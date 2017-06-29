@@ -8,12 +8,19 @@ class HabitTracker
     generate_habit(habits)
   end
 
-  private
-  def generate_habit(habits)
-    habits.each_with_index do |data, index|
-      @habits << Habit.new(index, data)
+  def list_habits
+    string = ""
+    @habits.each_with_index do |name, index|
+      string << "#{index+1}. #{name}\n"
     end
+    return string
   end
 
-  
+  private
+
+  def generate_habit(habits)
+    habits.each do |data|
+      @habits << Habit.new(data)
+    end
+  end
 end

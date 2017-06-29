@@ -1,6 +1,5 @@
 require_relative 'habit_tracker'
 class Parser
-
   attr_reader :habits
   def initialize(file)
     @habits = []
@@ -10,6 +9,7 @@ class Parser
   end
 
   private
+
   def get_raw_input(file)
     File.open(file, 'r') do |f|
       f.each_line { |line| @raw_input << line }
@@ -26,9 +26,9 @@ class Parser
   def parse
     pos = 0
     while @raw_input[pos] =~ /habit_tracker:/
-        pos += 1
-        puts @raw_input[pos]
-        parse_habit(pos)        
+      pos += 1
+      puts @raw_input[pos]
+      parse_habit(pos)
     end
   end
 end
