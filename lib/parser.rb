@@ -1,4 +1,9 @@
+# frozen_string_literal: true
+
 require_relative 'habit_tracker'
+
+# This class will be responsible for
+# parsing the input from the file given.
 class Parser
   attr_reader :habits
   def initialize(file)

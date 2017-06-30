@@ -1,5 +1,10 @@
+# frozen_string_literal: true
+
 require_relative 'habit'
 
+# HabitTracker contains the public API
+# to handle multiple habits. It
+# is designed to work closely with Habit.
 class HabitTracker
   attr_reader :habits
 
@@ -9,11 +14,9 @@ class HabitTracker
   end
 
   def list_habits
-    string = ""
-    @habits.each_with_index do |name, index|
-      string << "#{index+1}. #{name}\n"
+    @habits.each_with_index.inject('') do |acc, (habit, i)|
+      acc + "#{i + 1}. #{habit.name}\n"
     end
-    return string
   end
 
   private

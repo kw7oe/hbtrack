@@ -1,11 +1,14 @@
+# frozen_string_literal: true
+
 require_relative 'lib/habit_tracker'
 require_relative 'lib/parser'
 
-module Journal
+# CLI for the application
+module Kw
   def self.run(file)
     parser = Parser.new(file)
-    habit_tracker = HabitTracker.new(parser.habits)
+    HabitTracker.new(parser.habits)
   end
 end
 
-Journal.run(ARGV[0])
+Kw.run(ARGV[0])

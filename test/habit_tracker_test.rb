@@ -1,11 +1,12 @@
-require "minitest/autorun"
-require "minitest/pride"
-require_relative "../lib/habit_tracker"
+# frozen_string_literal: true
 
-class TestHabitTracker < MiniTest::Test 
+require 'minitest/autorun'
+require 'minitest/pride'
+require_relative '../lib/habit_tracker'
 
+class TestHabitTracker < MiniTest::Test
   def setup
-    @habit_tracker = HabitTracker.new(["Workout", "Read", "Programming"])
+    @habit_tracker = HabitTracker.new(%w[Workout Read Programming])
   end
 
   def test_habits_length
@@ -13,12 +14,11 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_list_habits
-    result = <<-EOS
-1. Workout
-2. Read
-3. Programming
+    result = <<~EOS
+      1. Workout
+      2. Read
+      3. Programming
     EOS
     assert_equal result, @habit_tracker.list_habits
   end
-
 end
