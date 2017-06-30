@@ -2,7 +2,7 @@ require "minitest/autorun"
 require "minitest/pride"
 require_relative "../lib/habit_tracker"
 
-class TestHabit < MiniTest::Test 
+class TestHabitTracker < MiniTest::Test 
 
   def setup
     @habit_tracker = HabitTracker.new(["Workout", "Read", "Programming"])

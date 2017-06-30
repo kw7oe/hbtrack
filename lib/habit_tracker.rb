@@ -5,7 +5,7 @@ class HabitTracker
 
   def initialize(habits)
     @habits = []
-    generate_habit(habits)
+    generate_habits(habits)
   end
 
   def list_habits
@@ -18,7 +18,7 @@ class HabitTracker
 
   private
 
-  def generate_habit(habits)
+  def generate_habits(habits)
     habits.each do |data|
       @habits << Habit.new(data)
     end
