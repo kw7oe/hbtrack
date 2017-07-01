@@ -6,9 +6,9 @@ require_relative 'habit'
 class CLI
   attr_reader :habits
 
-  def initialize
+  def initialize(file)
     @habits = []
-    get_habits
+    get_habits_from(file)
   end
 
   def parse_arguments(args)
@@ -22,9 +22,11 @@ class CLI
   end
 
   private
-  def get_habits
-    input = File.read("test_data").split(/\n\n/) 
-    input.each { |string| @habits << Habit.initialize_from_string(string) }
+  def get_habits_from(file)
+    if File.exists?(file)
+      input = File.read(file).split(/\n\n/) 
+      input.each { |string| @habits << Habit.initialize_from_string(string) }
+    end
   end
 
   def list(args)

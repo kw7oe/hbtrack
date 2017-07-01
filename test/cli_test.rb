@@ -7,7 +7,7 @@ require_relative '../lib/cli'
 
 class TestCLI < MiniTest::Test
   def setup
-    @cli = CLI.new
+    @cli = CLI.new("test_file")
     @cli.parse_arguments(%w[add workout])
   end
 
