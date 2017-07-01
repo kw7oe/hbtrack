@@ -25,8 +25,23 @@ class Habit
     "#{name}\n" + progress_output
   end
 
-  def self.get_progress_key_from(date)
-    date.strftime('%Y,%-m').to_sym
+  # Class Methods
+  class << self 
+    def get_progress_key_from(date)
+      date.strftime('%Y,%-m').to_sym
+    end
+
+    def initialize_from_string(string)
+      arr = string.split("\n")
+      habit_name = arr.shift
+      progress = arr.map do |s| 
+        a = s.split(":") 
+        key = a[0].to_sym
+        value = a[1]
+        { key => value }
+      end
+      Habit.new(habit_name, progress)
+    end
   end
 
   private
