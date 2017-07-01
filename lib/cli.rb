@@ -22,14 +22,14 @@ class CLI
   end
 
   private
+
   def get_habits_from(file)
-    if File.exists?(file)
-      input = File.read(file).split(/\n\n/) 
-      input.each { |string| @habits << Habit.initialize_from_string(string) }
-    end
+    return unless File.exist?(file)
+    input = File.read(file).split(/\n\n/)
+    input.each { |string| @habits << Habit.initialize_from_string(string) }
   end
 
-  def list(args)
+  def list(_args)
     @habits.each_with_index do |habit, index|
       puts "#{index + 1}. #{habit.name}"
     end
@@ -41,14 +41,26 @@ class CLI
   end
 
   def done(habit_name)
-    @habits.select do |habit|
-      habit.name == habit_name
-    end.first.done
+    habit = find_or_create(habit_name)
+    habit.done(Date.today)
     save
   end
 
+  def find(habit_name)
+    @habits.select { |habit| habit.name == habit_name }.first
+  end
+
+  def find_or_create(habit_name)
+    habit = find(habit_name)
+    if habit.nil?
+      habit = Habit.new(habit_name)
+      @habits << habit
+    end
+    habit
+  end
+
   def save
-    File.open("habit_stat", "w") do |f|
+    File.open('habit_stat', 'w') do |f|
       @habits.each do |habit|
         f.puts habit
       end
