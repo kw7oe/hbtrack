@@ -68,7 +68,6 @@ class HabitTracker
   def find_or_create(habit_name)
     habit = find(habit_name)
     if habit.nil?
-      puts CLI.red("Cant find #{habit_name}")
       habit = Habit.new(habit_name)
       @habits << habit
     end
