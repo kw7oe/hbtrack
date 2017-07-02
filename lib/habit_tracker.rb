@@ -1,14 +1,19 @@
 # frozen_string_literal: true
 
 require_relative 'habit'
+require_relative 'cli'
+require_relative 'config'
+
 # This class contains the methods to
 # handle the operation of mutliple habits
 class HabitTracker
   attr_reader :habits
 
-  def initialize(file)
+  def initialize(file = Config::FILE_NAME, output = Config::FILE_NAME)
     @habits = []
-    get_habits_from(file)
+    @file_name = file
+    @output_file_name = output
+    initialize_habits_from_file
   end
 
   def parse_arguments(args)
@@ -16,6 +21,10 @@ class HabitTracker
   end
 
   def method_missing(_m, *_args)
+    HabitTracker.help
+  end
+
+  def self.help
     puts 'usage: ruby hb.rb list'
     puts '       ruby hb.rb add habit_name'
     puts '       ruby hb.rb done habit_name'
@@ -23,9 +32,9 @@ class HabitTracker
 
   private
 
-  def get_habits_from(file)
-    return unless File.exist?(file)
-    input = File.read(file).split(/\n\n/)
+  def initialize_habits_from_file
+    return unless File.exist?(@file_name)
+    input = File.read(@file_name).split(/\n\n/)
     input.each { |string| @habits << Habit.initialize_from_string(string) }
   end
 
@@ -46,13 +55,20 @@ class HabitTracker
     save
   end
 
+  def remove(habit_name)
+    habit = find(habit_name)
+    @habits.delete(habit)
+    save
+  end
+
   def find(habit_name)
-    @habits.select { |habit| habit.name == habit_name }.first
+    @habits.find { |habit| habit.name == habit_name }
   end
 
   def find_or_create(habit_name)
     habit = find(habit_name)
     if habit.nil?
+      puts CLI.red("Cant find #{habit_name}")
       habit = Habit.new(habit_name)
       @habits << habit
     end
@@ -60,7 +76,7 @@ class HabitTracker
   end
 
   def save
-    File.open('habit_stat', 'w') do |f|
+    File.open(@output_file_name, 'w') do |f|
       @habits.each do |habit|
         f.puts habit
       end

@@ -4,10 +4,14 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require 'Date'
 require_relative '../lib/habit_tracker'
+require_relative '../lib/config'
 
 class TestHabitTracker < MiniTest::Test
   def setup
-    @habit_tracker = HabitTracker.new('test_data')
+    @habit_tracker = HabitTracker.new(
+      Config::TEST_FILE,
+      Config::OUTPUT_FILE
+    )
   end
 
   def test_habit_tracker_list
@@ -22,7 +26,13 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_habit_tracker_done
+    @habit_tracker.parse_arguments(%w[add learning])
     @habit_tracker.parse_arguments(%w[done learning])
     assert_equal 1, @habit_tracker.habits.last.progress.length
+  end
+
+  def test_habit_tracker_remove
+    @habit_tracker.parse_arguments(%w[remove read])
+    assert_equal 1, @habit_tracker.habits.length
   end
 end
