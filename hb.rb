@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require_relative 'lib/cli'
+require_relative 'lib/habit_tracker'
 
 # CLI for the application
 module Hb
   def self.run(args)
-    cli = CLI.new("test_data")
-    cli.parse_arguments(args)
+    habit_tracker = HabitTracker.new("test_data")
+    habit_tracker.parse_arguments(args)
   end
 end
 

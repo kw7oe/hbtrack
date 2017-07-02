@@ -2,8 +2,8 @@
 
 require_relative 'habit'
 # This class contains the methods to
-# handle the command line arguments
-class CLI
+# handle the operation of mutliple habits
+class HabitTracker
   attr_reader :habits
 
   def initialize(file)
