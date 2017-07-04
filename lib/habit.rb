@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'date'
+require_relative 'cli'
 
 # Habit provide a rich library to track the
 # progress of your habit.
@@ -22,6 +23,17 @@ class Habit
       "#{key}:#{value}\n"
     end
     arr.join('')
+  end
+
+  def pretty_print
+    "#{name}: " + pretty_print_progress(@progress.values.last) 
+  end
+
+  def pretty_print_progress(progress_value)
+    stat = progress_value.lstrip.split("").map do |x| 
+      x == "0" ? CLI.red("*") : CLI.green("*")
+    end.join("")
+    return stat
   end
 
   def to_s

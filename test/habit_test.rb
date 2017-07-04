@@ -4,6 +4,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require 'Date'
 require_relative '../lib/habit'
+require_relative '../lib/cli'
 
 class TestHabitTracker < MiniTest::Test
   def setup
@@ -60,5 +61,15 @@ class TestHabitTracker < MiniTest::Test
 
   def test_to_s
     assert_equal "Workout\n#{@habit.progress_output}\n", @habit.to_s
+  end
+
+  def test_pretty_print_progress
+    expected_result = CLI.red("*") * 3 + CLI.green("*")
+    assert_equal expected_result, @habit.pretty_print_progress("0001")
+  end
+
+  def test_pretty_print
+    expected_result = "Workout: " + CLI.red("*") * (Date.today.day - 1) + CLI.green("*")
+    assert_equal expected_result, @habit.pretty_print 
   end
 end

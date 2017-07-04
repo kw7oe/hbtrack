@@ -40,7 +40,7 @@ class HabitTracker
 
   def list(_args)
     @habits.each_with_index do |habit, index|
-      puts "#{index + 1}. #{habit.name}"
+      puts "#{index + 1}. #{habit.pretty_print}"
     end
   end
 

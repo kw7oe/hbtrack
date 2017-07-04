@@ -15,7 +15,10 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_habit_tracker_list
-    assert_output "1. workout\n2. read\n" do
+    progress = CLI.green("*") * 1
+    expected_result = "1. workout: " + progress + "\n"
+    expected_result += "2. read: " + progress + "\n"
+    assert_output expected_result do
       @habit_tracker.parse_arguments(['list'])
     end
   end
