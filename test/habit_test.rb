@@ -6,7 +6,7 @@ require 'Date'
 require_relative '../lib/habit'
 require_relative '../lib/cli'
 
-class TestHabitTracker < MiniTest::Test
+class TestHabit < MiniTest::Test
   def setup
     @habit = Habit.new('Workout')
     @habit.done(Date.today)
@@ -25,6 +25,10 @@ class TestHabitTracker < MiniTest::Test
 
   def test_name
     assert_equal 'Workout', @habit.name
+  end
+
+  def test_name_length
+    assert_equal 7, @habit.name_length
   end
 
   def test_done_with_default_progress
@@ -69,7 +73,7 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_pretty_print
-    expected_result = "Workout: " + CLI.red("*") * (Date.today.day - 1) + CLI.green("*")
-    assert_equal expected_result, @habit.pretty_print 
+    expected_result = "Workout : " + CLI.red("*") * (Date.today.day - 1) + CLI.green("*")
+    assert_equal expected_result, @habit.pretty_print
   end
 end

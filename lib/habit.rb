@@ -14,6 +14,10 @@ class Habit
     @progress = progress
   end
 
+  def name_length
+    name.length
+  end
+
   def done(date = Date.today)
     add_done(date)
   end
@@ -25,8 +29,9 @@ class Habit
     arr.join('')
   end
 
-  def pretty_print
-    "#{name}: " + pretty_print_progress(@progress.values.last) 
+  def pretty_print(no_of_space = 0)
+    "#{name}" + " " * no_of_space + " : " +
+    pretty_print_progress(@progress.values.last) 
   end
 
   def pretty_print_progress(progress_value)

@@ -30,6 +30,10 @@ class HabitTracker
     puts '       ruby hb.rb done habit_name'
   end
 
+  def longest_name
+    @habits.max_by { |habit| habit.name_length }.name
+  end
+
   private
 
   def initialize_habits_from_file
@@ -40,7 +44,8 @@ class HabitTracker
 
   def list(_args)
     @habits.each_with_index do |habit, index|
-      puts "#{index + 1}. #{habit.pretty_print}"
+      space = longest_name.length - habit.name_length
+      puts "#{index + 1}. #{habit.pretty_print(space)}"
     end
   end
 

@@ -14,10 +14,14 @@ class TestHabitTracker < MiniTest::Test
     )
   end
 
+  def test_habit_tracker_find_longest_name
+    assert_equal "workout", @habit_tracker.longest_name
+  end
+
   def test_habit_tracker_list
     progress = CLI.green("*") * 1
-    expected_result = "1. workout: " + progress + "\n"
-    expected_result += "2. read: " + progress + "\n"
+    expected_result = "1. workout : " + progress + "\n"
+    expected_result += "2. read    : " + progress + "\n"
     assert_output expected_result do
       @habit_tracker.parse_arguments(['list'])
     end
@@ -38,4 +42,5 @@ class TestHabitTracker < MiniTest::Test
     @habit_tracker.parse_arguments(%w[remove read])
     assert_equal 1, @habit_tracker.habits.length
   end
+
 end
