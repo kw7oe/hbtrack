@@ -29,16 +29,27 @@ class Habit
     arr.join('')
   end
 
-  def pretty_print(no_of_space = 0)
-    "#{name}" + " " * no_of_space + " : " +
-    pretty_print_progress(@progress.values.last) 
+  def pretty_print_all
+    progress.map do |key, value|
+      convert_key_to_date(key) + pretty_print_progress(value)
+    end.join("\n")
+  end
+
+  def pretty_print_latest(no_of_space = 0)
+    name.to_s + ' ' * no_of_space + ' : ' +
+      pretty_print_progress(@progress.values.last)
   end
 
   def pretty_print_progress(progress_value)
-    stat = progress_value.lstrip.split("").map do |x| 
-      x == "0" ? CLI.red("*") : CLI.green("*")
-    end.join("")
-    return stat
+    stat = progress_value.lstrip.split('').map do |x|
+      x == '0' ? CLI.red('*') : CLI.green('*')
+    end.join('')
+    stat
+  end
+
+  def convert_key_to_date(key)
+    key = key.to_s.split(',')
+    "#{Date::MONTHNAMES[key[1].to_i]} #{key[0]}: "
   end
 
   def to_s
@@ -64,8 +75,13 @@ class Habit
     # Example
     #
     #   Habit.initialize_from_string("workout\n2017,6:1001")
-    #   # => #<Habit:0x007f9be6041b70 @name="workout", @progress={:"2017,6"=>"1001"}>
+    #   # => #<Habit:0x007f9be6041b70 @name="workout",
+    #   #    @progress={:"2017,6"=>"1001"}>
+    #
+    #   Habit.initialize_from_string("")
+    #   # => nil
     def initialize_from_string(string)
+      return nil if string.empty?
       arr = string.split("\n")
       habit_name = arr.shift
       hash = {}

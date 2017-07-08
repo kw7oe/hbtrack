@@ -31,7 +31,7 @@ class HabitTracker
   end
 
   def longest_name
-    @habits.max_by { |habit| habit.name_length }.name
+    @habits.max_by(&:name_length).name
   end
 
   private
@@ -42,11 +42,20 @@ class HabitTracker
     input.each { |string| @habits << Habit.initialize_from_string(string) }
   end
 
-  def list(_args)
+  def list(habit_name = nil)
+    if habit = find(habit_name)
+      puts habit.pretty_print_all
+      return
+    end
+
     @habits.each_with_index do |habit, index|
       space = longest_name.length - habit.name_length
-      puts "#{index + 1}. #{habit.pretty_print(space)}"
+      puts "#{index + 1}. #{habit.pretty_print_latest(space)}"
     end
+  end
+
+  def config(_args)
+    system("open #{@file_name}")
   end
 
   def add(habit_name)
