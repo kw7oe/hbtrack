@@ -39,10 +39,22 @@ class TestHabitTracker < MiniTest::Test
     assert_equal 'learning', @habit_tracker.habits.last.name
   end
 
+  # Need to rewrite, shouldn't be test like this
   def test_habit_tracker_done
     @habit_tracker.parse_arguments(%w[add learning])
     @habit_tracker.parse_arguments(%w[done learning])
     assert_equal 1, @habit_tracker.habits.last.progress.length
+  end
+
+  # Need to rewrite, shouldn't be test like this
+  def test_habit_tracker_undone
+    @habit_tracker.parse_arguments(%w[undone workout])
+    expected_result = {
+      "2017,5": ' 0000000000011111',
+      "2017,6": ' 0000000000011111',
+      "2017,7": ' 1' + '0' * (Date.today.day - 1)
+    }
+    assert_equal expected_result, @habit_tracker.find('workout').progress
   end
 
   def test_habit_tracker_remove

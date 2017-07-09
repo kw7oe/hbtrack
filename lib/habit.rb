@@ -18,8 +18,11 @@ class Habit
     name.length
   end
 
-  def done(date = Date.today)
-    add_done(date)
+  def done(done = true, date = Date.today)
+    key = Habit.get_progress_key_from(date)
+    @progress[key] = ' ' unless @progress.key? key
+    i = date.day - @progress[key].length
+    @progress[key] += '0' * i + (done ? '1' : '0')
   end
 
   def progress_output
@@ -91,15 +94,5 @@ class Habit
       end
       Habit.new(habit_name, hash)
     end
-  end
-
-  private
-
-  def add_done(date)
-    key = Habit.get_progress_key_from(date)
-    @progress[key] = ' ' unless @progress.key? key
-    i = date.day - @progress[key].length
-    @progress[key] += '0' * i
-    @progress[key] += '1'
   end
 end

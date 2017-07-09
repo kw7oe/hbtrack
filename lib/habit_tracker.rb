@@ -24,10 +24,15 @@ class HabitTracker
     HabitTracker.help
   end
 
-  def self.help
-    puts 'usage: ruby hb.rb list'
+  def find(habit_name)
+    @habits.find { |habit| habit.name == habit_name }
+  end
+
+  def self.help # Refactoring needed
+    puts 'usage: ruby hb.rb list [ habit_name ]'
     puts '       ruby hb.rb add habit_name'
     puts '       ruby hb.rb done habit_name'
+    puts '       ruby hb.rb undone habit_name'
   end
 
   def longest_name
@@ -54,10 +59,6 @@ class HabitTracker
     end
   end
 
-  def config(_args)
-    system("open #{@file_name}")
-  end
-
   def add(habit_name)
     @habits << Habit.new(habit_name)
     save
@@ -65,18 +66,28 @@ class HabitTracker
 
   def done(habit_name)
     habit = find_or_create(habit_name)
-    habit.done(Date.today)
+    habit.done
+    save
+  end
+
+  def undone(habit_name)
+    habit = find(habit_name)
+    if habit.nil? # Redundant code
+      puts CLI.red "#{habit_name} not found."
+      exit
+    end
+    habit.done(false)
     save
   end
 
   def remove(habit_name)
     habit = find(habit_name)
+    if habit.nil? # Redundant code
+      puts CLI.red "#{habit_name} not found."
+      exit
+    end
     @habits.delete(habit)
     save
-  end
-
-  def find(habit_name)
-    @habits.find { |habit| habit.name == habit_name }
   end
 
   def find_or_create(habit_name)
