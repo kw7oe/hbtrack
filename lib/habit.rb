@@ -9,56 +9,7 @@ class Habit
   attr_accessor :name
   attr_reader :progress
 
-  def initialize(name, progress = {})
-    @name = name
-    @progress = progress
-  end
-
-  def name_length
-    name.length
-  end
-
-  def done(done = true, date = Date.today)
-    key = Habit.get_progress_key_from(date)
-    @progress[key] = ' ' unless @progress.key? key
-    i = date.day - @progress[key].length
-    @progress[key] += '0' * i + (done ? '1' : '0')
-  end
-
-  def progress_output
-    arr = @progress.map do |key, value|
-      "#{key}:#{value}\n"
-    end
-    arr.join('')
-  end
-
-  def pretty_print_all
-    progress.map do |key, value|
-      convert_key_to_date(key) + pretty_print_progress(value)
-    end.join("\n")
-  end
-
-  def pretty_print_latest(no_of_space = 0)
-    name.to_s + ' ' * no_of_space + ' : ' +
-      pretty_print_progress(@progress.values.last)
-  end
-
-  def pretty_print_progress(progress_value)
-    stat = progress_value.lstrip.split('').map do |x|
-      x == '0' ? CLI.red('*') : CLI.green('*')
-    end.join('')
-    stat
-  end
-
-  def convert_key_to_date(key)
-    key = key.to_s.split(',')
-    "#{Date::MONTHNAMES[key[1].to_i]} #{key[0]}: "
-  end
-
-  def to_s
-    "#{name}\n" + progress_output + "\n"
-  end
-
+  # Class Methods
   class << self
     # Generate hash key for progress based
     # on date.
@@ -94,5 +45,71 @@ class Habit
       end
       Habit.new(habit_name, hash)
     end
+  end
+
+  # Public APIs
+  def initialize(name, progress = {})
+    @name = name
+    @progress = progress
+  end
+
+  def name_length
+    name.length
+  end
+
+  def done(done = true, date = Date.today)
+    key = Habit.get_progress_key_from(date)
+    initialize_progress_hash_from(key)
+    update_progress_for(key, date.day, done)
+  end
+
+  def pretty_print_all
+    @progress.map do |key, value|
+      convert_key_to_date(key) + pretty_print_progress(value)
+    end.join("\n")
+  end
+
+  def pretty_print_latest(no_of_space = 0)
+    name.to_s + ' ' * no_of_space + ' : ' +
+      pretty_print_progress(@progress.values.last)
+  end
+
+  def pretty_print_progress(progress_value)
+    stat = progress_value.lstrip.split('').map do |x|
+      x == '0' ? CLI.red('*') : CLI.green('*')
+    end.join('')
+    stat
+  end
+
+  def convert_key_to_date(key)
+    key = key.to_s.split(',')
+    "#{Date::MONTHNAMES[key[1].to_i]} #{key[0]}: "
+  end
+
+  def progress_output
+    arr = @progress.map do |key, value|
+      "#{key}:#{value}\n"
+    end
+    arr.join('')
+  end
+
+  def to_s
+    "#{name}\n" + progress_output + "\n"
+  end
+
+  # Private APIs
+
+  private
+
+  def initialize_progress_hash_from(key)
+    @progress[key] = ' ' unless @progress.key? key
+  end
+
+  def update_progress_for(key, day, done)
+    i = day - @progress[key].length
+    result = @progress[key].split('')
+    i.times { |_x| result << '0' }
+    result[day] = done ? '1' : '0'
+    @progress[key] = result.join('')
   end
 end

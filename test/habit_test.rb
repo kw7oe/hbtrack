@@ -32,7 +32,8 @@ class TestHabit < MiniTest::Test
   def test_done_with_default_progress
     @habit.done
     key = Habit.get_progress_key_from(Date.today)
-    assert_equal ' ' + '0' * (Date.today.day - 1) + '1', @habit.progress[key]
+    assert_equal ' ' + '0' * (Date.today.day - 1) + '1',
+                 @habit.progress[key]
   end
 
   def test_done_with_initial_progress
@@ -47,18 +48,34 @@ class TestHabit < MiniTest::Test
   def test_undone_with_default_progress
     @habit.done(false)
     key = Habit.get_progress_key_from(Date.today)
-    assert_equal ' ' + '0' * Date.today.day, @habit.progress[key]
+    assert_equal ' ' + '0' * Date.today.day,
+                 @habit.progress[key]
+  end
+
+  def test_done_and_undone
+    date = Date.today
+    @habit.done(false, date)
+    key = Habit.get_progress_key_from(date)
+    expected_result = ' ' + '0' * Date.today.day
+    assert_equal expected_result, @habit.progress[key]
+    @habit.done(true, date)
+    assert @habit.progress[key].end_with? '1'
   end
 
   def test_progress_output
     @habit.done
     key = Habit.get_progress_key_from(Date.today)
-    assert_equal "#{key}:#{@habit.progress[key]}\n", @habit.progress_output
+    assert_equal "#{key}:#{@habit.progress[key]}\n",
+                 @habit.progress_output
   end
 
   def test_multple_progress_output
-    key1 = Habit.get_progress_key_from(Date.new(2017, 4, 9))
-    key2 = Habit.get_progress_key_from(Date.new(2017, 5, 10))
+    key1 = Habit.get_progress_key_from(
+      Date.new(2017, 4, 9)
+    )
+    key2 = Habit.get_progress_key_from(
+      Date.new(2017, 5, 10)
+    )
     @habit = Habit.new('Workout',
                        key1 => ' 00010',
                        key2 => ' 11101')
@@ -86,13 +103,16 @@ class TestHabit < MiniTest::Test
 
   def test_pretty_print_progress
     expected_result = CLI.red('*') * 3 + CLI.green('*')
-    assert_equal expected_result, @habit.pretty_print_progress('0001')
+    assert_equal expected_result,
+                 @habit.pretty_print_progress('0001')
   end
 
   def test_pretty_print_latest
     @habit.done(Date.today)
-    expected_result = 'Workout : ' + CLI.red('*') * (Date.today.day - 1) + CLI.green('*')
-    assert_equal expected_result, @habit.pretty_print_latest
+    expected_result = 'Workout : ' + CLI.red('*') *
+                                     (Date.today.day - 1) + CLI.green('*')
+    assert_equal expected_result,
+                 @habit.pretty_print_latest
   end
 
   def test_pretty_print_all
@@ -104,9 +124,10 @@ class TestHabit < MiniTest::Test
     EOF
     @habit = Habit.initialize_from_string(string)
     progress = CLI.red('*') * 11 + CLI.green('*') * 5
-    expected_result  = 'May 2017: ' + progress + "\n"
-    expected_result += 'June 2017: ' + progress + "\n"
-    expected_result += 'July 2017: ' + CLI.green('*')
-    assert_equal expected_result, @habit.pretty_print_all
+    expected_result = 'May 2017: ' + progress + "\n" \
+                       'June 2017: ' + progress + "\n" \
+                       'July 2017: ' + CLI.green('*')
+    assert_equal expected_result,
+                 @habit.pretty_print_all
   end
 end

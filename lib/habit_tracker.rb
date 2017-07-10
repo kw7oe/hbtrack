@@ -9,6 +9,13 @@ require_relative 'config'
 class HabitTracker
   attr_reader :habits
 
+  def self.help # Refactoring needed
+    puts 'usage: ruby hb.rb list [ habit_name ]'
+    puts '       ruby hb.rb add habit_name'
+    puts '       ruby hb.rb done habit_name'
+    puts '       ruby hb.rb undone habit_name'
+  end
+
   def initialize(file = Config::FILE_NAME, output = Config::FILE_NAME)
     @habits = []
     @file_name = file
@@ -24,15 +31,14 @@ class HabitTracker
     HabitTracker.help
   end
 
+  # This methods find a habit based on the name given.
+  # Blocks are executed when habit is not found.
   def find(habit_name)
-    @habits.find { |habit| habit.name == habit_name }
-  end
-
-  def self.help # Refactoring needed
-    puts 'usage: ruby hb.rb list [ habit_name ]'
-    puts '       ruby hb.rb add habit_name'
-    puts '       ruby hb.rb done habit_name'
-    puts '       ruby hb.rb undone habit_name'
+    habit = @habits.find do |h|
+      h.name == habit_name
+    end
+    yield if habit.nil?
+    habit
   end
 
   def longest_name
@@ -40,7 +46,6 @@ class HabitTracker
   end
 
   private
-
   def initialize_habits_from_file
     return unless File.exist?(@file_name)
     input = File.read(@file_name).split(/\n\n/)
@@ -48,55 +53,52 @@ class HabitTracker
   end
 
   def list(habit_name = nil)
-    if habit = find(habit_name)
-      puts habit.pretty_print_all
+    habit = find(habit_name) do
+      @habits.each_with_index do |h, index|
+        space = longest_name.length - h.name_length
+        puts "#{index + 1}. #{h.pretty_print_latest(space)}"
+      end
       return
     end
-
-    @habits.each_with_index do |habit, index|
-      space = longest_name.length - habit.name_length
-      puts "#{index + 1}. #{habit.pretty_print_latest(space)}"
-    end
+    puts habit.pretty_print_all
   end
 
   def add(habit_name)
     @habits << Habit.new(habit_name)
     save
+    puts CLI.green("#{habit_name} added succesfully!")
   end
 
   def done(habit_name)
     habit = find_or_create(habit_name)
     habit.done
     save
+    puts CLI.green("Done #{habit_name}!")
   end
 
   def undone(habit_name)
-    habit = find(habit_name)
-    if habit.nil? # Redundant code
-      puts CLI.red "#{habit_name} not found."
-      exit
-    end
+    habit = find(habit_name) { raise_habit_not_found }
     habit.done(false)
     save
+    puts CLI.green("Undone #{habit_name}!")
   end
 
   def remove(habit_name)
-    habit = find(habit_name)
-    if habit.nil? # Redundant code
-      puts CLI.red "#{habit_name} not found."
-      exit
-    end
+    habit = find(habit_name) { raise_habit_not_found }
     @habits.delete(habit)
     save
   end
 
   def find_or_create(habit_name)
-    habit = find(habit_name)
-    if habit.nil?
+    habit = find(habit_name) do
       habit = Habit.new(habit_name)
       @habits << habit
     end
     habit
+  end
+
+  def raise_habit_not_found
+    puts CLI.red "#{habit_name} not found."
   end
 
   def save
