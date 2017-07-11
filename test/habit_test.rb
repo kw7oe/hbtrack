@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require 'minitest/pride'
-require 'Date'
+require 'date'
 require_relative '../lib/habit'
 require_relative '../lib/cli'
 

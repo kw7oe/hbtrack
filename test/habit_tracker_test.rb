@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require 'minitest/pride'
-require 'Date'
+require 'date'
 require_relative '../lib/habit_tracker'
 require_relative '../lib/config'
 
@@ -28,37 +27,39 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_habit_tracker_list_workout
-    expected_result = @habit_tracker.habits[0].pretty_print_all + "\n"
-    assert_output expected_result do
+    expected_output = @habit_tracker.habits[0].pretty_print_all + "\n"
+    assert_output expected_output do
       @habit_tracker.parse_arguments(%w[list workout])
     end
   end
 
   def test_habit_tracker_add
-    @habit_tracker.parse_arguments(%w[add learning])
+    expected_output = CLI.green('learning added succesfully!') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[add learning])
+    end
     assert_equal 'learning', @habit_tracker.habits.last.name
   end
 
-  # Need to rewrite, shouldn't be test like this
   def test_habit_tracker_done
-    @habit_tracker.parse_arguments(%w[add learning])
-    @habit_tracker.parse_arguments(%w[done learning])
-    assert_equal 1, @habit_tracker.habits.last.progress.length
+    expected_output = CLI.green('Done read!') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[done read])
+    end
   end
 
-  # Need to rewrite, shouldn't be test like this
   def test_habit_tracker_undone
-    @habit_tracker.parse_arguments(%w[undone workout])
-    expected_result = {
-      "2017,5": ' 0000000000011111',
-      "2017,6": ' 0000000000011111',
-      "2017,7": ' 1' + '0' * (Date.today.day - 1)
-    }
-    assert_equal expected_result, @habit_tracker.find('workout').progress
+    expected_output = CLI.blue('Undone workout!') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[undone workout])
+    end
   end
 
   def test_habit_tracker_remove
-    @habit_tracker.parse_arguments(%w[remove read])
+    expected_output = CLI.blue('read removed!') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[remove read])
+    end
     assert_equal 1, @habit_tracker.habits.length
   end
 end

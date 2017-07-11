@@ -17,7 +17,7 @@ class Habit
     # Example
     #
     #   Habit.get_progress_key_from(Date.new(2017, 7, 18))
-    #   # => :"2017,6"
+    #   # => :"2017,7"
     def get_progress_key_from(date)
       date.strftime('%Y,%-m').to_sym
     end
@@ -48,7 +48,10 @@ class Habit
   end
 
   # Public APIs
-  def initialize(name, progress = {})
+  def initialize(name,
+                 progress = {
+                   Habit.get_progress_key_from(Date.today) => ' '
+                 })
     @name = name
     @progress = progress
   end
@@ -108,7 +111,7 @@ class Habit
   def update_progress_for(key, day, done)
     i = day - @progress[key].length
     result = @progress[key].split('')
-    i.times { |_x| result << '0' }
+    i.times { result << '0' }
     result[day] = done ? '1' : '0'
     @progress[key] = result.join('')
   end
