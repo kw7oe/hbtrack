@@ -16,7 +16,7 @@ class HabitTracker
     puts '       ruby hb.rb undone habit_name'
   end
 
-  def initialize(file = Config::FILE_NAME, 
+  def initialize(file = Config::FILE_NAME,
                  output = Config::FILE_NAME)
     @habits = []
     @file_name = file
@@ -66,9 +66,13 @@ class HabitTracker
   end
 
   def add(habit_name)
-    @habits << Habit.new(habit_name)
-    save
-    puts CLI.green("#{habit_name} added succesfully!") # Similar code
+    find(habit_name) do 
+      @habits << Habit.new(habit_name)
+      save
+      puts CLI.green("#{habit_name} added succesfully!")
+      return
+    end
+    puts CLI.blue("#{habit_name} already existed!")
   end
 
   def done(habit_name)

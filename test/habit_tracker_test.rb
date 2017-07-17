@@ -41,6 +41,14 @@ class TestHabitTracker < MiniTest::Test
     assert_equal 'learning', @habit_tracker.habits.last.name
   end
 
+  def test_habit_tracker_add_duplicate
+    expected_output = CLI.blue('workout already existed!') + "\n"
+    assert_output expected_output do 
+      @habit_tracker.parse_arguments(%w[add workout])
+    end
+    assert_equal 2, @habit_tracker.habits.size
+  end
+
   def test_habit_tracker_done
     expected_output = CLI.green('Done read!') + "\n"
     assert_output expected_output do
