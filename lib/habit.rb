@@ -60,6 +60,11 @@ class Habit
     name.length
   end
 
+  def latest_progress
+    key = Habit.get_progress_key_from(Date.today)
+    progress[key]
+  end
+
   def done(done = true, date = Date.today)
     key = Habit.get_progress_key_from(date)
     initialize_progress_hash_from(key)
@@ -74,7 +79,7 @@ class Habit
 
   def pretty_print_latest(no_of_space = 0)
     name.to_s + ' ' * no_of_space + ' : ' +
-      pretty_print_progress(@progress.values.last)
+      pretty_print_progress(latest_progress)
   end
 
   def pretty_print_progress(progress_value)

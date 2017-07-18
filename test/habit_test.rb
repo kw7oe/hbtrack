@@ -30,9 +30,8 @@ class TestHabit < MiniTest::Test
 
   def test_done_with_default_progress
     @habit.done
-    key = Habit.get_progress_key_from(Date.today)
     assert_equal ' ' + '0' * (Date.today.day - 1) + '1',
-                 @habit.progress[key]
+                 @habit.latest_progress
   end
 
   def test_done_with_initial_progress
@@ -46,19 +45,16 @@ class TestHabit < MiniTest::Test
 
   def test_undone_with_default_progress
     @habit.done(false)
-    key = Habit.get_progress_key_from(Date.today)
     assert_equal ' ' + '0' * Date.today.day,
-                 @habit.progress[key]
+                 @habit.latest_progress
   end
 
   def test_done_and_undone
-    date = Date.today
-    @habit.done(false, date)
-    key = Habit.get_progress_key_from(date)
+    @habit.done(false)
     expected_result = ' ' + '0' * Date.today.day
-    assert_equal expected_result, @habit.progress[key]
-    @habit.done(true, date)
-    assert @habit.progress[key].end_with? '1'
+    assert_equal expected_result, @habit.latest_progress
+    @habit.done(true)
+    assert @habit.latest_progress.end_with? '1'
   end
 
   def test_progress_output
