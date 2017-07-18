@@ -10,4 +10,7 @@ test/test_output
 /pkg/
 /spec/reports/
 /tmp/
+*.gem
+*.gemspec
+
 
