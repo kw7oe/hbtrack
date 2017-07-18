@@ -12,10 +12,10 @@ module Hbtrack
     attr_reader :habits
 
     def self.help # Refactoring needed
-      puts 'usage: ruby hbtrack.rb list [ habit_name ]'
-      puts '       ruby hbtrack.rb add habit_name'
-      puts '       ruby hbtrack.rb done habit_name'
-      puts '       ruby hbtrack.rb undone habit_name'
+      puts 'usage: hbtrack list [ habit_name ]'
+      puts '       hbtrack add habit_name'
+      puts '       hbtrack done habit_name'
+      puts '       hbtrack undone habit_name'
     end
 
     def initialize(file = Hbtrack::FILE_NAME,
