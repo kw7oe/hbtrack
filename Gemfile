@@ -2,5 +2,5 @@
 
 source 'https://rubygems.org'
 
-# gem "rails"
-gem 'minitest'
+# Specify your gem's dependencies in apple.gemspec
+gemspec

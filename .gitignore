@@ -1,3 +1,13 @@
 .DS_Store
 .rubocop.yml
 test/test_output
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+

@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
+require 'test_helper'
 require 'date'
-require_relative '../lib/habit_tracker'
-require_relative '../lib/config'
 
 class TestHabitTracker < MiniTest::Test
   def setup
-    @habit_tracker = HabitTracker.new(
-      Config::TEST_FILE,
-      Config::OUTPUT_FILE
+    @habit_tracker = Hb::HabitTracker.new(
+      Hb::TEST_FILE,
+      Hb::OUTPUT_FILE
     )
   end
 
@@ -18,7 +16,7 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_list_all
-    progress = CLI.green('*')
+    progress = Hb::CLI.green('*')
     expected_result = '1. workout : ' + progress + "\n"
     expected_result += '2. read    : ' + progress + "\n"
     assert_output expected_result do
@@ -34,7 +32,7 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_add
-    expected_output = CLI.green('learning added succesfully!') + "\n"
+    expected_output = Hb::CLI.green('learning added succesfully!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[add learning])
     end
@@ -42,7 +40,7 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_prevent_add_duplicate
-    expected_output = CLI.blue('workout already existed!') + "\n"
+    expected_output = Hb::CLI.blue('workout already existed!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[add workout])
     end
@@ -50,35 +48,35 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_done
-    expected_output = CLI.green('Done read!') + "\n"
+    expected_output = Hb::CLI.green('Done read!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[done read])
     end
   end
 
   def test_done_yesterday
-    expected_output = CLI.green('Done read!') + "\n"
-    assert_output expected_output do 
+    expected_output = Hb::CLI.green('Done read!') + "\n"
+    assert_output expected_output do
       @habit_tracker.parse_arguments(%w[done -y read])
     end
   end
 
   def test_undone
-    expected_output = CLI.blue('Undone workout!') + "\n"
+    expected_output = Hb::CLI.blue('Undone workout!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[undone workout])
     end
   end
 
-  def test_undone_yesterday 
-    expected_output = CLI.blue('Undone read!') + "\n"
-    assert_output expected_output do 
+  def test_undone_yesterday
+    expected_output = Hb::CLI.blue('Undone read!') + "\n"
+    assert_output expected_output do
       @habit_tracker.parse_arguments(%w[undone -y read])
     end
   end
 
   def test_remove
-    expected_output = CLI.blue('read removed!') + "\n"
+    expected_output = Hb::CLI.blue('read removed!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[remove read])
     end

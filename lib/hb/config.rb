@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Configuration for the application.
-class Config
+module Hb
   # File to read during testing
   TEST_FILE = 'test/test_data'
 

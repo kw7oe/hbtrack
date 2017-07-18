@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
+require 'test_helper'
 require 'date'
-require_relative '../lib/habit'
-require_relative '../lib/cli'
 
 class TestHabit < MiniTest::Test
   def setup
-    @habit = Habit.new('Workout')
+    @habit = Hb::Habit.new('Workout')
   end
 
   def test_initialize_from_string
@@ -17,7 +15,7 @@ class TestHabit < MiniTest::Test
       2017,6: 0000000000011111
       2017,7: 1
     EOF
-    assert Habit.initialize_from_string(string).to_s
+    assert Hb::Habit.initialize_from_string(string).to_s
   end
 
   def test_name
@@ -36,8 +34,8 @@ class TestHabit < MiniTest::Test
 
   def test_done_with_initial_progress
     date = Date.new(2017, 6, 17)
-    key = Habit.get_progress_key_from(date)
-    @habit = Habit.new('Workout', key => ' 0010')
+    key = Hb::Habit.get_progress_key_from(date)
+    @habit = Hb::Habit.new('Workout', key => ' 0010')
     @habit.done(true, date)
     expected_result = ' 00100000000000001'
     assert_equal expected_result, @habit.progress[key]
@@ -59,19 +57,19 @@ class TestHabit < MiniTest::Test
 
   def test_progress_output
     @habit.done
-    key = Habit.get_progress_key_from(Date.today)
+    key = Hb::Habit.get_progress_key_from(Date.today)
     assert_equal "#{key}:#{@habit.progress[key]}\n",
                  @habit.progress_output
   end
 
   def test_multple_progress_output
-    key1 = Habit.get_progress_key_from(
+    key1 = Hb::Habit.get_progress_key_from(
       Date.new(2017, 4, 9)
     )
-    key2 = Habit.get_progress_key_from(
+    key2 = Hb::Habit.get_progress_key_from(
       Date.new(2017, 5, 10)
     )
-    @habit = Habit.new('Workout',
+    @habit = Hb::Habit.new('Workout',
                        key1 => ' 00010',
                        key2 => ' 11101')
     expected_result = <<~EOF
@@ -93,19 +91,19 @@ class TestHabit < MiniTest::Test
       2017,7: 1
 
     EOF
-    assert_equal string, Habit.initialize_from_string(string).to_s
+    assert_equal string, Hb::Habit.initialize_from_string(string).to_s
   end
 
   def test_pretty_print_progress
-    expected_result = CLI.red('*') * 3 + CLI.green('*')
+    expected_result = Hb::CLI.red('*') * 3 + Hb::CLI.green('*')
     assert_equal expected_result,
                  @habit.pretty_print_progress('0001')
   end
 
   def test_pretty_print_latest
     @habit.done(Date.today)
-    expected_result = 'Workout : ' + CLI.red('*') *
-                                     (Date.today.day - 1) + CLI.green('*')
+    expected_result = 'Workout : ' + Hb::CLI.red('*') *
+                                     (Date.today.day - 1) + Hb::CLI.green('*')
     assert_equal expected_result,
                  @habit.pretty_print_latest
   end
@@ -117,11 +115,11 @@ class TestHabit < MiniTest::Test
       2017,6: 0000000000011111
       2017,7: 1
     EOF
-    @habit = Habit.initialize_from_string(string)
-    progress = CLI.red('*') * 11 + CLI.green('*') * 5
+    @habit = Hb::Habit.initialize_from_string(string)
+    progress = Hb::CLI.red('*') * 11 + Hb::CLI.green('*') * 5
     expected_result = 'May 2017: ' + progress + "\n" \
                        'June 2017: ' + progress + "\n" \
-                       'July 2017: ' + CLI.green('*')
+                       'July 2017: ' + Hb::CLI.green('*')
     assert_equal expected_result,
                  @habit.pretty_print_all
   end
