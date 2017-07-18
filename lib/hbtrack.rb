@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'hb/habit_tracker'
+require 'hbtrack/habit_tracker'
 
-module Hb
+module Hbtrack
   class << self
     def run *args
       if ARGV.empty?

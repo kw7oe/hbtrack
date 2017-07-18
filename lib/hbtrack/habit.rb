@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'date'
-require 'hb/cli'
+require 'hbtrack/cli'
 
-module Hb
+module Hbtrack
   # Habit provide a rich library to track the
   # progress of your habit.  
   class Habit
@@ -85,7 +85,7 @@ module Hb
 
     def pretty_print_progress(progress_value)
       stat = progress_value.lstrip.split('').map do |x|
-        x == '0' ? Hb::CLI.red('*') : Hb::CLI.green('*')
+        x == '0' ? Hbtrack::CLI.red('*') : Hbtrack::CLI.green('*')
       end.join('')
       stat
     end

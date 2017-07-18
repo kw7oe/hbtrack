@@ -2,7 +2,7 @@
 
 # A class that contains the helper methods
 # used for CLI.
-module Hb
+module Hbtrack
   class CLI
     FONT_COLOR = {
       green: "\e[32m",
