@@ -47,6 +47,10 @@ module Hbtrack
       @habits.max_by(&:name_length).name
     end
 
+    def method_missing(method_name, *arguments, &block)
+      HabitTracker.help
+    end
+
     private
 
     def initialize_habits_from_file
