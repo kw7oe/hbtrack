@@ -11,9 +11,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ['kw7oe']
   spec.email         = ['choongkwern@hotmail.com']
 
-  spec.summary       = 'TODO: Write a short summary, because Rubygems requires one.'
-  spec.description   = 'TODO: Write a longer description or delete this line.'
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = 'A CLI to track your habits.'
+  spec.description   = 'Habit Tracker CLI'
+  spec.homepage      = "https://github.com/kw7oe/hb"
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

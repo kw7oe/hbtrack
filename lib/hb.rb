@@ -8,7 +8,6 @@ module Hb
       if ARGV.empty?
         HabitTracker.help
       else
-        puts "ARGV: #{ARGV}"
         HabitTracker.new.parse_arguments(*args)
       end
     end

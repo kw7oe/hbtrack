@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'hb'
+Hb.run(ARGV)
