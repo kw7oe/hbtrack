@@ -13,11 +13,11 @@ class TestHabitTracker < MiniTest::Test
     )
   end
 
-  def test_habit_tracker_find_longest_name
+  def test_find_longest_name
     assert_equal 'workout', @habit_tracker.longest_name
   end
 
-  def test_habit_tracker_list_all
+  def test_list_all
     progress = CLI.green('*')
     expected_result = '1. workout : ' + progress + "\n"
     expected_result += '2. read    : ' + progress + "\n"
@@ -26,14 +26,14 @@ class TestHabitTracker < MiniTest::Test
     end
   end
 
-  def test_habit_tracker_list_workout
+  def test_list_single_habit
     expected_output = @habit_tracker.habits[0].pretty_print_all + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[list workout])
     end
   end
 
-  def test_habit_tracker_add
+  def test_add
     expected_output = CLI.green('learning added succesfully!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[add learning])
@@ -41,29 +41,43 @@ class TestHabitTracker < MiniTest::Test
     assert_equal 'learning', @habit_tracker.habits.last.name
   end
 
-  def test_habit_tracker_add_duplicate
+  def test_prevent_add_duplicate
     expected_output = CLI.blue('workout already existed!') + "\n"
-    assert_output expected_output do 
+    assert_output expected_output do
       @habit_tracker.parse_arguments(%w[add workout])
     end
     assert_equal 2, @habit_tracker.habits.size
   end
 
-  def test_habit_tracker_done
+  def test_done
     expected_output = CLI.green('Done read!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[done read])
     end
   end
 
-  def test_habit_tracker_undone
+  def test_done_yesterday
+    expected_output = CLI.green('Done read!') + "\n"
+    assert_output expected_output do 
+      @habit_tracker.parse_arguments(%w[done -y read])
+    end
+  end
+
+  def test_undone
     expected_output = CLI.blue('Undone workout!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[undone workout])
     end
   end
 
-  def test_habit_tracker_remove
+  def test_undone_yesterday 
+    expected_output = CLI.blue('Undone read!') + "\n"
+    assert_output expected_output do 
+      @habit_tracker.parse_arguments(%w[undone -y read])
+    end
+  end
+
+  def test_remove
     expected_output = CLI.blue('read removed!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[remove read])

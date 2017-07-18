@@ -25,7 +25,9 @@ class HabitTracker
   end
 
   def parse_arguments(args)
-    send(args.shift, args.join(','))
+    head = args.shift
+    tail = args
+    send(head, tail)
   end
 
   def method_missing(_m, *_args)
@@ -38,7 +40,7 @@ class HabitTracker
     habit = @habits.find do |h|
       h.name == habit_name
     end
-    yield if habit.nil?
+    yield if habit.nil? && block_given?
     habit
   end
 
@@ -54,7 +56,8 @@ class HabitTracker
     input.each { |string| @habits << Habit.initialize_from_string(string) }
   end
 
-  def list(habit_name = nil)
+  def list(args)
+    habit_name, options = parse_options(args) 
     habit = find(habit_name) do
       @habits.each_with_index do |h, index|
         space = longest_name.length - h.name_length
@@ -65,8 +68,9 @@ class HabitTracker
     puts habit.pretty_print_all
   end
 
-  def add(habit_name)
-    find(habit_name) do 
+  def add(args)
+    habit_name, options = parse_options(args)
+    find(habit_name) do
       @habits << Habit.new(habit_name)
       save
       puts CLI.green("#{habit_name} added succesfully!")
@@ -75,21 +79,26 @@ class HabitTracker
     puts CLI.blue("#{habit_name} already existed!")
   end
 
-  def done(habit_name)
+  def done(args)
+    habit_name, options = parse_options(args)
+    day = get_day_based_on(options)
     habit = find_or_create(habit_name)
-    habit.done
+    habit.done(true, day)
     save
     puts CLI.green("Done #{habit_name}!") # Similar code
   end
 
-  def undone(habit_name)
+  def undone(args)
+    habit_name, options = parse_options(args)
+    day = get_day_based_on(options)
     habit = find(habit_name) { raise_habit_not_found }
-    habit.done(false)
+    habit.done(false, day)
     save
     puts CLI.blue("Undone #{habit_name}!") # Similar code
   end
 
-  def remove(habit_name)
+  def remove(args)
+    habit_name, options = parse_options(args)
     habit = find(habit_name) { raise_habit_not_found }
     @habits.delete(habit)
     save
@@ -102,6 +111,17 @@ class HabitTracker
       @habits << habit
     end
     habit
+  end
+
+  def parse_options(args) 
+    options = args.select { |x| x =~ /\A-/ } 
+    args -= options
+    return args[0], options
+  end
+
+  def get_day_based_on(options)
+    return Date.today unless options[0] == '-y'
+    Date.today - 1    
   end
 
   def raise_habit_not_found
