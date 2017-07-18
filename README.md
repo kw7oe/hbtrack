@@ -45,8 +45,8 @@ To look at individual habit progress:
 hbtrack list habit_name
 ```
 
-## Contact
-If there is any bugs/feature requesst, feel free to create a new issues.
+## Bugs/Features
+If there are any bugs/feature requesst, feel free to create a new issues.
 
 
 

@@ -14,8 +14,9 @@ module Hbtrack
     def self.help # Refactoring needed
       puts 'usage: hbtrack list [ habit_name ]'
       puts '       hbtrack add habit_name'
-      puts '       hbtrack done habit_name'
-      puts '       hbtrack undone habit_name'
+      puts '       hbtrack done [-y] habit_name'
+      puts '       hbtrack undone [-y] habit_name'
+      puts '       hbtrack remove habit_name'
     end
 
     def initialize(file = Hbtrack::FILE_NAME,
