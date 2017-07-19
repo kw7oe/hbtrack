@@ -11,6 +11,7 @@ module Hbtrack
     attr_reader :progress
 
     # Class Methods
+
     class << self
       # Generate hash key for progress based
       # on date.
@@ -49,6 +50,7 @@ module Hbtrack
     end
 
     # Public APIs
+
     def initialize(name,
                    progress = {
                      Habit.get_progress_key_from(Date.today) => ' '
@@ -95,11 +97,45 @@ module Hbtrack
       "#{Date::MONTHNAMES[key[1].to_i]} #{key[0]}: "
     end
 
+    # Get all of the progress of the habit in string form
+    #
+    # Example:
+    # 
+    #   habit.progress_output
+    #   # => "2017,5: 0010001010\n2017,6: 000010010\n"
+    #
     def progress_output
       arr = @progress.map do |key, value|
         "#{key}:#{value}\n"
       end
       arr.join('')
+    end
+
+    def progress_stat
+      @progress.map do |key, value|
+        convert_key_to_date(key) + "\n" + 
+        progress_stat_output_for(key)
+      end.join("\n")
+    end
+
+    def progress_stat_output_for(key)
+      hash = progress_stat_for(key)
+      Hbtrack::CLI.green("Done: #{hash[:done]}") + "\n" +
+      Hbtrack::CLI.red("Undone: #{hash[:undone]}") + "\n"
+    end
+
+    # Get the stat of the progress.
+    # 
+    # key - Key for the progress (hash)
+    #
+    # Example:
+    #   
+    #   habit.progress_stat_for("2017,5".to_sym)
+    #   # => { done: 5, undone: 2 }
+    def progress_stat_for(key)
+      undone = @progress[key].split("").count { |x| x == '0'}
+      done = @progress[key].lstrip.length - undone
+      { done: done, undone: undone }
     end
 
     def to_s
