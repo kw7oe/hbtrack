@@ -39,6 +39,14 @@ class TestHabitTracker < MiniTest::Test
     assert_equal 'learning', @habit_tracker.habits.last.name
   end
 
+  def test_add_blank
+    expected_output = Hbtrack::CLI.red('Invalid argument: ' + 
+                      'habit_name is expected.') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[add])
+    end
+  end
+
   def test_prevent_add_duplicate
     expected_output = Hbtrack::CLI.blue('workout already existed!') + "\n"
     assert_output expected_output do
@@ -51,6 +59,14 @@ class TestHabitTracker < MiniTest::Test
     expected_output = Hbtrack::CLI.green('Done read!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[done read])
+    end
+  end
+
+  def test_done_blank
+    expected_output = Hbtrack::CLI.red('Invalid argument: ' + 
+                      'habit_name is expected.') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[done])
     end
   end
 
@@ -68,6 +84,14 @@ class TestHabitTracker < MiniTest::Test
     end
   end
 
+  def test_undone_blank
+    expected_output = Hbtrack::CLI.red('Invalid argument: ' + 
+                      'habit_name is expected.') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[undone])
+    end
+  end
+
   def test_undone_yesterday
     expected_output = Hbtrack::CLI.blue('Undone read!') + "\n"
     assert_output expected_output do
@@ -81,6 +105,14 @@ class TestHabitTracker < MiniTest::Test
       @habit_tracker.parse_arguments(%w[remove read])
     end
     assert_equal 1, @habit_tracker.habits.length
+  end
+
+  def test_remove_blank
+    expected_output = Hbtrack::CLI.red('Invalid argument: ' + 
+                      'habit_name is expected.') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[remove])
+    end
   end
 
   def test_remove_invalid_habit

@@ -74,9 +74,8 @@ module Hbtrack
     def add(args)
       habit_name, _options = parse_options(args)
       find(habit_name) do
-        habit = Hbtrack::Habit.new(habit_name)
-        @habits << habit
-        save_to_file(habit, "Add")
+        habit = create(habit_name)
+        save_to_file(habit, "Add") unless habit.nil?
         return
       end
       puts Hbtrack::CLI.blue("#{habit_name} already existed!")
@@ -86,32 +85,42 @@ module Hbtrack
       habit_name, options = parse_options(args)
       day = get_day_based_on(options)
       habit = find_or_create(habit_name)
-      habit.done(true, day)
-      save_to_file(habit, "Done")
+      save_to_file(habit, "Done") do 
+        habit.done(true, day)
+      end
     end
 
     def undone(args)
       habit_name, options = parse_options(args)
       day = get_day_based_on(options)
       habit = find(habit_name) { raise_habit_not_found(habit_name) }
-      habit.done(false, day)
-      save_to_file(habit, "Undone", "blue")
+      save_to_file(habit, "Undone", "blue") do 
+        habit.done(false, day)
+      end
     end
 
     def remove(args)
       habit_name, _options = parse_options(args)
       habit = find(habit_name) { raise_habit_not_found(habit_name) }
-      @habits.delete(habit)
-      save_to_file(habit, "Remove", "blue")      
+      save_to_file(habit, "Remove", "blue") do 
+        @habits.delete(habit)
+      end      
     end
 
     def find_or_create(habit_name)
       habit = find(habit_name) do
-        habit = Hbtrack::Habit.new(habit_name)
-        @habits << habit        
+        habit = create(habit_name)       
         return habit
       end
-      habit
+    end
+
+    def create(habit_name)
+      unless habit_name.nil? || habit_name =~ /\s+/
+        habit = Hbtrack::Habit.new(habit_name)
+        @habits << habit
+        return habit
+      end
+      puts Hbtrack::CLI.red("Invalid argument: habit_name is expected.")
     end
 
     def parse_options(args)
@@ -126,7 +135,9 @@ module Hbtrack
     end
 
     def raise_habit_not_found(habit_name)
-      puts Hbtrack::CLI.red "Invalid argument: #{habit_name} not found."
+      last_words = habit_name ? 'not found' : 'is expected'
+      habit_name ||= "habit_name"
+      puts Hbtrack::CLI.red "Invalid argument: #{habit_name} #{last_words}."
     end
 
     def save
@@ -139,6 +150,7 @@ module Hbtrack
 
     def save_to_file(habit, action, color = "green") 
       unless habit.nil?
+        yield if block_given?
         save
         output = "#{action} #{habit.name}!"
         puts Hbtrack::CLI.public_send(color, output)
