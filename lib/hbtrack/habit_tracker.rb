@@ -74,9 +74,9 @@ module Hbtrack
     def add(args)
       habit_name, _options = parse_options(args)
       find(habit_name) do
-        @habits << Hbtrack::Habit.new(habit_name)
-        save
-        puts Hbtrack::CLI.green("#{habit_name} added succesfully!")
+        habit = Hbtrack::Habit.new(habit_name)
+        @habits << habit
+        save_to_file(habit, "Add")
         return
       end
       puts Hbtrack::CLI.blue("#{habit_name} already existed!")
@@ -87,31 +87,29 @@ module Hbtrack
       day = get_day_based_on(options)
       habit = find_or_create(habit_name)
       habit.done(true, day)
-      save
-      puts Hbtrack::CLI.green("Done #{habit_name}!") # Similar code
+      save_to_file(habit, "Done")
     end
 
     def undone(args)
       habit_name, options = parse_options(args)
       day = get_day_based_on(options)
-      habit = find(habit_name) { raise_habit_not_found }
+      habit = find(habit_name) { raise_habit_not_found(habit_name) }
       habit.done(false, day)
-      save
-      puts Hbtrack::CLI.blue("Undone #{habit_name}!") # Similar code
+      save_to_file(habit, "Undone", "blue")
     end
 
     def remove(args)
       habit_name, _options = parse_options(args)
-      habit = find(habit_name) { raise_habit_not_found }
+      habit = find(habit_name) { raise_habit_not_found(habit_name) }
       @habits.delete(habit)
-      save
-      puts Hbtrack::CLI.blue("#{habit_name} removed!") # Similar code
+      save_to_file(habit, "Remove", "blue")      
     end
 
     def find_or_create(habit_name)
       habit = find(habit_name) do
         habit = Hbtrack::Habit.new(habit_name)
-        @habits << habit
+        @habits << habit        
+        return habit
       end
       habit
     end
@@ -127,8 +125,8 @@ module Hbtrack
       Date.today - 1
     end
 
-    def raise_habit_not_found
-      puts Hbtrack::CLI.red "#{habit_name} not found."
+    def raise_habit_not_found(habit_name)
+      puts Hbtrack::CLI.red "Invalid argument: #{habit_name} not found."
     end
 
     def save
@@ -136,6 +134,14 @@ module Hbtrack
         @habits.each do |habit|
           f.puts habit
         end
+      end
+    end
+
+    def save_to_file(habit, action, color = "green") 
+      unless habit.nil?
+        save
+        output = "#{action} #{habit.name}!"
+        puts Hbtrack::CLI.public_send(color, output)
       end
     end
   end

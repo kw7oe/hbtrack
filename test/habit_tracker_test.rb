@@ -32,7 +32,7 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_add
-    expected_output = Hbtrack::CLI.green('learning added succesfully!') + "\n"
+    expected_output = Hbtrack::CLI.green('Add learning!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[add learning])
     end
@@ -76,10 +76,18 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_remove
-    expected_output = Hbtrack::CLI.blue('read removed!') + "\n"
+    expected_output = Hbtrack::CLI.blue('Remove read!') + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[remove read])
     end
     assert_equal 1, @habit_tracker.habits.length
+  end
+
+  def test_remove_invalid_habit
+    expected_output = Hbtrack::CLI.red('Invalid argument: ' +
+                      'habit_not_exist not found.') + "\n"
+    assert_output expected_output do
+      @habit_tracker.parse_arguments(%w[remove habit_not_exist])
+    end
   end
 end
