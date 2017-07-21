@@ -47,7 +47,7 @@ module Hbtrack
       @habits.max_by(&:name_length).name
     end
 
-    def method_missing(method_name, *arguments, &block)
+    def method_missing(_method_name, _arguments, _block)
       HabitTracker.help
     end
 
@@ -75,7 +75,7 @@ module Hbtrack
       habit_name, _options = parse_options(args)
       find(habit_name) do
         habit = create(habit_name)
-        save_to_file(habit, "Add") unless habit.nil?
+        save_to_file(habit, 'Add') unless habit.nil?
         return
       end
       puts Hbtrack::CLI.blue("#{habit_name} already existed!")
@@ -85,7 +85,7 @@ module Hbtrack
       habit_name, options = parse_options(args)
       day = get_day_based_on(options)
       habit = find_or_create(habit_name)
-      save_to_file(habit, "Done") do 
+      save_to_file(habit, 'Done') do
         habit.done(true, day)
       end
     end
@@ -94,7 +94,7 @@ module Hbtrack
       habit_name, options = parse_options(args)
       day = get_day_based_on(options)
       habit = find(habit_name) { raise_habit_not_found(habit_name) }
-      save_to_file(habit, "Undone", "blue") do 
+      save_to_file(habit, 'Undone', 'blue') do
         habit.done(false, day)
       end
     end
@@ -102,25 +102,30 @@ module Hbtrack
     def remove(args)
       habit_name, _options = parse_options(args)
       habit = find(habit_name) { raise_habit_not_found(habit_name) }
-      save_to_file(habit, "Remove", "blue") do 
+      save_to_file(habit, 'Remove', 'blue') do
         @habits.delete(habit)
-      end      
+      end
     end
 
     def find_or_create(habit_name)
       habit = find(habit_name) do
-        habit = create(habit_name)       
+        habit = create(habit_name)
         return habit
       end
     end
 
     def create(habit_name)
-      unless habit_name.nil? || habit_name =~ /\s+/
+      unless valid_habit_name?(habit_name)
         habit = Hbtrack::Habit.new(habit_name)
         @habits << habit
         return habit
       end
-      puts Hbtrack::CLI.red("Invalid argument: habit_name is expected.")
+
+      error_msg = 'Invalid argument: habit_name is expected.'
+      if habit_name && habit_name.length > 11 
+        error_msg = 'habit_name too long.'
+      end
+      puts Hbtrack::CLI.red(error_msg)
     end
 
     def parse_options(args)
@@ -136,8 +141,13 @@ module Hbtrack
 
     def raise_habit_not_found(habit_name)
       last_words = habit_name ? 'not found' : 'is expected'
-      habit_name ||= "habit_name"
+      habit_name ||= 'habit_name'
       puts Hbtrack::CLI.red "Invalid argument: #{habit_name} #{last_words}."
+    end
+
+    def valid_habit_name?(habit_name)
+      habit_name.nil? || habit_name =~ /\s+/ || 
+      habit_name.length > 11
     end
 
     def save
@@ -148,7 +158,7 @@ module Hbtrack
       end
     end
 
-    def save_to_file(habit, action, color = "green") 
+    def save_to_file(habit, action, color = 'green')
       unless habit.nil?
         yield if block_given?
         save
@@ -158,5 +168,3 @@ module Hbtrack
     end
   end
 end
-
-

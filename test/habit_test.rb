@@ -16,7 +16,7 @@ class TestHabit < MiniTest::Test
       2017,6: 0000000000011111
       2017,7: 1
     EOF
-    @habit = Hbtrack::Habit.initialize_from_string(string) 
+    @habit = Hbtrack::Habit.initialize_from_string(string)
   end
 
   def test_initialize_from_string
@@ -34,28 +34,28 @@ class TestHabit < MiniTest::Test
 
   def test_done_with_default_progress
     @habit.done
-    assert_equal ' ' + '0' * (Date.today.day - 1) + '1',
+    assert_equal '0' * (Date.today.day - 1) + '1',
                  @habit.latest_progress
   end
 
   def test_done_with_initial_progress
     date = Date.new(2017, 6, 17)
     key = Hbtrack::Habit.get_progress_key_from(date)
-    @habit = Hbtrack::Habit.new('Workout', key => ' 0010')
+    @habit = Hbtrack::Habit.new('Workout', key => '0010')
     @habit.done(true, date)
-    expected_result = ' 00100000000000001'
+    expected_result = '00100000000000001'
     assert_equal expected_result, @habit.progress[key]
   end
 
   def test_undone_with_default_progress
     @habit.done(false)
-    assert_equal ' ' + '0' * Date.today.day,
+    assert_equal '0' * Date.today.day,
                  @habit.latest_progress
   end
 
   def test_done_and_undone
     @habit.done(false)
-    expected_result = ' ' + '0' * Date.today.day
+    expected_result = '0' * Date.today.day
     assert_equal expected_result, @habit.latest_progress
     @habit.done(true)
     assert @habit.latest_progress.end_with? '1'
@@ -64,7 +64,7 @@ class TestHabit < MiniTest::Test
   def test_progress_output
     @habit.done
     key = Hbtrack::Habit.get_progress_key_from(Date.today)
-    assert_equal "#{key}:#{@habit.progress[key]}\n",
+    assert_equal "#{key}: #{@habit.progress[key]}\n",
                  @habit.progress_output
   end
 
@@ -76,8 +76,8 @@ class TestHabit < MiniTest::Test
       Date.new(2017, 5, 10)
     )
     @habit = Hbtrack::Habit.new('Workout',
-                       key1 => ' 00010',
-                       key2 => ' 11101')
+                                key1 => '00010',
+                                key2 => '11101')
     expected_result = <<~EOF
       2017,4: 00010
       2017,5: 11101
@@ -100,26 +100,27 @@ class TestHabit < MiniTest::Test
     assert_equal string, Hbtrack::Habit.initialize_from_string(string).to_s
   end
 
-  def test_pretty_print_progress
-    expected_result = @cli.red('*') * 3 + @cli.green('*')
-    assert_equal expected_result,
-                 @habit.pretty_print_progress('0001')
-  end
-
   def test_pretty_print_latest
     @habit.done(Date.today)
     expected_result = 'Workout : ' + @cli.red('*') *
-                                     (Date.today.day - 1) + @cli.green('*')
+                      (Date.today.day - 1) + @cli.green('*') +
+                      ' ' * (32 - Date.today.day) +
+                      "(All: #{Date.today.day}, Done: 1," \
+                      " Undone: #{Date.today.day - 1})"
     assert_equal expected_result,
                  @habit.pretty_print_latest
   end
 
   def test_pretty_print_all
     initialize_habit_from_string
+    stat = ' ' * 16 +
+           '(All: 16, Done: 5, Undone: 11)'
     progress = @cli.red('*') * 11 + Hbtrack::CLI.green('*') * 5
-    expected_result = 'May 2017: ' + progress + "\n" \
-                       'June 2017: ' + progress + "\n" \
-                       'July 2017: ' + Hbtrack::CLI.green('*')
+    expected_result = ' May 2017 : ' + progress + stat + "\n" \
+                      'June 2017 : ' + progress + stat + "\n" \
+                      'July 2017 : ' + Hbtrack::CLI.green('*') +
+                      ' ' * 31 +
+                      '(All: 1, Done: 1, Undone: 0)'
     assert_equal expected_result,
                  @habit.pretty_print_all
   end
@@ -127,24 +128,24 @@ class TestHabit < MiniTest::Test
   def test_progress_stat_for
     initialize_habit_from_string
     expected_result = { done: 5, undone: 11 }
-    assert_equal expected_result, @habit.progress_stat_for("2017,5".to_sym)
+    assert_equal expected_result, @habit.progress_stat_for('2017,5'.to_sym)
   end
 
   def test_progress_stat_output
     initialize_habit_from_string
-    expected_result = @cli.green("Done: 5") + "\n" +
-                      @cli.red("Undone: 11") + "\n"
-    assert_equal expected_result, @habit.progress_stat_output_for("2017,5".to_sym)
+    expected_result = @cli.green('Done: 5') + "\n" +
+                      @cli.red('Undone: 11') + "\n"
+    assert_equal expected_result, @habit.progress_stat_output_for('2017,5'.to_sym)
   end
 
   def test_progress_stat
     initialize_habit_from_string
-    expected_result = "May 2017: \n" + 
-                      @habit.progress_stat_output_for("2017,5".to_sym) +
-                      "\n" + "June 2017: \n" +
-                      @habit.progress_stat_output_for("2017,6".to_sym) +
-                      "\n" + "July 2017: \n" +
-                      @habit.progress_stat_output_for("2017,7".to_sym) 
+    expected_result = "May 2017 : \n" +
+                      @habit.progress_stat_output_for('2017,5'.to_sym) +
+                      "\n" + "June 2017 : \n" +
+                      @habit.progress_stat_output_for('2017,6'.to_sym) +
+                      "\n" + "July 2017 : \n" +
+                      @habit.progress_stat_output_for('2017,7'.to_sym)
     assert_equal expected_result, @habit.progress_stat
   end
 end

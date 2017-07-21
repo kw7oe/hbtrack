@@ -4,7 +4,7 @@ require 'hbtrack/habit_tracker'
 
 module Hbtrack
   class << self
-    def run *args
+    def run(*args)
       if ARGV.empty?
         HabitTracker.help
       else
