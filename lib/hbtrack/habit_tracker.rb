@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-require 'hbtrack/version'
-require 'hbtrack/habit'
-require 'hbtrack/cli'
-require 'hbtrack/config'
-
 module Hbtrack
   # This class contains the methods to
   # handle the operation of mutliple habits
@@ -19,8 +14,8 @@ module Hbtrack
       puts '       hbtrack remove habit_name'
     end
 
-    def initialize(file = Hbtrack::FILE_NAME,
-                   output = Hbtrack::FILE_NAME)
+    def initialize(file = FILE_NAME,
+                   output = FILE_NAME)
       @habits = []
       @file_name = file
       @output_file_name = output
@@ -56,7 +51,7 @@ module Hbtrack
     def initialize_habits_from_file
       return unless File.exist?(@file_name)
       input = File.read(@file_name).split(/\n\n/)
-      input.each { |string| @habits << Hbtrack::Habit.initialize_from_string(string) }
+      input.each { |string| @habits << Habit.initialize_from_string(string) }
     end
 
     def list(args)
@@ -86,7 +81,7 @@ module Hbtrack
         save_to_file(habit, 'Add') unless habit.nil?
         return
       end
-      puts Hbtrack::CLI.blue("#{habit_name} already existed!")
+      puts CLI.blue("#{habit_name} already existed!")
     end
 
     def done(args)
@@ -124,7 +119,7 @@ module Hbtrack
 
     def create(habit_name)
       unless invalid_habit_name?(habit_name)
-        habit = Hbtrack::Habit.new(habit_name)
+        habit = Habit.new(habit_name)
         @habits << habit
         return habit
       end
@@ -148,7 +143,7 @@ module Hbtrack
     end
 
     def raise_error_msg(msg)
-      puts Hbtrack::CLI.red msg 
+      puts CLI.red msg 
       return
     end
 
@@ -187,7 +182,7 @@ module Hbtrack
         yield if block_given?
         save
         output = "#{action} #{habit.name}!"
-        puts Hbtrack::CLI.public_send(color, output)
+        puts CLI.public_send(color, output)
       end
     end
   end
