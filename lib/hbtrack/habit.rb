@@ -24,9 +24,10 @@ module Hbtrack # Habit provide a rich library to track the
 
       # Initialize Habit object from string.
       #
-      # string - The string to be parse.
+      # @param string [String] The string to be parse.
+      # @return [Habit] a habit object
       #
-      # Example
+      # == Example
       #
       #   Habit.initialize_from_string("workout\n2017,6:1001")
       #   # => #<Habit:0x007f9be6041b70 @name="workout",
@@ -57,20 +58,22 @@ module Hbtrack # Habit provide a rich library to track the
     end
 
     # The length of the habit name.
+    #
+    # @return [Numeric] length of the habit name
     def name_length
       name.length
     end
 
     # Get the latest progress key.
     # 
-    # Return key in symbol.
+    # @return [Symbol] latest progress key
     def latest_key  
       Habit.get_progress_key_from(Date.today)
     end
 
     # Get the latest progress.
     #
-    # Return value of the progress in string.
+    # @return [String] value of the progress
     def latest_progress
       progress[latest_key]
     end
@@ -78,7 +81,7 @@ module Hbtrack # Habit provide a rich library to track the
     # Find the month in progress with 
     # the longest name
     # 
-    # Return month in string.
+    # @return [String] month
     def longest_month
       key = progress.keys.max_by do |x| 
         Util.get_month_from(x).length
@@ -88,27 +91,21 @@ module Hbtrack # Habit provide a rich library to track the
 
     # Update the status of the progress
     #
-    # done - If true, it is marked as done. 
-    #        Else, marked as undone.
-    # date - The date of the progress
+    # @param done [true, false] If true, it is marked as done. 
+    #   Else, marked as undone.
+    # @param date [Date] The date of the progress
+    # @return [void]
     def done(done = true, date = Date.today)
       key = Habit.get_progress_key_from(date)
       initialize_progress_hash_from(key)
       update_progress_for(key, date.day, done)
     end
 
-    def progress_stat
-      @progress.map do |key,_value|
-        Util.convert_key_to_date(key, 0) + "\n" +
-          StatFormatter.done_undone(stat_for_progress(key))
-      end.join("\n")
-    end
-
     # Get the stat of the progress.
     #
-    # key - Key for the progress (hash)
-    #
-    # Example:
+    # @param key [Symbol] key for the progress
+    # @return [Hash] stat of the progress in the form of 
+    # == Example:
     #
     #   habit.stat_for_progress("2017,5".to_sym)
     #   # => { done: 5, undone: 2 }
@@ -120,7 +117,7 @@ module Hbtrack # Habit provide a rich library to track the
 
     # Get all of the progress of the habit in string form
     #
-    # Example:
+    # == Example:
     #
     #   habit.progress_output
     #   # => "2017,5: 0010001010\n2017,6: 000010010\n"

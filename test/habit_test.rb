@@ -125,27 +125,10 @@ class TestHabit < MiniTest::Test
                  @habit.pretty_print_all
   end
 
-  def test_progress_stat_for
+  def test_stat_for_progress
     initialize_habit_from_string
     expected_result = { done: 5, undone: 11 }
-    assert_equal expected_result, @habit.progress_stat_for('2017,5'.to_sym)
+    assert_equal expected_result, @habit.stat_for_progress('2017,5'.to_sym)
   end
 
-  def test_progress_stat_output
-    initialize_habit_from_string
-    expected_result = @cli.green('Done: 5') + "\n" +
-                      @cli.red('Undone: 11') + "\n"
-    assert_equal expected_result, @habit.progress_stat_output_for('2017,5'.to_sym)
-  end
-
-  def test_progress_stat
-    initialize_habit_from_string
-    expected_result = "May 2017 : \n" +
-                      @habit.progress_stat_output_for('2017,5'.to_sym) +
-                      "\n" + "June 2017 : \n" +
-                      @habit.progress_stat_output_for('2017,6'.to_sym) +
-                      "\n" + "July 2017 : \n" +
-                      @habit.progress_stat_output_for('2017,7'.to_sym)
-    assert_equal expected_result, @habit.progress_stat
-  end
 end
