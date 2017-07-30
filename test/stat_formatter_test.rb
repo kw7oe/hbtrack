@@ -27,7 +27,7 @@ class TestStatFormatter < MiniTest::Test
   end
 
   def test_completion_rate
-    expected_result = "Completion rate: 31.25%"
+    expected_result = "(Completion rate: 31.25%)"
     assert_equal expected_result, 
       Hbtrack::CompletionRateSF.new.format(@value)
   end

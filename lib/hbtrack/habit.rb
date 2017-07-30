@@ -149,7 +149,7 @@ module Hbtrack # Habit provide a rich library to track the
       i = day - @progress[key].length - 1
       result = @progress[key].split('')
       i.times { result << '0' }
-      result[day] = done ? '1' : '0'
+      result[day-1] = done ? '1' : '0'
       @progress[key] = result.join('')
     end
   end

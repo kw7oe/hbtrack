@@ -47,6 +47,16 @@ class TestHabit < MiniTest::Test
     assert_equal expected_result, @habit.progress[key]
   end
 
+  def test_done_twice_on_the_same_day
+    date = Date.new(2017, 7, 4)
+    key = Hbtrack::Habit.get_progress_key_from(date)
+    @habit = Hbtrack::Habit.new('Workout', key => '00')
+    @habit.done(true, date)
+    assert_equal '0' * 3 + '1', @habit.progress[key]
+    @habit.done(true, date)
+    assert_equal '0' * 3 + '1', @habit.progress[key]
+  end
+
   def test_undone_with_default_progress
     @habit.done(false)
     assert_equal '0' * Date.today.day,

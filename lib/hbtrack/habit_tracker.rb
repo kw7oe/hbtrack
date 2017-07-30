@@ -56,7 +56,8 @@ module Hbtrack
     end
 
     def list(args)
-      habit_name, _options = parse_options(args)
+      habit_name, options = parse_options(args)
+      set_sf_based_on(options)
       habit = find(habit_name) do
         if habit_name.nil?
           list_all_habits
@@ -66,6 +67,13 @@ module Hbtrack
         return
       end
       puts @hp.print_all_progress(habit)
+    end
+
+    def set_sf_based_on(options)
+      return if options.empty?
+      if options[0] == '-p'
+        @hp = HabitPrinter.new(CompletionRateSF.new)
+      end
     end
 
     def list_all_habits 
@@ -140,7 +148,8 @@ module Hbtrack
     end
 
     def get_day_based_on(options)
-      return Date.today unless options[0] == '-y'
+      yesterday = options[0] == '-y' || options[0] == '--yesterday'
+      return Date.today unless yesterday
       Date.today - 1
     end
 
