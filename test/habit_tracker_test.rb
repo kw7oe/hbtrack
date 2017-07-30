@@ -26,7 +26,9 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_list_single_habit
-    expected_output = @habit_tracker.habits[0].pretty_print_all + "\n"
+    h = @habit_tracker.habits[0]
+    expected_output = 
+      @habit_tracker.hp.print_all_progress(h) + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[list workout])
     end

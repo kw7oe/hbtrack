@@ -7,6 +7,7 @@ require 'hbtrack/util'
 require 'hbtrack/config'
 require 'hbtrack/habit'
 require 'hbtrack/stat_formatter'
+require 'hbtrack/habit_printer'
 
 module Hbtrack
   class << self

@@ -4,7 +4,7 @@ module Hbtrack
   # This class contains the methods to
   # handle the operation of mutliple habits
   class HabitTracker
-    attr_reader :habits
+    attr_reader :habits, :hp
 
     def self.help # Refactoring needed
       puts 'usage: hbtrack list [ habit_name ]'
@@ -19,6 +19,7 @@ module Hbtrack
       @habits = []
       @file_name = file
       @output_file_name = output
+      @hp = HabitPrinter.new(CompleteSF.new)
       initialize_habits_from_file
     end
 
@@ -64,13 +65,14 @@ module Hbtrack
         end
         return
       end
-      puts habit.pretty_print_all
+      puts @hp.print_all_progress(habit)
     end
 
     def list_all_habits 
       @habits.each_with_index do |h, index|
         space = longest_name.length - h.name_length
-        puts "#{index + 1}. #{h.pretty_print_latest(space)}"
+        puts "#{index + 1}. " +
+        "#{@hp.print_latest_progress(h, space)}"
       end
     end
 

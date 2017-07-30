@@ -100,31 +100,6 @@ class TestHabit < MiniTest::Test
     assert_equal string, Hbtrack::Habit.initialize_from_string(string).to_s
   end
 
-  def test_pretty_print_latest
-    @habit.done(Date.today)
-    expected_result = 'Workout : ' + @cli.red('*') *
-                      (Date.today.day - 1) + @cli.green('*') +
-                      ' ' * (32 - Date.today.day) +
-                      "(All: #{Date.today.day}, Done: 1," \
-                      " Undone: #{Date.today.day - 1})"
-    assert_equal expected_result,
-                 @habit.pretty_print_latest
-  end
-
-  def test_pretty_print_all
-    initialize_habit_from_string
-    stat = ' ' * 16 +
-           '(All: 16, Done: 5, Undone: 11)'
-    progress = @cli.red('*') * 11 + Hbtrack::CLI.green('*') * 5
-    expected_result = ' May 2017 : ' + progress + stat + "\n" \
-                      'June 2017 : ' + progress + stat + "\n" \
-                      'July 2017 : ' + Hbtrack::CLI.green('*') +
-                      ' ' * 31 +
-                      '(All: 1, Done: 1, Undone: 0)'
-    assert_equal expected_result,
-                 @habit.pretty_print_all
-  end
-
   def test_stat_for_progress
     initialize_habit_from_string
     expected_result = { done: 5, undone: 11 }

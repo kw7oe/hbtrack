@@ -78,6 +78,13 @@ module Hbtrack # Habit provide a rich library to track the
       progress[latest_key]
     end
 
+    # Get the stat for the latest progress.
+    #
+    # @return [Hash] stat for the progress.
+    def latest_stat
+      stat_for_progress(latest_key)
+    end
+
     # Find the month in progress with 
     # the longest name
     # 
@@ -129,27 +136,6 @@ module Hbtrack # Habit provide a rich library to track the
       arr.join('')
     end
 
-    def pretty_print_all
-      @progress.map do |key, _value|
-        space = longest_month.length - Util.get_month_from(key).length 
-        Util.convert_key_to_date(key, space) +
-        pretty_print_progress(key)
-      end.join("\n")
-    end
-
-    def pretty_print_latest(no_of_space = 0)
-      name.to_s + ' ' * no_of_space + ' : ' +
-        pretty_print_progress(latest_key)
-    end
-
-    def pretty_print_progress(key)
-      stat = progress[key].split('').map do |x|
-        x == '0' ? CLI.red('*') : CLI.green('*')
-      end.join('')
-      stat + ' ' * (32 - progress[key].size) +
-        StatFormatter.complete(stat_for_progress(key))
-    end
-
     def to_s
       "#{name}\n" + progress_output + "\n"
     end
@@ -166,6 +152,5 @@ module Hbtrack # Habit provide a rich library to track the
       result[day] = done ? '1' : '0'
       @progress[key] = result.join('')
     end
-
   end
 end
