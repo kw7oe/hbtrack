@@ -68,7 +68,7 @@ module Hbtrack # Habit provide a rich library to track the
     # 
     # @return [Symbol] latest progress key
     def latest_key  
-      Habit.get_progress_key_from(Date.today)
+      progress.keys.last      
     end
 
     # Get the latest progress.
