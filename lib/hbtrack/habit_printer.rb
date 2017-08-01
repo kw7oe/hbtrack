@@ -10,6 +10,10 @@ module Hbtrack
       @stat_formatter = stat_formatter
     end
 
+    def calculate_space_needed_for(habit, key)
+      habit.longest_month.length - Util.get_month_from(key).length
+    end
+
     def print_latest_progress(habit, no_of_space = 0)
       habit.name.to_s + ' ' * no_of_space + ' : ' +
       print_progress(
@@ -19,8 +23,8 @@ module Hbtrack
     end
 
     def print_all_progress(habit)
-      habit.progress.map do |key, value|
-        space = habit.longest_month.length - Util.get_month_from(key).length 
+      habit.progress.map do |key, value|        
+        space = calculate_space_needed_for(habit, key)
         Util.convert_key_to_date(key, space) +
         print_progress(
           value, 

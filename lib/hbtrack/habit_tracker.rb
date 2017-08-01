@@ -7,7 +7,7 @@ module Hbtrack
     attr_reader :habits, :hp
 
     def self.help # Refactoring needed
-      puts 'usage: hbtrack list [ habit_name ]'
+      puts 'usage: hbtrack list [-p] [ habit_name ]'
       puts '       hbtrack add habit_name'
       puts '       hbtrack done [-y] habit_name'
       puts '       hbtrack undone [-y] habit_name'
@@ -66,6 +66,7 @@ module Hbtrack
         end
         return
       end
+      puts Util.title habit.name 
       puts @hp.print_all_progress(habit)
     end
 
@@ -77,6 +78,7 @@ module Hbtrack
     end
 
     def list_all_habits 
+      puts Util.title Date.today.strftime("%B %Y")
       @habits.each_with_index do |h, index|
         space = longest_name.length - h.name_length
         puts "#{index + 1}. " +

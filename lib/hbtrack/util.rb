@@ -8,6 +8,22 @@ module Hbtrack
 
     class << self
 
+      # Format the string into title style.
+      #
+      # @param string [String] the string to be styled as title
+      # @return [String] string with 'title' style
+      # 
+      # == Example
+      #
+      #   puts Util.title("Title")
+      #   # Title
+      #   # -----
+      #   #=> nil 
+      def title(string) 
+        string + "\n" + 
+        "-" * string.length + "\n"
+      end
+
       # Convert key into date in string form.
       # 
       # @param key [Symbol] The key of the progress in the 

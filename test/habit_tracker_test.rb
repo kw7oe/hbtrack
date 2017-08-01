@@ -9,6 +9,9 @@ class TestHabitTracker < MiniTest::Test
       Hbtrack::TEST_FILE,
       Hbtrack::OUTPUT_FILE
     )
+    @habit_tracker.habits.each do |habit|
+      habit.done
+    end
   end
 
   def test_find_longest_name
@@ -18,7 +21,9 @@ class TestHabitTracker < MiniTest::Test
   def test_list_all
     progress = Hbtrack::CLI.green('*')
     stat = ' ' * 31 + '(All: 1, Done: 1, Undone: 0)'
-    expected_result = '1. workout : ' + progress + stat + "\n"
+    expected_result = "#{Date.today.strftime("%B %Y")}"
+    expected_result += "\n" + "-" * expected_result.size + "\n"
+    expected_result += '1. workout : ' + progress + stat + "\n"
     expected_result += '2. read    : ' + progress + stat + "\n"
     assert_output expected_result do
       @habit_tracker.parse_arguments(['list'])
@@ -27,7 +32,8 @@ class TestHabitTracker < MiniTest::Test
 
   def test_list_single_habit
     h = @habit_tracker.habits[0]
-    expected_output = 
+    expected_output = h.name + "\n" + "-" * h.name_length + "\n"
+    expected_output += 
       @habit_tracker.hp.print_all_progress(h) + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[list workout])

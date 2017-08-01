@@ -9,8 +9,9 @@ class TestHabitPrinter < MiniTest::Test
       workout
       2017,5: 0000000000011111
       2017,6: 0000000000011111
-      2017,7: 1
     EOF
+    @latest_key = Hbtrack::Habit.get_progress_key_from(Date.today)
+    string += @latest_key.to_s + ": 1"
     @habit = Hbtrack::Habit.initialize_from_string(string)
     @hp = Hbtrack::HabitPrinter.new(
       Hbtrack::CompleteSF.new
@@ -30,9 +31,12 @@ class TestHabitPrinter < MiniTest::Test
     stat = ' ' * 16 +
            '(All: 16, Done: 5, Undone: 11)'
     progress = @cli.red('*') * 11 + Hbtrack::CLI.green('*') * 5
-    expected_result = ' May 2017 : ' + progress + stat + "\n" \
-                      'June 2017 : ' + progress + stat + "\n" \
-                      'July 2017 : ' + Hbtrack::CLI.green('*') +
+    expected_result = Hbtrack::Util.convert_key_to_date(:"2017,5", @hp.calculate_space_needed_for(@habit, :"2017,5")) + 
+                      progress + stat + "\n" +
+                      Hbtrack::Util.convert_key_to_date(:"2017,6", @hp.calculate_space_needed_for(@habit, :"2017,6")) + 
+                      progress + stat + "\n" +
+                      Hbtrack::Util.convert_key_to_date(@latest_key, @hp.calculate_space_needed_for(@habit, @latest_key)) + 
+                      @cli.green('*') +
                       ' ' * 31 +
                       '(All: 1, Done: 1, Undone: 0)'
     assert_equal expected_result,

@@ -56,8 +56,12 @@ module Hbtrack
     # @return [Hash] formatted result
     def to_percentage(hash)
       total = hash[:done] + hash[:undone]
-      done_p = hash[:done] / total.to_f * 100
-      undone_p = hash[:undone] / total.to_f * 100
+      done_p = 0
+      undone_p = 0
+      unless total == 0
+        done_p = hash[:done] / total.to_f * 100
+        undone_p = hash[:undone] / total.to_f * 100
+      end
       { done: done_p, undone: undone_p }
     end
   end
