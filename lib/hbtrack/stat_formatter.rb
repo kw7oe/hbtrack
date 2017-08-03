@@ -34,7 +34,7 @@ module Hbtrack
     # @return [String] formatted result
     def format(hash)
       total = hash[:done] + hash[:undone]
-      "(All: #{total}, Done: #{hash[:done]}, Undone: #{hash[:undone]})"
+      "All: #{total}, Done: #{hash[:done]}, Undone: #{hash[:undone]}"
     end
   end
 
@@ -46,7 +46,7 @@ module Hbtrack
     # @return [String] formatted result
     def format(hash)
       percentage = to_percentage(hash)[:done]
-      "(Completion rate: #{'%.2f' % percentage}%)"
+      "Completion rate: #{'%.2f' % percentage}%"
     end
 
     # Convert the value in the hash into percentage

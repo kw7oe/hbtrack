@@ -12,19 +12,35 @@ class TestHabitTracker < MiniTest::Test
     @habit_tracker.habits.each do |habit|
       habit.done
     end
+
+    @done_count = @habit_tracker.habits.count
+    @undone_count = (Date.today.day - 1) * 2
+    @total = @done_count + @undone_count
   end
 
   def test_find_longest_name
     assert_equal 'workout', @habit_tracker.longest_name
   end
 
+  def test_total_habits_stat
+    stat = {done: @done_count, undone: @undone_count}
+    assert_equal stat, @habit_tracker.total_habits_stat
+  end
+
+  def test_overall_stat_description
+    expected_output = Hbtrack::Util.title "Total" 
+    expected_output += "All: #{@total}, Done: #{@done_count}, " \
+                        "Undone: #{@undone_count}"
+    assert_equal expected_output, @habit_tracker.overall_stat_description
+  end
+
   def test_list_all
-    progress = Hbtrack::CLI.green('*')
-    stat = ' ' * 31 + '(All: 1, Done: 1, Undone: 0)'
-    expected_result = "#{Date.today.strftime("%B %Y")}"
-    expected_result += "\n" + "-" * expected_result.size + "\n"
-    expected_result += '1. workout : ' + progress + stat + "\n"
-    expected_result += '2. read    : ' + progress + stat + "\n"
+    expected_result = Hbtrack::Util.title "#{Date.today.strftime("%B %Y")}"
+    expected_result += "1. " + 
+    @habit_tracker.hp.print_latest_progress(@habit_tracker.habits[0]) + "\n"
+    expected_result += "2. " + 
+    @habit_tracker.hp.print_latest_progress(@habit_tracker.habits[1], 3) + "\n\n"
+    expected_result += @habit_tracker.overall_stat_description + "\n"
     assert_output expected_result do
       @habit_tracker.parse_arguments(['list'])
     end
@@ -32,7 +48,7 @@ class TestHabitTracker < MiniTest::Test
 
   def test_list_single_habit
     h = @habit_tracker.habits[0]
-    expected_output = h.name + "\n" + "-" * h.name_length + "\n"
+    expected_output = Hbtrack::Util.title h.name
     expected_output += 
       @habit_tracker.hp.print_all_progress(h) + "\n"
     assert_output expected_output do
@@ -134,10 +150,10 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_remove_invalid_habit
-    expected_output = Hbtrack::CLI.red('Invalid argument: ' \
-                      'habit_not_exist not found.') + "\n"
+    expected_output = Hbtrack::CLI.red('Invalid habit: ' \
+                      'apple not found.') + "\n"
     assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[remove habit_not_exist])
+      @habit_tracker.parse_arguments(%w[remove apple])
     end
   end
 end

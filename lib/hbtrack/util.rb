@@ -8,10 +8,10 @@ module Hbtrack
 
     class << self
 
-      # Format the string into title style.
+      # Format the string with title style.
       #
       # @param string [String] the string to be styled as title
-      # @return [String] string with 'title' style
+      # @return [Nil]
       # 
       # == Example
       #
@@ -40,6 +40,18 @@ module Hbtrack
         year = key.to_s.split(",")[0]
         ' ' * no_of_space + get_month_from(key) + 
         " #{year}" + " : "
+      end
+
+      # Format the current month and year into string
+      # 
+      # @return [String] Month and Year in String.
+      # 
+      # == Example
+      #
+      #  Util.current_month
+      #  #=> "August 2017"
+      def current_month
+        Date.today.strftime("%B %Y")
       end
 
       # Get the month in string form from given key

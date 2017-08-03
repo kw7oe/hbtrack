@@ -19,8 +19,15 @@ module Hbtrack
       @habits = []
       @file_name = file
       @output_file_name = output
-      @hp = HabitPrinter.new(CompleteSF.new)
+      @sf = CompleteSF.new
+      @hp = HabitPrinter.new(@sf)
       initialize_habits_from_file
+    end
+
+    def initialize_habits_from_file
+      return unless File.exist?(@file_name)
+      input = File.read(@file_name).split(/\n\n/)
+      input.each { |string| @habits << Habit.initialize_from_string(string) }
     end
 
     def parse_arguments(args)
@@ -47,14 +54,20 @@ module Hbtrack
       HabitTracker.help
     end
 
-    private
-
-    def initialize_habits_from_file
-      return unless File.exist?(@file_name)
-      input = File.read(@file_name).split(/\n\n/)
-      input.each { |string| @habits << Habit.initialize_from_string(string) }
+    def total_habits_stat 
+      @habits.reduce({done: 0, undone: 0}) do |stat, habit|
+        stat[:done] += habit.latest_stat[:done]
+        stat[:undone] += habit.latest_stat[:undone]
+        stat
+      end
     end
 
+    def overall_stat_description
+      Util.title("Total") +
+      @sf.format(total_habits_stat)
+    end
+
+    private
     def list(args)
       habit_name, options = parse_options(args)
       set_sf_based_on(options)
@@ -72,18 +85,20 @@ module Hbtrack
 
     def set_sf_based_on(options)
       return if options.empty?
-      if options[0] == '-p'
-        @hp = HabitPrinter.new(CompletionRateSF.new)
+      if options[0] == '-p' || options[0] == '--percentage'
+        @sf = CompletionRateSF.new
+        @hp = HabitPrinter.new(@sf)
       end
     end
 
     def list_all_habits 
-      puts Util.title Date.today.strftime("%B %Y")
+      puts Util.title Util.current_month
       @habits.each_with_index do |h, index|
         space = longest_name.length - h.name_length
         puts "#{index + 1}. " +
         "#{@hp.print_latest_progress(h, space)}"
       end
+      puts "\n" + overall_stat_description
     end
 
     def add(args)
@@ -166,7 +181,7 @@ module Hbtrack
     end        
 
     def raise_habit_not_found(habit_name)
-      raise_error_msg "Invalid argument: #{habit_name} not found."
+      raise_error_msg "Invalid habit: #{habit_name} not found."
     end
 
     def raise_invalid_arguments 

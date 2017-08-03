@@ -2,8 +2,9 @@
 
 require 'date'
 
-module Hbtrack # Habit provide a rich library to track the
-  # progress of your habit.
+module Hbtrack 
+
+  # Habit class
   class Habit
     attr_accessor :name
     attr_reader :progress
