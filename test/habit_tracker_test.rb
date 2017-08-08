@@ -47,10 +47,13 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_list_single_habit
+    total = 32 + Date.today.day
+    undone = 22 + Date.today.day - 1
     h = @habit_tracker.habits[0]
     expected_output = Hbtrack::Util.title h.name
     expected_output += 
-      @habit_tracker.hp.print_all_progress(h) + "\n"
+      @habit_tracker.hp.print_all_progress(h) + "\n\n"
+    expected_output += h.overall_stat_description(Hbtrack::CompleteSF.new) + "\n"
     assert_output expected_output do
       @habit_tracker.parse_arguments(%w[list workout])
     end

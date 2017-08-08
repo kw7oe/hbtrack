@@ -116,4 +116,18 @@ class TestHabit < MiniTest::Test
     assert_equal expected_result, @habit.stat_for_progress('2017,5'.to_sym)
   end
 
+  def test_overall_stat
+    initialize_habit_from_string
+    expected_result = { done: 11, undone: 22 }
+    assert_equal expected_result, @habit.overall_stat
+  end
+
+  def test_overall_stat_description
+    initialize_habit_from_string
+    expected_output = "Total\n-----\n"
+    expected_output += "All: 33, Done: 11, "
+    expected_output += "Undone: 22"
+    assert_equal expected_output, @habit.overall_stat_description(Hbtrack::CompleteSF.new)
+  end
+
 end

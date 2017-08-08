@@ -81,6 +81,7 @@ module Hbtrack
       end
       puts Util.title habit.name 
       puts @hp.print_all_progress(habit)
+      puts "\n" + habit.overall_stat_description(@sf)
     end
 
     def set_sf_based_on(options)

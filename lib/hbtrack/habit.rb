@@ -141,6 +141,22 @@ module Hbtrack
       arr.join('')
     end
 
+    def overall_stat
+      done = 0
+      undone = 0
+      @progress.each do |key, _value|
+        stat = stat_for_progress(key)
+        done += stat[:done]
+        undone += stat[:undone]
+      end
+      { done: done, undone: undone}
+    end
+
+    def overall_stat_description(formatter)
+      Util.title("Total") +
+      formatter.format(overall_stat)
+    end
+
     def to_s
       "#{name}\n" + progress_output + "\n"
     end
