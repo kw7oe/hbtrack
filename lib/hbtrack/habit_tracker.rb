@@ -114,10 +114,16 @@ module Hbtrack
 
     def done(args)
       habit_name, options = parse_options(args)
-      day = get_day_based_on(options)
-      habit = find_or_create(habit_name)
-      save_to_file(habit, 'Done') do
-        habit.done(true, day)
+      if options[0] == '-a' || options[1] == '--all' 
+        save_to_file(@habits, 'Done') do 
+          @habits.each { |habit| habit.done(true) }
+        end
+      else
+        day = get_day_based_on(options)
+        habit = find_or_create(habit_name)
+        save_to_file(habit, 'Done') do
+          habit.done(true, day)
+        end
       end
     end
 
@@ -210,7 +216,12 @@ module Hbtrack
       unless habit.nil?
         yield if block_given?
         save
-        output = "#{action} #{habit.name}!"
+        if habit.is_a? Array 
+          name = habit.map { |h| h.name }.join(", ")
+        else 
+          name = habit.name 
+        end
+        output = "#{action} #{name}!"
         puts CLI.public_send(color, output)
       end
     end

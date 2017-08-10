@@ -47,8 +47,6 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_list_single_habit
-    total = 32 + Date.today.day
-    undone = 22 + Date.today.day - 1
     h = @habit_tracker.habits[0]
     expected_output = Hbtrack::Util.title h.name
     expected_output += 
