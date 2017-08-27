@@ -8,14 +8,15 @@ require 'hbtrack/config'
 require 'hbtrack/habit'
 require 'hbtrack/stat_formatter'
 require 'hbtrack/habit_printer'
+require 'hbtrack/error_handler'
 
 module Hbtrack
   class << self
-    def run(*args)
+    def run
       if ARGV.empty?
         HabitTracker.help
       else
-        HabitTracker.new.parse_arguments(*args)
+        HabitTracker.new.parse_arguments(ARGV)
       end
     end
   end

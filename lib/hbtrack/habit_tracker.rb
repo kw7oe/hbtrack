@@ -75,7 +75,7 @@ module Hbtrack
         if habit_name.nil?
           list_all_habits
         else
-         raise_habit_not_found(habit_name)
+         ErrorHandler.raise_habit_not_found(habit_name)
         end
         return
       end
@@ -129,16 +129,22 @@ module Hbtrack
 
     def undone(args)
       habit_name, options = parse_options(args)
-      day = get_day_based_on(options)
-      habit = find(habit_name) { raise_if_habit_error(habit_name) }
-      save_to_file(habit, 'Undone', 'blue') do
-        habit.done(false, day)
+      if options[0] == '-a' || options[1] == '--all' 
+        save_to_file(@habits, 'Undone', 'blue') do 
+          @habits.each { |habit| habit.done(false) }
+        end
+      else
+        day = get_day_based_on(options)
+        habit = find(habit_name) { ErrorHandler.raise_if_habit_error(habit_name) }
+        save_to_file(habit, 'Undone', 'blue') do
+          habit.done(false, day)
+        end
       end
     end
 
     def remove(args)
       habit_name, _options = parse_options(args)
-      habit = find(habit_name) { raise_if_habit_error(habit_name) }
+      habit = find(habit_name) { ErrorHandler.raise_if_habit_error(habit_name) }
       save_to_file(habit, 'Remove', 'blue') do
         @habits.delete(habit)
       end
@@ -159,9 +165,9 @@ module Hbtrack
       end
 
       if habit_name && habit_name.length > 11 
-        raise_habit_name_too_long
+        ErrorHandler.raise_habit_name_too_long
       else
-        raise_invalid_arguments
+        ErrorHandler.raise_invalid_arguments
       end
     end
 
@@ -175,28 +181,6 @@ module Hbtrack
       yesterday = options[0] == '-y' || options[0] == '--yesterday'
       return Date.today unless yesterday
       Date.today - 1
-    end
-
-    def raise_error_msg(msg)
-      puts CLI.red msg 
-      return
-    end
-
-    def raise_if_habit_error(habit_name)       
-      return raise_invalid_arguments if habit_name.nil? 
-      raise_habit_not_found(habit_name)
-    end        
-
-    def raise_habit_not_found(habit_name)
-      raise_error_msg "Invalid habit: #{habit_name} not found."
-    end
-
-    def raise_invalid_arguments 
-      raise_error_msg "Invalid argument: habit_name is expected."
-    end
-
-    def raise_habit_name_too_long
-      raise_error_msg "habit_name too long."
     end
 
     def invalid_habit_name?(habit_name)
