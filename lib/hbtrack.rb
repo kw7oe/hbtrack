@@ -12,11 +12,11 @@ require 'hbtrack/error_handler'
 
 module Hbtrack
   class << self
-    def run
+    def run(args)
       if ARGV.empty?
         HabitTracker.help
       else
-        HabitTracker.new.parse_arguments(ARGV)
+        HabitTracker.new.parse_arguments(args)
       end
     end
   end
