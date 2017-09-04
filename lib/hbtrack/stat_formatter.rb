@@ -3,18 +3,7 @@
 require 'hbtrack/util'
 
 module Hbtrack
-  # This is an abstract class for classes that
-  # are used to format the progress of a Habit
-  # into string
-  class StatFormatter
-    def initialize; end
-
-    def format
-      raise 'Not Implemented'
-    end
-  end
-
-  class DoneUndoneSF < StatFormatter
+  class DoneUndoneSF
     # Format in terms of the count of done and undone.
     # @param hash [Hash]
     # @option hash [String] :done total of done
@@ -26,7 +15,7 @@ module Hbtrack
     end
   end
 
-  class CompleteSF < StatFormatter
+  class CompleteSF
     # Format in terms of the total and the count of
     # done and undone.
     # @param hash [Hash]
@@ -39,7 +28,7 @@ module Hbtrack
     end
   end
 
-  class CompletionRateSF < StatFormatter
+  class CompletionRateSF
     # Format in terms of the completion rate of the habit.
     # @param hash [Hash]
     # @option hash [String] :done total of done

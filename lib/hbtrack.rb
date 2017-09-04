@@ -2,6 +2,7 @@
 
 require 'hbtrack/habit_tracker'
 require 'hbtrack/habit'
+require 'hbtrack/config'
 require 'hbtrack/stat_formatter'
 require 'hbtrack/habit_printer'
 require 'hbtrack/command/list_command'

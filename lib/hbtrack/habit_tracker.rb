@@ -6,7 +6,7 @@ module Hbtrack
   # This class contains the methods to
   # handle the operation of mutliple habits
   class HabitTracker
-    attr_reader :habits, :hp
+    attr_reader :habits, :hp, :output_file_name
 
     def self.help # Refactoring needed
       puts 'usage: hbtrack list [-p] [ habit_name ]'

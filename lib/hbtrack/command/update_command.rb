@@ -13,7 +13,8 @@ module Hbtrack
     end
 
     def execute
-      update(@name, @day, @isDone)
+      return update(@name, @day, @isDone) if @name
+      super
     end
 
     def create_option_parser
@@ -45,13 +46,13 @@ module Hbtrack
                 end
               end
       habit.done(isDone, day)
-      Store.new(@hbt.habits, FILE_NAME).save
+      Store.new(@hbt.habits, @hbt.output_file_name).save
       Hbtrack::Util.green("#{action(isDone)} workout!")
     end
 
     def update_all(_day, isDone)
       @hbt.habits.each { |habit| habit.done(isDone) }
-      Store.new(@hbt.habits, FILE_NAME).save
+      Store.new(@hbt.habits, @hbt.output_file_name).save
     end
 
     def action(isDone)
