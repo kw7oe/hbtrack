@@ -5,7 +5,7 @@ module Hbtrack
   # are used to format the progress of a Habit
   # into string
   class HabitPrinter
-    attr_reader :formatter
+    attr_accessor :formatter
 
     def initialize(formatter = CompleteSF.new)
       @formatter = formatter

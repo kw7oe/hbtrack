@@ -4,46 +4,70 @@ require 'optparse'
 
 module Hbtrack
   class ListCommand
+    attr_reader :printer
     def initialize(hbt, options)
       @hbt = hbt
-      @options = options
+      @percentage = false
+      @all = false
+      @printer = HabitPrinter.new
+      @options = parse_options
+      leftover = @options.parse(options)
+      @name = leftover.first
+      @printer.formatter = CompletionRateSF.new if @percentage
     end
 
     def execute
+      return list_all(@printer) if @all
+      return list(@name, @printer) if @name
+      help
+    end
+
+    def parse_options
       OptionParser.new do |opts|
-        opts.banner = "Usage: hbtrack list [<habit_name>] [options]"
+        opts.banner = 'Usage: hbtrack list [<habit_name>] [options]'
 
-        printer = HabitPrinter.new
-
-        opts.on("-a", "--all", "List all habits") do
-          list_all(printer)
+        opts.on('-p', '--percentage', 'List habit(s) with completion rate') do
+          @percentage = true
         end
 
-        opts.on(String, "-p", "--percentage", "List habits with completion rate") do |habit_name|
-          printer = HabitPrinter.new(CompletionRateSF.new)
-          list(habit_name, printer)
+        opts.on('-a', '--all', 'List all habits') do
+          @all = true
         end
 
-      end.parse(@options)
+        opts.on_tail('-h', '--help', 'Prints this help') do
+          puts opts
+          exit
+        end
+      end
+    end
+
+    def help
+      @options.help
     end
 
     def list(name, printer)
       habit = @hbt.find(name) do
-        ErrorHandler.raise_habit_not_found(habit_name)
+        ErrorHandler.raise_habit_not_found(name)
+        exit
       end
-      puts Util.title habit.name
-      puts printer.print_all_progress(habit)
-      puts "\n" + habit.overall_stat_description(printer.formatter)
+
+      title = Util.title habit.name
+      progress = printer.print_all_progress(habit)
+      footer = "\n" + habit.overall_stat_description(printer.formatter)
+
+      "#{title}#{progress}\n#{footer}"
     end
 
     def list_all(printer)
-      puts Util.title Util.current_month
-      @hbt.habits.each_with_index do |h, index|
+      title = Util.title Util.current_month
+      progress = @hbt.habits.each_with_index.map do |h, index|
         space = @hbt.longest_name.length - h.name_length
-        puts "#{index + 1}. " \
+        "#{index + 1}. " \
         "#{printer.print_latest_progress(h, space)}"
-      end
-      puts "\n" + @hbt.overall_stat_description
+      end.join("\n")
+      footer = "\n" + @hbt.overall_stat_description
+
+      "#{title}#{progress}\n#{footer}"
     end
   end
 end

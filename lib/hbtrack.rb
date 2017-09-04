@@ -18,7 +18,8 @@ module Hbtrack
         HabitTracker.help
       else
         hbt = HabitTracker.new
-        ListCommand.execute(hbt, args)
+        args.shift
+        puts ListCommand.new(hbt, args).execute
       end
     end
   end
