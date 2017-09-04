@@ -19,8 +19,5 @@ module Hbtrack
         end
       end
     end
-
   end
 end
-
-

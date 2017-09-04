@@ -8,6 +8,7 @@ require 'hbtrack/config'
 require 'hbtrack/habit'
 require 'hbtrack/stat_formatter'
 require 'hbtrack/habit_printer'
+require 'hbtrack/command'
 require 'hbtrack/error_handler'
 
 module Hbtrack
@@ -16,7 +17,8 @@ module Hbtrack
       if ARGV.empty?
         HabitTracker.help
       else
-        HabitTracker.new.parse_arguments(args)
+        hbt = HabitTracker.new
+        ListCommand.execute(hbt, args)
       end
     end
   end

@@ -9,9 +9,7 @@ class TestHabitTracker < MiniTest::Test
       Hbtrack::TEST_FILE,
       Hbtrack::OUTPUT_FILE
     )
-    @habit_tracker.habits.each do |habit|
-      habit.done
-    end
+    @habit_tracker.habits.each(&:done)
 
     @done_count = @habit_tracker.habits.count
     @undone_count = (Date.today.day - 1) * 2
@@ -23,38 +21,15 @@ class TestHabitTracker < MiniTest::Test
   end
 
   def test_total_habits_stat
-    stat = {done: @done_count, undone: @undone_count}
+    stat = { done: @done_count, undone: @undone_count }
     assert_equal stat, @habit_tracker.total_habits_stat
   end
 
   def test_overall_stat_description
-    expected_output = Hbtrack::Util.title "Total" 
+    expected_output = Hbtrack::Util.title 'Total'
     expected_output += "All: #{@total}, Done: #{@done_count}, " \
                         "Undone: #{@undone_count}"
     assert_equal expected_output, @habit_tracker.overall_stat_description
-  end
-
-  def test_list_all
-    expected_result = Hbtrack::Util.title "#{Date.today.strftime("%B %Y")}"
-    expected_result += "1. " + 
-    @habit_tracker.hp.print_latest_progress(@habit_tracker.habits[0]) + "\n"
-    expected_result += "2. " + 
-    @habit_tracker.hp.print_latest_progress(@habit_tracker.habits[1], 3) + "\n\n"
-    expected_result += @habit_tracker.overall_stat_description + "\n"
-    assert_output expected_result do
-      @habit_tracker.parse_arguments(['list'])
-    end
-  end
-
-  def test_list_single_habit
-    h = @habit_tracker.habits[0]
-    expected_output = Hbtrack::Util.title h.name
-    expected_output += 
-      @habit_tracker.hp.print_all_progress(h) + "\n\n"
-    expected_output += h.overall_stat_description(Hbtrack::CompleteSF.new) + "\n"
-    assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[list workout])
-    end
   end
 
   def test_add
@@ -68,7 +43,7 @@ class TestHabitTracker < MiniTest::Test
   def test_add_very_long_name
     count = @habit_tracker.habits.count
     expected_output = Hbtrack::CLI.red('habit_name too long.') + "\n"
-    assert_output expected_output do 
+    assert_output expected_output do
       @habit_tracker.parse_arguments(%w[add veryverylongname])
     end
     assert_equal @habit_tracker.habits.count, count

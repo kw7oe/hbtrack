@@ -50,57 +50,23 @@ module Hbtrack
       @habits.max_by(&:name_length).name
     end
 
-    def method_missing(*args)
+    def method_missing(*_args)
       HabitTracker.help
     end
 
-    def total_habits_stat 
-      @habits.reduce({done: 0, undone: 0}) do |stat, habit|
+    def total_habits_stat
+      @habits.each_with_object(done: 0, undone: 0) do |habit, stat|
         stat[:done] += habit.latest_stat[:done]
         stat[:undone] += habit.latest_stat[:undone]
-        stat
       end
     end
 
     def overall_stat_description
-      Util.title("Total") +
-      @sf.format(total_habits_stat)
+      Util.title('Total') +
+        @sf.format(total_habits_stat)
     end
 
     private
-    def list(args)
-      habit_name, options = parse_options(args)
-      set_sf_based_on(options)
-      habit = find(habit_name) do
-        if habit_name.nil?
-          list_all_habits
-        else
-         ErrorHandler.raise_habit_not_found(habit_name)
-        end
-        return
-      end
-      puts Util.title habit.name 
-      puts @hp.print_all_progress(habit)
-      puts "\n" + habit.overall_stat_description(@sf)
-    end
-
-    def set_sf_based_on(options)
-      return if options.empty?
-      if options[0] == '-p' || options[0] == '--percentage'
-        @sf = CompletionRateSF.new
-        @hp = HabitPrinter.new(@sf)
-      end
-    end
-
-    def list_all_habits 
-      puts Util.title Util.current_month
-      @habits.each_with_index do |h, index|
-        space = longest_name.length - h.name_length
-        puts "#{index + 1}. " +
-        "#{@hp.print_latest_progress(h, space)}"
-      end
-      puts "\n" + overall_stat_description
-    end
 
     def add(args)
       habit_name, _options = parse_options(args)
@@ -114,8 +80,8 @@ module Hbtrack
 
     def done(args)
       habit_name, options = parse_options(args)
-      if options[0] == '-a' || options[1] == '--all' 
-        save_to_file(@habits, 'Done') do 
+      if options[0] == '-a' || options[1] == '--all'
+        save_to_file(@habits, 'Done') do
           @habits.each { |habit| habit.done(true) }
         end
       else
@@ -129,8 +95,8 @@ module Hbtrack
 
     def undone(args)
       habit_name, options = parse_options(args)
-      if options[0] == '-a' || options[1] == '--all' 
-        save_to_file(@habits, 'Undone', 'blue') do 
+      if options[0] == '-a' || options[1] == '--all'
+        save_to_file(@habits, 'Undone', 'blue') do
           @habits.each { |habit| habit.done(false) }
         end
       else
@@ -164,7 +130,7 @@ module Hbtrack
         return habit
       end
 
-      if habit_name && habit_name.length > 11 
+      if habit_name && habit_name.length > 11
         ErrorHandler.raise_habit_name_too_long
       else
         ErrorHandler.raise_invalid_arguments
@@ -184,8 +150,8 @@ module Hbtrack
     end
 
     def invalid_habit_name?(habit_name)
-      habit_name.nil? || habit_name =~ /\s+/ || 
-      habit_name.length > 11
+      habit_name.nil? || habit_name =~ /\s+/ ||
+        habit_name.length > 11
     end
 
     def save
@@ -200,11 +166,11 @@ module Hbtrack
       unless habit.nil?
         yield if block_given?
         save
-        if habit.is_a? Array 
-          name = habit.map { |h| h.name }.join(", ")
-        else 
-          name = habit.name 
-        end
+        name = if habit.is_a? Array
+                 habit.map(&:name).join(', ')
+               else
+                 habit.name
+               end
         output = "#{action} #{name}!"
         puts CLI.public_send(color, output)
       end

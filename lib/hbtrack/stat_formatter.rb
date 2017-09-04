@@ -5,11 +5,10 @@ module Hbtrack
   # are used to format the progress of a Habit
   # into string
   class StatFormatter
-    def initialize
-    end
+    def initialize; end
 
     def format
-      raise "Not Implemented"
+      raise 'Not Implemented'
     end
   end
 
@@ -21,7 +20,7 @@ module Hbtrack
     # @return [String] formatted result
     def format(hash)
       CLI.green("Done: #{hash[:done]}") + "\n" +
-      CLI.red("Undone: #{hash[:undone]}")
+        CLI.red("Undone: #{hash[:undone]}")
     end
   end
 
@@ -46,7 +45,7 @@ module Hbtrack
     # @return [String] formatted result
     def format(hash)
       percentage = to_percentage(hash)[:done]
-      "Completion rate: #{'%.2f' % percentage}%"
+      sprintf('Completion rate: %.2f%', percentage)
     end
 
     # Convert the value in the hash into percentage
@@ -58,7 +57,7 @@ module Hbtrack
       total = hash[:done] + hash[:undone]
       done_p = 0
       undone_p = 0
-      unless total == 0
+      unless total.zero?
         done_p = hash[:done] / total.to_f * 100
         undone_p = hash[:undone] / total.to_f * 100
       end
@@ -66,4 +65,3 @@ module Hbtrack
     end
   end
 end
-

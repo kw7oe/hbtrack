@@ -125,9 +125,8 @@ class TestHabit < MiniTest::Test
   def test_overall_stat_description
     initialize_habit_from_string
     expected_output = "Total\n-----\n"
-    expected_output += "All: 33, Done: 11, "
-    expected_output += "Undone: 22"
+    expected_output += 'All: 33, Done: 11, '
+    expected_output += 'Undone: 22'
     assert_equal expected_output, @habit.overall_stat_description(Hbtrack::CompleteSF.new)
   end
-
 end

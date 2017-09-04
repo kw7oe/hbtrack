@@ -2,8 +2,7 @@
 
 require 'date'
 
-module Hbtrack 
-
+module Hbtrack
   # Habit class
   class Habit
     attr_accessor :name
@@ -66,14 +65,12 @@ module Hbtrack
     end
 
     # Get the latest progress key.
-    # 
+    #
     # @return [Symbol] latest progress key
-    def latest_key  
+    def latest_key
       key = Habit.get_progress_key_from(Date.today)
-      if progress[key].nil?
-        initialize_progress_hash_from(key)
-      end
-      key     
+      initialize_progress_hash_from(key) if progress[key].nil?
+      key
     end
 
     # Get the latest progress.
@@ -90,12 +87,12 @@ module Hbtrack
       stat_for_progress(latest_key)
     end
 
-    # Find the month in progress with 
+    # Find the month in progress with
     # the longest name
-    # 
+    #
     # @return [String] month
     def longest_month
-      key = progress.keys.max_by do |x| 
+      key = progress.keys.max_by do |x|
         Util.get_month_from(x).length
       end
       Util.get_month_from(key)
@@ -103,7 +100,7 @@ module Hbtrack
 
     # Update the status of the progress
     #
-    # @param done [true, false] If true, it is marked as done. 
+    # @param done [true, false] If true, it is marked as done.
     #   Else, marked as undone.
     # @param date [Date] The date of the progress
     # @return [void]
@@ -116,7 +113,7 @@ module Hbtrack
     # Get the stat of the progress.
     #
     # @param key [Symbol] key for the progress
-    # @return [Hash] stat of the progress in the form of 
+    # @return [Hash] stat of the progress in the form of
     # == Example:
     #
     #   habit.stat_for_progress("2017,5".to_sym)
@@ -149,12 +146,12 @@ module Hbtrack
         done += stat[:done]
         undone += stat[:undone]
       end
-      { done: done, undone: undone}
+      { done: done, undone: undone }
     end
 
     def overall_stat_description(formatter)
-      Util.title("Total") +
-      formatter.format(overall_stat)
+      Util.title('Total') +
+        formatter.format(overall_stat)
     end
 
     def to_s
@@ -162,6 +159,7 @@ module Hbtrack
     end
 
     private
+
     def initialize_progress_hash_from(key)
       @progress[key] = '' unless @progress.key? key
     end
@@ -170,7 +168,7 @@ module Hbtrack
       i = day - @progress[key].length - 1
       result = @progress[key].split('')
       i.times { result << '0' }
-      result[day-1] = done ? '1' : '0'
+      result[day - 1] = done ? '1' : '0'
       @progress[key] = result.join('')
     end
   end
