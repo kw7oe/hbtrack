@@ -4,7 +4,7 @@ module Hbtrack
   class ErrorHandler
     class << self
       def raise_error_msg(msg)
-        puts CLI.red msg
+        puts Util.red msg
         nil
       end
 

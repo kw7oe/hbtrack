@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'hbtrack/util'
+
 module Hbtrack
   # This is an abstract class for classes that
   # are used to format the progress of a Habit
@@ -19,8 +21,8 @@ module Hbtrack
     # @option hash [String] :undone total of undone
     # @return [String] formatted result
     def format(hash)
-      CLI.green("Done: #{hash[:done]}") + "\n" +
-        CLI.red("Undone: #{hash[:undone]}")
+      Util.green("Done: #{hash[:done]}") + "\n" +
+        Util.red("Undone: #{hash[:undone]}")
     end
   end
 

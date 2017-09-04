@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'hbtrack/util'
+
 module Hbtrack
   # This class contains the methods to
   # handle the operation of mutliple habits
@@ -46,6 +48,13 @@ module Hbtrack
       habit
     end
 
+    def find_or_create(habit_name)
+      habit = find(habit_name) do
+        habit = create(habit_name)
+        return habit
+      end
+    end
+
     def longest_name
       @habits.max_by(&:name_length).name
     end
@@ -75,37 +84,7 @@ module Hbtrack
         save_to_file(habit, 'Add') unless habit.nil?
         return
       end
-      puts CLI.blue("#{habit_name} already existed!")
-    end
-
-    def done(args)
-      habit_name, options = parse_options(args)
-      if options[0] == '-a' || options[1] == '--all'
-        save_to_file(@habits, 'Done') do
-          @habits.each { |habit| habit.done(true) }
-        end
-      else
-        day = get_day_based_on(options)
-        habit = find_or_create(habit_name)
-        save_to_file(habit, 'Done') do
-          habit.done(true, day)
-        end
-      end
-    end
-
-    def undone(args)
-      habit_name, options = parse_options(args)
-      if options[0] == '-a' || options[1] == '--all'
-        save_to_file(@habits, 'Undone', 'blue') do
-          @habits.each { |habit| habit.done(false) }
-        end
-      else
-        day = get_day_based_on(options)
-        habit = find(habit_name) { ErrorHandler.raise_if_habit_error(habit_name) }
-        save_to_file(habit, 'Undone', 'blue') do
-          habit.done(false, day)
-        end
-      end
+      puts Util.blue("#{habit_name} already existed!")
     end
 
     def remove(args)
@@ -113,13 +92,6 @@ module Hbtrack
       habit = find(habit_name) { ErrorHandler.raise_if_habit_error(habit_name) }
       save_to_file(habit, 'Remove', 'blue') do
         @habits.delete(habit)
-      end
-    end
-
-    def find_or_create(habit_name)
-      habit = find(habit_name) do
-        habit = create(habit_name)
-        return habit
       end
     end
 
@@ -141,12 +113,6 @@ module Hbtrack
       options = args.select { |x| x =~ /\A-/ }
       args -= options
       [args[0], options]
-    end
-
-    def get_day_based_on(options)
-      yesterday = options[0] == '-y' || options[0] == '--yesterday'
-      return Date.today unless yesterday
-      Date.today - 1
     end
 
     def invalid_habit_name?(habit_name)
@@ -172,7 +138,7 @@ module Hbtrack
                  habit.name
                end
         output = "#{action} #{name}!"
-        puts CLI.public_send(color, output)
+        puts Util.public_send(color, output)
       end
     end
   end

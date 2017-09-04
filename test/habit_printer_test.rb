@@ -15,11 +15,11 @@ class TestHabitPrinter < MiniTest::Test
     @hp = Hbtrack::HabitPrinter.new(
       Hbtrack::CompleteSF.new
     )
-    @cli = Hbtrack::CLI
+    @util = Hbtrack::Util
   end
 
   def test_pretty_print_latest
-    expected_result = 'workout : ' + @cli.green('*') +
+    expected_result = 'workout : ' + @util.green('*') +
                       ' ' * 31 +
                       'All: 1, Done: 1, Undone: 0'
     assert_equal expected_result,
@@ -29,13 +29,13 @@ class TestHabitPrinter < MiniTest::Test
   def test_pretty_print_all
     stat = ' ' * 16 +
            'All: 16, Done: 5, Undone: 11'
-    progress = @cli.red('*') * 11 + Hbtrack::CLI.green('*') * 5
-    expected_result = Hbtrack::Util.convert_key_to_date(:"2017,5", @hp.calculate_space_needed_for(@habit, :"2017,5")) +
+    progress = @util.red('*') * 11 + @util.green('*') * 5
+    expected_result = @util.convert_key_to_date(:"2017,5", @hp.calculate_space_needed_for(@habit, :"2017,5")) +
                       progress + stat + "\n" +
-                      Hbtrack::Util.convert_key_to_date(:"2017,6", @hp.calculate_space_needed_for(@habit, :"2017,6")) +
+                      @util.convert_key_to_date(:"2017,6", @hp.calculate_space_needed_for(@habit, :"2017,6")) +
                       progress + stat + "\n" +
-                      Hbtrack::Util.convert_key_to_date(@latest_key, @hp.calculate_space_needed_for(@habit, @latest_key)) +
-                      @cli.green('*') +
+                      @util.convert_key_to_date(@latest_key, @hp.calculate_space_needed_for(@habit, @latest_key)) +
+                      @util.green('*') +
                       ' ' * 31 +
                       'All: 1, Done: 1, Undone: 0'
     assert_equal expected_result,

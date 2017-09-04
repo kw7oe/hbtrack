@@ -5,12 +5,12 @@ require 'test_helper'
 class TestStatFormatter < MiniTest::Test
   def setup
     @value = { done: 5, undone: 11 }
-    @cli = Hbtrack::CLI
+    @util = Hbtrack::Util
   end
 
   def test_format_done_and_undone_only
-    expected_result = @cli.green('Done: 5') + "\n" +
-                      @cli.red('Undone: 11')
+    expected_result = @util.green('Done: 5') + "\n" +
+                      @util.red('Undone: 11')
     assert_equal expected_result, Hbtrack::DoneUndoneSF.new.format(@value)
   end
 

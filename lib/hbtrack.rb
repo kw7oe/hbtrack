@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
 require 'hbtrack/habit_tracker'
-require 'hbtrack/version'
-require 'hbtrack/cli'
-require 'hbtrack/util'
-require 'hbtrack/config'
 require 'hbtrack/habit'
 require 'hbtrack/stat_formatter'
 require 'hbtrack/habit_printer'
-require 'hbtrack/command'
+require 'hbtrack/command/list_command'
+require 'hbtrack/command/update_command'
 require 'hbtrack/error_handler'
 
 module Hbtrack
@@ -18,8 +15,15 @@ module Hbtrack
         HabitTracker.help
       else
         hbt = HabitTracker.new
-        args.shift
-        puts ListCommand.new(hbt, args).execute
+        command = case args.shift
+        when "list"
+          ListCommand.new(hbt, args)
+        when "done"
+          UpdateCommand.new(hbt, args, true)
+        when "undone"
+          UpdateCommand.new(hbt, args, false)
+        end
+        puts command.execute                    
       end
     end
   end

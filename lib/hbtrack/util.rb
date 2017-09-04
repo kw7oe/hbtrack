@@ -5,7 +5,20 @@ module Hbtrack
   # are used to format the progress of a Habit
   # into string
   class Util
-    class << self
+    FONT_COLOR = {
+      green: "\e[32m",
+      red: "\e[31m",
+      blue: "\e[34m"
+    }.freeze
+
+    class << self      
+      # Define Util.green, Util.red, Util.blue
+      # which colorize string output in terminal
+      FONT_COLOR.each do |key, value|
+        define_method(key) do |string|
+          value + string + "\e[0m"
+        end
+      end
       # Format the string with title style.
       #
       # @param string [String] the string to be styled as title

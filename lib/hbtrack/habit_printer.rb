@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'hbtrack/util'
+
 module Hbtrack
   # This class contains the methods that
   # are used to format the progress of a Habit
@@ -36,7 +38,7 @@ module Hbtrack
 
     def print_progress(progress, stat)
       output = progress.split('').map do |x|
-        x == '0' ? CLI.red('*') : CLI.green('*')
+        x == '0' ? Util.red('*') : Util.green('*')
       end.join('')
       output + ' ' * (32 - progress.size) +
         @formatter.format(stat)

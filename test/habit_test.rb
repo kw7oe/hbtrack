@@ -6,7 +6,6 @@ require 'date'
 class TestHabit < MiniTest::Test
   def setup
     @habit = Hbtrack::Habit.new('Workout')
-    @cli = Hbtrack::CLI
   end
 
   def initialize_habit_from_string
