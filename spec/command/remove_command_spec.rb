@@ -11,9 +11,10 @@ RSpec.describe Hbtrack::RemoveCommand do
   end
 
   it "should remove habit" do 
+    count = @hbt.habits.count
     result = Hbtrack::Util.blue('Remove workout!')
-    expect(result).to eq @command.remove('workout')
-    expect(1).to eq @hbt.habits.count
+    expect(@command.execute).to eq result
+    expect(@hbt.habits.count).to eq (count - 1)
   end
 
 end

@@ -31,37 +31,4 @@ class TestHabitTracker < MiniTest::Test
                         "Undone: #{@undone_count}"
     assert_equal expected_output, @habit_tracker.overall_stat_description
   end
-
-  def test_add
-    expected_output = Hbtrack::Util.green('Add learning!') + "\n"
-    assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[add learning])
-    end
-    assert_equal 'learning', @habit_tracker.habits.last.name
-  end
-
-  def test_add_very_long_name
-    count = @habit_tracker.habits.count
-    expected_output = Hbtrack::Util.red('habit_name too long.') + "\n"
-    assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[add veryverylongname])
-    end
-    assert_equal @habit_tracker.habits.count, count
-  end
-
-  def test_add_blank
-    expected_output = Hbtrack::Util.red('Invalid argument: ' \
-                      'habit_name is expected.') + "\n"
-    assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[add])
-    end
-  end
-
-  def test_prevent_add_duplicate
-    expected_output = Hbtrack::Util.blue('workout already existed!') + "\n"
-    assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[add workout])
-    end
-    assert_equal 2, @habit_tracker.habits.size
-  end
 end

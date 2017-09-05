@@ -8,6 +8,7 @@ require 'hbtrack/habit_printer'
 require 'hbtrack/command/list_command'
 require 'hbtrack/command/update_command'
 require 'hbtrack/command/remove_command'
+require 'hbtrack/command/add_command'
 require 'hbtrack/error_handler'
 
 module Hbtrack
@@ -23,8 +24,11 @@ module Hbtrack
         UpdateCommand.new(hbt, args, false)
       when "remove"
         RemoveCommand.new(hbt, args)
+      when "add"
+        AddCommand.new(hbt, args)
       else
-        HabitTracker.help
+        puts HabitTracker.help
+        exit
       end
       puts command.execute                    
     end

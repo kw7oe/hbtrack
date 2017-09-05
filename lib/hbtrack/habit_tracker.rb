@@ -8,14 +8,6 @@ module Hbtrack
   class HabitTracker
     attr_reader :habits, :hp, :output_file_name
 
-    def self.help # Refactoring needed
-      'usage: hbtrack list [-p] [ habit_name ]' \
-      '       hbtrack add habit_name' \
-      '       hbtrack done [-y] habit_name' \
-      '       hbtrack undone [-y] habit_name' \
-      '       hbtrack remove habit_name'
-    end
-
     def initialize(file = FILE_NAME,
                    output = FILE_NAME)
       @habits = []
@@ -30,12 +22,6 @@ module Hbtrack
       return unless File.exist?(@file_name)
       input = File.read(@file_name).split(/\n\n/)
       input.each { |string| @habits << Habit.initialize_from_string(string) }
-    end
-
-    def parse_arguments(args)
-      head = args.shift
-      tail = args
-      send(head, tail)
     end
 
     # This methods find a habit based on the name given.
@@ -75,18 +61,6 @@ module Hbtrack
         @sf.format(total_habits_stat)
     end
 
-    private
-
-    def add(args)
-      habit_name, _options = parse_options(args)
-      find(habit_name) do
-        habit = create(habit_name)
-        save_to_file(habit, 'Add') unless habit.nil?
-        return
-      end
-      puts Util.blue("#{habit_name} already existed!")
-    end
-
     def create(habit_name)
       unless invalid_habit_name?(habit_name)
         habit = Habit.new(habit_name)
@@ -101,37 +75,10 @@ module Hbtrack
       end
     end
 
-    def parse_options(args)
-      options = args.select { |x| x =~ /\A-/ }
-      args -= options
-      [args[0], options]
-    end
-
+    private
     def invalid_habit_name?(habit_name)
       habit_name.nil? || habit_name =~ /\s+/ ||
         habit_name.length > 11
-    end
-
-    def save
-      File.open(@output_file_name, 'w') do |f|
-        @habits.each do |habit|
-          f.puts habit
-        end
-      end
-    end
-
-    def save_to_file(habit, action, color = 'green')
-      unless habit.nil?
-        yield if block_given?
-        save
-        name = if habit.is_a? Array
-                 habit.map(&:name).join(', ')
-               else
-                 habit.name
-               end
-        output = "#{action} #{name}!"
-        puts Util.public_send(color, output)
-      end
     end
   end
 end
