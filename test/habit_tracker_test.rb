@@ -64,28 +64,4 @@ class TestHabitTracker < MiniTest::Test
     end
     assert_equal 2, @habit_tracker.habits.size
   end
-
-  def test_remove
-    expected_output = Hbtrack::Util.blue('Remove read!') + "\n"
-    assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[remove read])
-    end
-    assert_equal 1, @habit_tracker.habits.length
-  end
-
-  def test_remove_blank
-    expected_output = Hbtrack::Util.red('Invalid argument: ' \
-                      'habit_name is expected.') + "\n"
-    assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[remove])
-    end
-  end
-
-  def test_remove_invalid_habit
-    expected_output = Hbtrack::Util.red('Invalid habit: ' \
-                      'apple not found.') + "\n"
-    assert_output expected_output do
-      @habit_tracker.parse_arguments(%w[remove apple])
-    end
-  end
 end

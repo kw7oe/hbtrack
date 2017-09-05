@@ -9,11 +9,11 @@ module Hbtrack
     attr_reader :habits, :hp, :output_file_name
 
     def self.help # Refactoring needed
-      puts 'usage: hbtrack list [-p] [ habit_name ]'
-      puts '       hbtrack add habit_name'
-      puts '       hbtrack done [-y] habit_name'
-      puts '       hbtrack undone [-y] habit_name'
-      puts '       hbtrack remove habit_name'
+      'usage: hbtrack list [-p] [ habit_name ]' \
+      '       hbtrack add habit_name' \
+      '       hbtrack done [-y] habit_name' \
+      '       hbtrack undone [-y] habit_name' \
+      '       hbtrack remove habit_name'
     end
 
     def initialize(file = FILE_NAME,
@@ -85,14 +85,6 @@ module Hbtrack
         return
       end
       puts Util.blue("#{habit_name} already existed!")
-    end
-
-    def remove(args)
-      habit_name, _options = parse_options(args)
-      habit = find(habit_name) { ErrorHandler.raise_if_habit_error(habit_name) }
-      save_to_file(habit, 'Remove', 'blue') do
-        @habits.delete(habit)
-      end
     end
 
     def create(habit_name)
