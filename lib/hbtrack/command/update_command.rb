@@ -59,7 +59,7 @@ module Hbtrack
 
       Store.new(@hbt.habits, @hbt.output_file_name).save
 
-      Hbtrack::Util.green("#{action(is_done)} all habits!")      
+      Hbtrack::Util.green("#{action(is_done)} all habits!")
     end
 
     def action(is_done)

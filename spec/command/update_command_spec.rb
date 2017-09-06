@@ -12,7 +12,7 @@ RSpec.describe Hbtrack::UpdateCommand do
   end
 
   context '#execute' do
-    before do       
+    before do
       @name = 'workout'
       @habit = @hbt.find(@name)
     end
@@ -27,12 +27,12 @@ RSpec.describe Hbtrack::UpdateCommand do
       expected_count = count + 1
 
       expect(result).to eq expected
-      expect(result_count).to eq expected_count 
+      expect(result_count).to eq expected_count
     end
 
     it 'should mark task as undone' do
       @command = Hbtrack::UpdateCommand.new(@hbt, [@name], false)
-      @habit.progress[@habit.latest_key] = "111111" # Mock Undone Task
+      @habit.progress[@habit.latest_key] = '111111' # Mock Undone Task
       count = @habit.latest_stat[:undone]
 
       result = @command.execute
@@ -42,7 +42,7 @@ RSpec.describe Hbtrack::UpdateCommand do
       expected_count = count + 1
 
       expect(result).to eq expected
-      expect(result_count).to eq expected_count 
+      expect(result_count).to eq expected_count
     end
 
     it 'should return error messages if habit_name doesnt exist' do
@@ -58,7 +58,7 @@ RSpec.describe Hbtrack::UpdateCommand do
 
     it 'should mark task as done for yesterday' do
       @command = Hbtrack::UpdateCommand.new(@hbt, ['workout', '-y'], true)
-      @habit.progress[@habit.latest_key] = "0" * (Date.today.day - 1)
+      @habit.progress[@habit.latest_key] = '0' * (Date.today.day - 1)
       count = @habit.latest_stat[:done]
 
       result = @command.execute
@@ -67,7 +67,7 @@ RSpec.describe Hbtrack::UpdateCommand do
 
       expected = Hbtrack::Util.green('Done workout!')
       expected_count = count + 1
-      expected_progress = "0" * (Date.today.day - 2) + "1"
+      expected_progress = '0' * (Date.today.day - 2) + '1'
 
       expect(result).to eq expected
       expect(result_count).to eq expected_count
