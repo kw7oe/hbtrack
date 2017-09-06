@@ -75,7 +75,6 @@ module Hbtrack
       end
     end
 
-    private
     def invalid_habit_name?(habit_name)
       habit_name.nil? || habit_name =~ /\s+/ ||
         habit_name.length > 11
