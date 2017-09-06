@@ -6,14 +6,15 @@ require 'hbtrack/store'
 
 module Hbtrack
   class UpdateCommand < Command
-    def initialize(hbt, options, isDone)
+    def initialize(hbt, options, is_done)
       @day = Date.today
-      @isDone = isDone
+      @is_done = is_done
       super(hbt, options)
     end
 
     def execute
-      return update(@name, @day, @isDone) if @name
+      return update_all(@day, @is_done) if @all
+      return update(@name, @day, @is_done) if @name
       super
     end
 
@@ -36,27 +37,33 @@ module Hbtrack
       end
     end
 
-    def update(name, day, isDone)
-      habit = if isDone
+    def update(name, day, is_done)
+      habit = if is_done
                 @hbt.find_or_create(name)
               else
                 @hbt.find(name) do
-                  ErrorHandler.raise_if_habit_error(name)
-                  exit
+                  return ErrorHandler.raise_if_habit_error(name)
                 end
               end
-      habit.done(isDone, day)
+
+      habit.done(is_done, day)
+
       Store.new(@hbt.habits, @hbt.output_file_name).save
-      Hbtrack::Util.green("#{action(isDone)} workout!")
+
+      Hbtrack::Util.green("#{action(is_done)} workout!")
     end
 
-    def update_all(_day, isDone)
-      @hbt.habits.each { |habit| habit.done(isDone) }
+    # TODO: Test needed
+    def update_all(day, is_done)
+      @hbt.habits.each { |habit| habit.done(is_done, day) }
+
       Store.new(@hbt.habits, @hbt.output_file_name).save
+
+      Hbtrack::Util.green("#{action(is_done)} all habits!")      
     end
 
-    def action(isDone)
-      isDone ? 'Done' : 'Undone'
+    def action(is_done)
+      is_done ? 'Done' : 'Undone'
     end
   end
 end

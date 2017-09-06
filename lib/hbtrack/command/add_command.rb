@@ -30,11 +30,9 @@ module Hbtrack
       @hbt.find(name) do
         @hbt.create(name)
         Store.new(@hbt.habits, @hbt.output_file_name).save
-        return Hbtrack::Util.green("Add #{name}!")     
+        return Hbtrack::Util.green("Add #{name}!")
       end
       Hbtrack::Util.blue("#{name} already existed!")
     end
-
   end
 end
-

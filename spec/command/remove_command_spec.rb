@@ -1,8 +1,9 @@
-require "spec_helper"
+# frozen_string_literal: true
 
-RSpec.describe Hbtrack::RemoveCommand do 
+require 'spec_helper'
 
-  before do 
+RSpec.describe Hbtrack::RemoveCommand do
+  before do
     @hbt = Hbtrack::HabitTracker.new(
       Hbtrack::TEST_FILE,
       Hbtrack::OUTPUT_FILE
@@ -10,12 +11,22 @@ RSpec.describe Hbtrack::RemoveCommand do
     @command = Hbtrack::RemoveCommand.new(@hbt, ['workout'])
   end
 
-  it "should remove habit" do 
-    count = @hbt.habits.count
-    result = Hbtrack::Util.blue('Remove workout!')
-    expect(@command.execute).to eq result
-    expect(@hbt.habits.count).to eq (count - 1)
+  context '#execute' do
+    it 'should remove habit' do
+      count = @hbt.habits.count
+      result = Hbtrack::Util.blue('Remove workout!')
+      expect(@command.execute).to eq result
+      expect(@hbt.habits.count).to eq(count - 1)
+    end
+
+    it 'should raise habit not found' do
+      name = 'apple'
+      @command = Hbtrack::RemoveCommand.new(@hbt, [name])
+      result = @command.execute
+
+      expected = Hbtrack::ErrorHandler.raise_habit_not_found(name)
+
+      expect(result).to eq expected
+    end
   end
-
 end
-

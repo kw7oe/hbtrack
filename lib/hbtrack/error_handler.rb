@@ -4,7 +4,7 @@ module Hbtrack
   class ErrorHandler
     class << self
       def raise_error_msg(msg)
-        return Util.red msg
+        Util.red msg
       end
 
       def raise_if_habit_error(habit_name)

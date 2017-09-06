@@ -11,7 +11,7 @@ module Hbtrack
       blue: "\e[34m"
     }.freeze
 
-    class << self      
+    class << self
       # Define Util.green, Util.red, Util.blue
       # which colorize string output in terminal
       FONT_COLOR.each do |key, value|

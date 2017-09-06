@@ -16,21 +16,21 @@ module Hbtrack
     def run(args)
       hbt = HabitTracker.new
       command = case args.shift
-      when "list"
-        ListCommand.new(hbt, args)
-      when "done"
-        UpdateCommand.new(hbt, args, true)
-      when "undone"
-        UpdateCommand.new(hbt, args, false)
-      when "remove"
-        RemoveCommand.new(hbt, args)
-      when "add"
-        AddCommand.new(hbt, args)
-      else
-        puts HabitTracker.help
-        exit
-      end
-      puts command.execute                    
+                when 'list'
+                  ListCommand.new(hbt, args)
+                when 'done'
+                  UpdateCommand.new(hbt, args, true)
+                when 'undone'
+                  UpdateCommand.new(hbt, args, false)
+                when 'remove'
+                  RemoveCommand.new(hbt, args)
+                when 'add'
+                  AddCommand.new(hbt, args)
+                else
+                  puts HabitTracker.help
+                  exit
+                end
+      puts command.execute
     end
   end
 end

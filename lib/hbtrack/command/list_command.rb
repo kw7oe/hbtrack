@@ -43,8 +43,7 @@ module Hbtrack
 
     def list(name, printer)
       habit = @hbt.find(name) do
-        ErrorHandler.raise_habit_not_found(name)
-        exit
+        return ErrorHandler.raise_habit_not_found(name)
       end
 
       title = Util.title habit.name

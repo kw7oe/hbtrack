@@ -28,15 +28,13 @@ module Hbtrack
 
     def remove(name)
       habit = @hbt.find(name) do
-        ErrorHandler.raise_if_habit_error(habit_name) 
-        exit
+        return ErrorHandler.raise_if_habit_error(name)
       end
-      
+
       @hbt.habits.delete(habit)
 
       Store.new(@hbt.habits, @hbt.output_file_name).save
       Hbtrack::Util.blue("Remove #{name}!")
     end
-
   end
 end

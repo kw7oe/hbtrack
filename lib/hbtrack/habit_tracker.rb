@@ -45,10 +45,6 @@ module Hbtrack
       @habits.max_by(&:name_length).name
     end
 
-    def method_missing(*_args)
-      HabitTracker.help
-    end
-
     def total_habits_stat
       @habits.each_with_object(done: 0, undone: 0) do |habit, stat|
         stat[:done] += habit.latest_stat[:done]
@@ -69,9 +65,9 @@ module Hbtrack
       end
 
       if habit_name && habit_name.length > 11
-        ErrorHandler.raise_habit_name_too_long
+        return ErrorHandler.raise_habit_name_too_long
       else
-        ErrorHandler.raise_invalid_arguments
+        return ErrorHandler.raise_invalid_arguments
       end
     end
 

@@ -6,9 +6,7 @@ require 'hbtrack/util'
 module Hbtrack
   # Habit class
   class Habit
-    attr_accessor :name
-    attr_reader :progress
-
+    attr_accessor :name, :progress
     # Class Methods
 
     class << self
