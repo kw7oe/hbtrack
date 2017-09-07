@@ -52,6 +52,20 @@ module Hbtrack
       end
     end
 
+    def done_count_for(date:)
+      habits.reduce(0) do |a, habit|
+        val = habit.done_for(date: date) == '1' ? 1 : 0
+        a + val
+      end
+    end
+
+    def undone_count_for(date:)
+      habits.reduce(0) do |a, habit|
+        val = habit.done_for(date: date) == '0' ? 1 : 0
+        a + val
+      end
+    end
+
     def overall_stat_description
       Util.title('Total') +
         @sf.format(total_habits_stat)
@@ -64,11 +78,9 @@ module Hbtrack
         return habit
       end
 
-      if habit_name && habit_name.length > 11
-        return ErrorHandler.raise_habit_name_too_long
-      else
-        return ErrorHandler.raise_invalid_arguments
-      end
+      return ErrorHandler.raise_habit_name_too_long if habit_name && habit_name.length > 11
+
+      ErrorHandler.raise_invalid_arguments
     end
 
     def invalid_habit_name?(habit_name)

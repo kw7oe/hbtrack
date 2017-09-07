@@ -36,6 +36,15 @@ RSpec.describe Hbtrack::HabitTracker do
     expect(@habit_tracker.find('workout').name).to eq result
   end
 
+  it '#done_count_for should return the right done count' do
+    expect(@habit_tracker.done_count_for(date: Date.today)).to eq @done_count
+  end
+
+  it '#done_count_for should return the right done count' do
+    @habit_tracker.habits.each { |h| h.done(false) }
+    expect(@habit_tracker.undone_count_for(date: Date.today)).to eq 2
+  end
+
   context '#create' do
     it 'should create habit if habit_name valid' do
       @habit_tracker.create('ukulele')

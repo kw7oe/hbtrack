@@ -9,10 +9,12 @@ module Hbtrack
     def initialize(hbt, options, is_done)
       @day = Date.today
       @is_done = is_done
+      @remaining = false
       super(hbt, options)
     end
 
     def execute
+      return update_remaining(@day, @is_done) if @remaining
       return update_all(@day, @is_done) if @all
       return update(@name, @day, @is_done) if @name
       super
@@ -24,6 +26,10 @@ module Hbtrack
 
         opts.on('-a', '--all', 'Done/Undone all habits') do
           @all = true
+        end
+
+        opts.on('-r', '--remaining', 'Done/Undone remaining habits') do
+          @remaining = true
         end
 
         opts.on('-y', '--yesterday', 'Done/Undone habit(s) for yesterday') do
@@ -53,7 +59,6 @@ module Hbtrack
       Hbtrack::Util.green("#{action(is_done)} workout!")
     end
 
-    # TODO: Test needed
     def update_all(day, is_done)
       @hbt.habits.each { |habit| habit.done(is_done, day) }
 
@@ -61,6 +66,18 @@ module Hbtrack
 
       Hbtrack::Util.green("#{action(is_done)} all habits!")
     end
+
+    def update_remaining(day, is_done)
+      @hbt.habits.each do |habit|
+        habit.done(is_done, day) if habit.done_for(date: day).nil?
+      end
+
+      Store.new(@hbt.habits, @hbt.output_file_name).save
+
+      Hbtrack::Util.green("#{action(is_done)} remaining habit(s)!")
+    end
+
+    private
 
     def action(is_done)
       is_done ? 'Done' : 'Undone'
