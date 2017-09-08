@@ -54,6 +54,8 @@ module Hbtrack
     end
 
     def list_all(printer)
+      return Util.blue 'No habits added yet.' if @hbt.habits.empty?
+
       title = Util.title Util.current_month
       progress = @hbt.habits.each_with_index.map do |h, index|
         space = @hbt.longest_name.length - h.name_length

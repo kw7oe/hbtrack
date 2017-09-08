@@ -67,16 +67,33 @@ RSpec.describe Hbtrack::ListCommand do
     end
   end
 
-  it '#list_all should return the right output' do
-    result = @command.list_all(Hbtrack::HabitPrinter.new)
+  context "#list_all" do
+    before do 
+      @printer = Hbtrack::HabitPrinter.new
+    end
 
-    expected = Hbtrack::Util.title Date.today.strftime('%B %Y').to_s
-    expected += '1. ' +
-                @command.printer.print_latest_progress(@hbt.habits[0]) + "\n"
-    expected += '2. ' +
-                @command.printer.print_latest_progress(@hbt.habits[1], 3) + "\n\n"
-    expected += @hbt.overall_stat_description
+    it 'should return the right output' do
+      result = @command.list_all(@printer)
 
-    expect(result).to eq expected
+      expected = Hbtrack::Util.title Date.today.strftime('%B %Y').to_s
+      expected += '1. ' +
+                  @command.printer.print_latest_progress(@hbt.habits[0]) + "\n"
+      expected += '2. ' +
+                  @command.printer.print_latest_progress(@hbt.habits[1], 3) + "\n\n"
+      expected += @hbt.overall_stat_description
+
+      expect(result).to eq expected
+    end
+
+    it 'should return no habits added' do
+      @hbt.habits = []
+      command = Hbtrack::ListCommand.new(@hbt, [])
+
+      result = @command.list_all(@printer)
+
+      expected = Hbtrack::Util.blue 'No habits added yet.'
+
+      expect(result).to eq expected
+    end
   end
 end

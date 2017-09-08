@@ -32,7 +32,7 @@ RSpec.describe Hbtrack::UpdateCommand do
 
     it 'should mark task as undone' do
       @command = Hbtrack::UpdateCommand.new(@hbt, [@name], false)
-      @habit.progress[@habit.latest_key] = '111111' # Mock Undone Task
+      @habit.progress[@habit.latest_key] = '1' * (Date.today.day - 1) # Mock Undone Task
       count = @habit.latest_stat[:undone]
 
       result = @command.execute

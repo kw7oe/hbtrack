@@ -6,7 +6,8 @@ module Hbtrack
   # This class contains the methods to
   # handle the operation of mutliple habits
   class HabitTracker
-    attr_reader :habits, :hp, :output_file_name
+    attr_accessor :habits 
+    attr_reader :hp, :output_file_name
 
     def initialize(file = FILE_NAME,
                    output = FILE_NAME)
