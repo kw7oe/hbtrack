@@ -28,7 +28,7 @@ RSpec.describe Hbtrack::HabitTracker do
   it '#overall_stat_description should return the right string' do
     result = Hbtrack::Util.title 'Total'
     result += "All: #{@total}, Done: #{@done_count}, Undone: #{@undone_count}"
-    expect(@habit_tracker.overall_stat_description).to eq result
+    expect(@habit_tracker.overall_stat_description(Hbtrack::CompleteSF.new)).to eq result
   end
 
   it '#find should return the right habit' do

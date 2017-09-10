@@ -5,15 +5,14 @@ require 'hbtrack/command'
 
 module Hbtrack
   class ListCommand < Command
-    attr_reader :printer
+    attr_reader :printer, :formatter
 
     def initialize(hbt, options)
       @percentage = false
 
       super(hbt, options)
-
-      @printer = HabitPrinter.new
-      @printer.formatter = CompletionRateSF.new if @percentage
+      @formatter = @percentage ? CompletionRateSF.new : CompleteSF.new      
+      @printer = HabitPrinter.new(@formatter)
     end
 
     def execute
@@ -62,7 +61,7 @@ module Hbtrack
         "#{index + 1}. " \
         "#{printer.print_latest_progress(h, space)}"
       end.join("\n")
-      footer = "\n" + @hbt.overall_stat_description
+      footer = "\n" + @hbt.overall_stat_description(@formatter)
 
       "#{title}#{progress}\n#{footer}"
     end

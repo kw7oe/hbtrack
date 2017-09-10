@@ -14,8 +14,6 @@ module Hbtrack
       @habits = []
       @file_name = file
       @output_file_name = output
-      @sf = CompleteSF.new
-      @hp = HabitPrinter.new(@sf)
       initialize_habits_from_file
     end
 
@@ -67,9 +65,8 @@ module Hbtrack
       end
     end
 
-    def overall_stat_description
-      Util.title('Total') +
-        @sf.format(total_habits_stat)
+    def overall_stat_description(formatter)
+      Util.title('Total') + formatter.format(total_habits_stat)
     end
 
     def create(habit_name)

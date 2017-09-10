@@ -80,7 +80,7 @@ RSpec.describe Hbtrack::ListCommand do
                   @command.printer.print_latest_progress(@hbt.habits[0]) + "\n"
       expected += '2. ' +
                   @command.printer.print_latest_progress(@hbt.habits[1], 3) + "\n\n"
-      expected += @hbt.overall_stat_description
+      expected += @hbt.overall_stat_description(@command.formatter)
 
       expect(result).to eq expected
     end
