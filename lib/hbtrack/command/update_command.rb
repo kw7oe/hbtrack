@@ -23,7 +23,8 @@ module Hbtrack
     def create_option_parser
       OptionParser.new do |opts|
         opts.banner = 'Usage: hbtrack done/undone [<habit_name>] [options]'
-
+        opts.separator ''
+        opts.separator 'Options:'
         opts.on('-a', '--all', 'Done/Undone all habits') do
           @all = true
         end

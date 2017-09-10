@@ -18,11 +18,6 @@ module Hbtrack
     def create_option_parser
       OptionParser.new do |opts|
         opts.banner = 'Usage: hbtrack add [<habit_name>]'
-
-        opts.on('-h', '--help', 'Prints this help') do
-          puts opts
-          exit
-        end
       end
     end
 

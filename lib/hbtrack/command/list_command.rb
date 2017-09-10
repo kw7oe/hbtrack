@@ -24,7 +24,9 @@ module Hbtrack
     def create_option_parser
       OptionParser.new do |opts|
         opts.banner = 'Usage: hbtrack list [<habit_name>] [options]'
-
+        opts.separator ''
+        opts.separator 'Options:'
+        
         opts.on('-p', '--percentage', 'List habit(s) with completion rate') do
           @percentage = true
         end
