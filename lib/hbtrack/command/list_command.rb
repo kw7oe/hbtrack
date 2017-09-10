@@ -17,7 +17,7 @@ module Hbtrack
 
     def execute
       return list_all(@printer) if @all
-      return list(@name, @printer) if @name
+      return list(@names[0], @printer) if @names.length > 0
       super
     end
 

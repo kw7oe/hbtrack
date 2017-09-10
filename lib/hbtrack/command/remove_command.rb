@@ -11,7 +11,7 @@ module Hbtrack
     end
 
     def execute
-      return remove(@name) if @name
+      return remove(@names) if @names
       super
     end
 
@@ -21,15 +21,17 @@ module Hbtrack
       end
     end
 
-    def remove(name)
-      habit = @hbt.find(name) do
-        return ErrorHandler.raise_if_habit_error(name)
+    def remove(names)
+      names.each do |name|
+        habit = @hbt.find(name) do
+          return ErrorHandler.raise_if_habit_error(name)
+        end
+
+        @hbt.habits.delete(habit)
       end
 
-      @hbt.habits.delete(habit)
-
       Store.new(@hbt.habits, @hbt.output_file_name).save
-      Hbtrack::Util.blue("Remove #{name}!")
+      Hbtrack::Util.blue("Remove #{names.join(",")}!")
     end
   end
 end

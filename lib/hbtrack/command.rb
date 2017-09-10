@@ -8,7 +8,7 @@ module Hbtrack
       @option_parser = create_option_parser
 
       unprocess_option = @option_parser.parse(options)
-      @name = unprocess_option.first
+      @names = unprocess_option
     end
 
     def execute

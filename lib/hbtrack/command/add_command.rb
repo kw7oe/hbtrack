@@ -11,7 +11,7 @@ module Hbtrack
     end
 
     def execute
-      return add(@name) if @name
+      return add(@names) if @names.length > 0
       super
     end
 
@@ -21,13 +21,28 @@ module Hbtrack
       end
     end
 
-    def add(name)
-      @hbt.find(name) do
-        @hbt.create(name)
-        Store.new(@hbt.habits, @hbt.output_file_name).save
-        return Hbtrack::Util.green("Add #{name}!")
+    def add(names)
+      added = []
+      names.each do |name|
+        @hbt.find(name) do
+          @hbt.create(name)
+          added << name
+        end
       end
-      Hbtrack::Util.blue("#{name} already existed!")
+
+      Store.new(@hbt.habits, @hbt.output_file_name).save   
+
+      output = [
+        Hbtrack::Util.green("Add #{added.join(",")}!")
+      ]
+
+      names = names - added
+      unless names.empty? 
+        output << "\n"
+        output << Hbtrack::Util.blue("#{names.join(",")} already existed!")
+      end
+
+      return output.join      
     end
   end
 end

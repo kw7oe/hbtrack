@@ -16,7 +16,7 @@ module Hbtrack
     def execute
       return update_remaining(@day, @is_done) if @remaining
       return update_all(@day, @is_done) if @all
-      return update(@name, @day, @is_done) if @name
+      return update(@names, @day, @is_done) if @names
       super
     end
 
@@ -44,20 +44,22 @@ module Hbtrack
       end
     end
 
-    def update(name, day, is_done)
-      habit = if is_done
-                @hbt.find_or_create(name)
-              else
-                @hbt.find(name) do
-                  return ErrorHandler.raise_if_habit_error(name)
+    def update(names, day, is_done)
+      names.each do |name|
+        habit = if is_done
+                  @hbt.find_or_create(name)
+                else
+                  @hbt.find(name) do
+                    return ErrorHandler.raise_if_habit_error(name)
+                  end
                 end
-              end
 
-      habit.done(is_done, day)
+        habit.done(is_done, day)
+      end
 
       Store.new(@hbt.habits, @hbt.output_file_name).save
 
-      Hbtrack::Util.green("#{action(is_done)} workout!")
+      Hbtrack::Util.green("#{action(is_done)} #{names.join(",")}!")
     end
 
     def update_all(day, is_done)
