@@ -34,18 +34,17 @@ module Hbtrack
 
     def help
       puts 'Usage: hbtrack <command> [<habit_name>] [options]'
-      puts 
+      puts
       puts 'Commands:'
       puts '     add: Add habit(s)'
-      puts '     remove: Remove habit(s)'        
+      puts '     remove: Remove habit(s)'
       puts '     list: List habit(s)'
       puts '     done: Mark habit(s) as done'
       puts '     undone: Mark habit(s) as undone'
-      puts   
+      puts
       puts 'Options:'
       puts "     -h, --help\t\tShow help messages of the command"
       exit
-    end    
+    end
   end
 end
-

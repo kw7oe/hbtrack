@@ -59,7 +59,7 @@ module Hbtrack
 
       Store.new(@hbt.habits, @hbt.output_file_name).save
 
-      Hbtrack::Util.green("#{action(is_done)} #{names.join(",")}!")
+      Hbtrack::Util.green("#{action(is_done)} #{names.join(',')}!")
     end
 
     def update_all(day, is_done)

@@ -11,13 +11,13 @@ module Hbtrack
       @percentage = false
 
       super(hbt, options)
-      @formatter = @percentage ? CompletionRateSF.new : CompleteSF.new      
+      @formatter = @percentage ? CompletionRateSF.new : CompleteSF.new
       @printer = HabitPrinter.new(@formatter)
     end
 
     def execute
       return list_all(@printer) if @all
-      return list(@names[0], @printer) if @names.length > 0
+      return list(@names[0], @printer) unless @names.empty?
       super
     end
 
@@ -26,7 +26,7 @@ module Hbtrack
         opts.banner = 'Usage: hbtrack list [<habit_name>] [options]'
         opts.separator ''
         opts.separator 'Options:'
-        
+
         opts.on('-p', '--percentage', 'List habit(s) with completion rate') do
           @percentage = true
         end

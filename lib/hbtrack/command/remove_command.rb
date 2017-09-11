@@ -31,7 +31,7 @@ module Hbtrack
       end
 
       Store.new(@hbt.habits, @hbt.output_file_name).save
-      Hbtrack::Util.blue("Remove #{names.join(",")}!")
+      Hbtrack::Util.blue("Remove #{names.join(',')}!")
     end
   end
 end
