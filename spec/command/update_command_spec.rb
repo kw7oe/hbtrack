@@ -45,10 +45,10 @@ RSpec.describe Hbtrack::UpdateCommand do
       expect(result_count).to eq expected_count
     end
 
-    it 'should mar multiple tasks as done' do 
+    it 'should mark multiple tasks as done' do
       habit1 = @hbt.find('workout')
       habit2 = @hbt.find('read')
-      @command = Hbtrack::UpdateCommand.new(@hbt, ['workout', 'read'], true)
+      @command = Hbtrack::UpdateCommand.new(@hbt, %w[workout read], true)
 
       count1 = habit1.latest_stat[:done]
       count2 = habit2.latest_stat[:done]
@@ -64,6 +64,23 @@ RSpec.describe Hbtrack::UpdateCommand do
       expect(result).to eq expected
       expect(result_count1).to eq expected_count1
       expect(result_count2).to eq expected_count2
+    end
+
+    it 'should mark habit as done based on `--day` options' do
+      @command = Hbtrack::UpdateCommand.new(@hbt, ['workout', '--day=4'], true)
+      count = @habit.latest_stat[:done]
+
+      result = @command.execute
+      result_count = @habit.latest_stat[:done]
+      result_progress = @habit.latest_progress[3]
+
+      expected = Hbtrack::Util.green('Done workout!')
+      expected_count = count + 1
+      expected_progress = '1'
+
+      expect(result).to eq expected
+      expect(result_count).to eq expected_count
+      expect(result_progress).to eq expected_progress
     end
 
     it 'should return error messages if habit_name doesnt exist' do

@@ -37,6 +37,10 @@ module Hbtrack
           @day = Date.today - 1
         end
 
+        opts.on('--day DAY', OptionParser::OctalInteger, 'Done/Undone habits(s) for that specific day of the month') do |day|
+          @day = Date.new(Date.today.year, Date.today.month, day.to_i)
+        end
+
         opts.on('-h', '--help', 'Prints this help') do
           puts opts
           exit

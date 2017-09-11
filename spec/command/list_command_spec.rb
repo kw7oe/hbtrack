@@ -87,7 +87,7 @@ RSpec.describe Hbtrack::ListCommand do
 
     it 'should return no habits added' do
       @hbt.habits = []
-      
+
       result = @command.list_all(@printer)
 
       expected = Hbtrack::Util.blue 'No habits added yet.'

@@ -30,7 +30,7 @@ RSpec.describe Hbtrack::RemoveCommand do
     end
 
     it 'should remove multiple habits' do
-      @command = Hbtrack::RemoveCommand.new(@hbt, ['workout', 'read'])
+      @command = Hbtrack::RemoveCommand.new(@hbt, %w[workout read])
       count = @hbt.habits.count
 
       result = Hbtrack::Util.blue('Remove workout,read!')
