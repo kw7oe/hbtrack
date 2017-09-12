@@ -38,7 +38,13 @@ module Hbtrack
 
     def print_progress(progress, stat)
       output = progress.split('').map do |x|
-        x == '0' ? Util.red('*') : Util.green('*')
+        if x == '0'
+          Util.red('*')
+        elsif x == '1'
+          Util.green('*')
+        else
+          ' '
+        end
       end.join('')
       output + ' ' * (32 - progress.size) +
         @formatter.format(stat)

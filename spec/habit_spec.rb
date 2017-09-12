@@ -4,8 +4,7 @@ require 'spec_helper'
 require 'date'
 
 RSpec.describe Hbtrack::Habit do
-
-  before do 
+  before do
     @habit = Hbtrack::Habit.new('Workout')
   end
 
@@ -19,16 +18,30 @@ RSpec.describe Hbtrack::Habit do
     @habit = Hbtrack::Habit.initialize_from_string(string)
   end
 
-  context "#initialize_from_string" do
+  context '#initialize_from_string' do
     it 'should initialize habit' do
       initialize_habit_from_string
 
       expect(@habit).not_to be_nil
       expect(@habit.progress.length).to eq 3
     end
+
+    it 'should equal to_s' do
+      string = <<~EOF
+        workout
+        2017,5: 0000000000011111
+        2017,6: 0000000000011111
+        2017,7: 1
+
+      EOF
+
+      initialize_habit_from_string
+
+      expect(@habit.to_s).to eq string
+    end
   end
 
-  context "#name" do
+  context '#name' do
     it 'should return the right name' do
       expect(@habit.name).to eq 'Workout'
     end
@@ -38,7 +51,7 @@ RSpec.describe Hbtrack::Habit do
     end
   end
 
-  context "#latest_progrss" do
+  context '#latest_progrss' do
     it 'should return the right progress' do
       @habit.done
 
@@ -46,7 +59,6 @@ RSpec.describe Hbtrack::Habit do
 
       expect(@habit.latest_progress).to eq expected
     end
-
   end
 
   context '#done' do
@@ -121,8 +133,8 @@ RSpec.describe Hbtrack::Habit do
                                   key1 => '00010',
                                   key2 => '11101')
       expected = <<~EOF
-       2017,4: 00010
-       2017,5: 11101
+        2017,4: 00010
+        2017,5: 11101
       EOF
       expect(@habit.progress_output).to eq expected
     end
@@ -135,38 +147,42 @@ RSpec.describe Hbtrack::Habit do
       expect(@habit.to_s).to eq expected
     end
   end
+
+  context '#stat_for_progress' do
+    it 'should return the correct stat' do
+      initialize_habit_from_string
+
+      result = @habit.stat_for_progress('2017,5'.to_sym)
+
+      expected = { done: 5, undone: 11 }
+
+      expect(result).to eq expected
+    end
+  end
+
+  context '#overall_stat' do
+    it 'should return the correct stat' do
+      initialize_habit_from_string
+
+      result = @habit.overall_stat
+
+      expected = { done: 11, undone: 22 }
+
+      expect(result).to eq expected
+    end
+  end
+
+  context '#overall_stat_description' do
+    it 'should return the correct description' do
+      initialize_habit_from_string
+
+      result = @habit.overall_stat_description(Hbtrack::CompleteSF.new)
+
+      expected = "Total\n-----\n"
+      expected += 'All: 33, Done: 11, '
+      expected += 'Undone: 22'
+
+      expect(result).to eq expected
+    end
+  end
 end
-
-
-
-
-# def test_intialize_from_string_equal_to_s
-#   string = <<~EOF
-#     workout
-#     2017,5: 0000000000011111
-#     2017,6: 0000000000011111
-#     2017,7: 1
-
-#   EOF
-#   assert_equal string, Hbtrack::Habit.initialize_from_string(string).to_s
-# end
-
-# def test_stat_for_progress
-#   initialize_habit_from_string
-#   expected_result = { done: 5, undone: 11 }
-#   assert_equal expected_result, @habit.stat_for_progress('2017,5'.to_sym)
-# end
-
-# def test_overall_stat
-#   initialize_habit_from_string
-#   expected_result = { done: 11, undone: 22 }
-#   assert_equal expected_result, @habit.overall_stat
-# end
-
-# def test_overall_stat_description
-#   initialize_habit_from_string
-#   expected_output = "Total\n-----\n"
-#   expected_output += 'All: 33, Done: 11, '
-#   expected_output += 'Undone: 22'
-#   assert_equal expected_output, @habit.overall_stat_description(Hbtrack::CompleteSF.new)
-# end
