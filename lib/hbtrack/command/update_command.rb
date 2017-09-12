@@ -21,23 +21,24 @@ module Hbtrack
     end
 
     def create_option_parser
+      action = @is_done ? 'Done' : 'Undone'
       OptionParser.new do |opts|
-        opts.banner = 'Usage: hbtrack done/undone [<habit_name>] [options]'
+        opts.banner = "Usage: hbtrack #{action.downcase} [<habit_name>] [options]"
         opts.separator ''
         opts.separator 'Options:'
-        opts.on('-a', '--all', 'Done/Undone all habits') do
+        opts.on('-a', '--all', "#{action} all habits") do
           @all = true
         end
 
-        opts.on('-r', '--remaining', 'Done/Undone remaining habits') do
+        opts.on('-r', '--remaining', "#{action} remaining habits") do
           @remaining = true
         end
 
-        opts.on('-y', '--yesterday', 'Done/Undone habit(s) for yesterday') do
+        opts.on('-y', '--yesterday', "#{action} habit(s) for yesterday") do
           @day = Date.today - 1
         end
 
-        opts.on('--day DAY', OptionParser::OctalInteger, 'Done/Undone habits(s) for that specific day of the month') do |day|
+        opts.on('--day DAY', OptionParser::OctalInteger, "#{action} habit(s) for specific day") do |day|
           @day = Date.new(Date.today.year, Date.today.month, day.to_i)
         end
 

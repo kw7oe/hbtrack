@@ -12,7 +12,7 @@ RSpec.describe Hbtrack::HabitTracker do
     @habit_tracker.habits.each(&:done)
     @habit_count = @habit_tracker.habits.count
     @done_count = @habit_tracker.habits.count
-    @undone_count = (Date.today.day - 1) * 2
+    @undone_count = 0
     @total = @done_count + @undone_count
   end
 

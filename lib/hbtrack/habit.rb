@@ -127,7 +127,7 @@ module Hbtrack
     #   # => { done: 5, undone: 2 }
     def stat_for_progress(key)
       undone = @progress[key].split('').count { |x| x == '0' }
-      done = @progress[key].length - undone
+      done = @progress[key].split('').count { |x| x == '1' }
       { done: done, undone: undone }
     end
 
@@ -174,7 +174,7 @@ module Hbtrack
     def update_progress_for(key, day, done)
       i = day - @progress[key].length - 1
       result = @progress[key].split('')
-      i.times { result << '0' }
+      i.times { result << ' ' }
       result[day - 1] = done ? '1' : '0'
       @progress[key] = result.join('')
     end
