@@ -35,7 +35,7 @@ Options:
   - remaining habits of as done/undone
   - habit(s) as done for specific day with `--day DAY`
 - [x] Remove single or multiple habits at once
-- [x] Generate report in HTML format. *(In Progress)*
+- [ ] Generate report in HTML format. *(In Progress)*
 
 ## Output
 
