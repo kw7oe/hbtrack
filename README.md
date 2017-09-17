@@ -1,4 +1,4 @@
-## Hbtrack
+# Hbtrack [![Gem Version](https://badge.fury.io/rb/hbtrack.svg)](https://badge.fury.io/rb/hbtrack) [![Build Status](https://travis-ci.org/kw7oe/hbtrack.svg?branch=master)](https://travis-ci.org/kw7oe/hbtrack)
 
 `hbtrack` is a simple command lines tool to keep track of your daily habits. The functionality of the current version is very limited.
 
@@ -10,42 +10,36 @@ gem install hbtrack
 
 ## Usage
 
-#### Add a new habit
 ```
-$ hbtrack add habit_name
-```
-Duplicate habit name will be ignore. 
+Usage: hbtrack <command> [<habit_name>] [options]
 
-#### Mark habit as done/undone
-```
-$ hbtrack done habit_name
-```
-This will mark the current habit as done for the current day. 
+Commands:
+     add: Add habit(s)
+     remove: Remove habit(s)
+     list: List habit(s)
+     done: Mark habit(s) as done
+     undone: Mark habit(s) as undone
 
-```
-$ hbtrack undone habit_name
-```
-This will mark the current habit as undone for the current day.
-
-You can also mark your habit done/undone for the previous day by adding `-y` or `--yesterday` option: 
-```
-$ hbtrack done/undone -y habit_name
+Options:
+     -h, --help   Show help messages of the command
 ```
 
-#### Remove a habit 
-```
-$ hbtrack remove habit_name
-```
+**Note:** For more details about available options for each command, type `hbtrack <command> -h` 
 
-#### Listing Progress
+## Features
+- [x] List all habits
+  - with completion rate or total/done/undone count
+- [x] Add single or multiple habits at once
+- [x] Mark:
+  - single or mutiple habits as done/undone
+  - remaining habits of as done/undone
+  - habit(s) as done for specific day with `--day DAY`
+- [x] Remove single or multiple habits at once
+- [x] Generate report in HTML format. *(In Progress)*
 
-You can list all your habits progress by: 
-```
-$ hbtrack list 
-```
-This will list all the habits you added and its progress for the current month.
+## Output
 
-**Output:** 
+### List all habits:
 ```
 August 2017
 -----------
@@ -62,12 +56,7 @@ All: 15, Done: 13, Undone: 2
 
 **Note:** The actual output is colorized where green color font indicate done and red color font indicate undone.
 
-You can also look at the progress of an individual habit by: 
-```
-$ hbtrack list habit_name
-```
-
-**Output:**
+### List a habit:
 ```
 workout
 -------
@@ -75,13 +64,11 @@ workout
    August 2017 : ***                             All: 3, Done: 3, Undone: 0
 ```
 
+### List all habits with `-p`:
 
 Extra options such as `-p` or `--percentage` can be provided to list the stats of your habits in terms of completion rate.
-```
-$ hbtrack list -p habit_name
-```
 
-With the extra options `-p`, the output will be:
+
 ```
 August 2017
 -----------
@@ -118,6 +105,7 @@ The first line represent the name of the habit. The second rows onward represent
 * `2017,6` represent your progress during June 2017. 
 * `1` is used to represent done.
 * `0` is used to represent undone.
+* Black space is used to represent not recorded/dayoff.
 * Each habit is seperated by a newline. For example:
 
 ```
@@ -129,7 +117,7 @@ read
 ```
 
 ## Bugs/Features
-The project is still in development. 
+The project is still under development. 
 
 If there are any bugs/features request, feel free to create a new issues.
 
