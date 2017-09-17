@@ -1,4 +1,8 @@
-# Hbtrack [![Gem Version](https://badge.fury.io/rb/hbtrack.svg)](https://badge.fury.io/rb/hbtrack) [![Build Status](https://travis-ci.org/kw7oe/hbtrack.svg?branch=master)](https://travis-ci.org/kw7oe/hbtrack)
+# Hbtrack 
+[![Gem Version](https://badge.fury.io/rb/hbtrack.svg)](https://badge.fury.io/rb/hbtrack) 
+[![Build Status](https://travis-ci.org/kw7oe/hbtrack.svg?branch=master)](https://travis-ci.org/kw7oe/hbtrack) 
+[![Code Climate](https://codeclimate.com/github/kw7oe/hbtrack/badges/gpa.svg)](https://codeclimate.com/github/kw7oe/hbtrack)
+
 
 `hbtrack` is a simple command lines tool to keep track of your daily habits. The functionality of the current version is very limited.
 
