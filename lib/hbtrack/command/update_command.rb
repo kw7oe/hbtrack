@@ -38,7 +38,7 @@ module Hbtrack
           @day = Date.today - 1
         end
 
-        opts.on('--day DAY', OptionParser::OctalInteger, "#{action} habit(s) for specific day") do |day|
+        opts.on('--day DAY', Integer, "#{action} habit(s) for specific day") do |day|
           @day = Date.new(Date.today.year, Date.today.month, day.to_i)
         end
 
