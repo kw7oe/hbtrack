@@ -52,17 +52,11 @@ module Hbtrack
     end
 
     def done_count_for(date:)
-      habits.reduce(0) do |a, habit|
-        val = habit.done_for(date: date) == '1' ? 1 : 0
-        a + val
-      end
+      hello(date, '1')
     end
 
     def undone_count_for(date:)
-      habits.reduce(0) do |a, habit|
-        val = habit.done_for(date: date) == '0' ? 1 : 0
-        a + val
-      end
+      hello(date, '0')
     end
 
     def overall_stat_description(formatter)
@@ -85,5 +79,13 @@ module Hbtrack
       habit_name.nil? || habit_name =~ /\s+/ ||
         habit_name.length > 11
     end
+
+    private def hello(d, value)
+      habits.reduce(0) do |a, habit|
+        val = habit.done_for(date: d) == value ? 1 : 0
+        a + val
+      end
+    end
+
   end
 end
