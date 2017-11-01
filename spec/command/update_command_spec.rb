@@ -104,8 +104,15 @@ RSpec.describe Hbtrack::UpdateCommand do
       result_progress = @habit.progress[@habit.latest_key]
 
       expected = Hbtrack::Util.green('Done workout!')
-      expected_count = count + 1
-      expected_progress = '0' * (Date.today.day - 2) + '1'
+
+      if (Date.today.day > 1)
+        expected_count = count + 1
+        expected_progress = '0' * (Date.today.day - 2) + '1'
+      else
+        expected_count = 0
+        expected_progress = ''
+      end
+      
 
       expect(result).to eq expected
       expect(result_count).to eq expected_count
