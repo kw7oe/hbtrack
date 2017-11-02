@@ -9,7 +9,6 @@ require 'hbtrack/command/list_command'
 require 'hbtrack/command/update_command'
 require 'hbtrack/command/remove_command'
 require 'hbtrack/command/add_command'
-require 'hbtrack/report/generator'
 require 'hbtrack/error_handler'
 
 module Hbtrack
@@ -27,9 +26,6 @@ module Hbtrack
                   RemoveCommand.new(hbt, args)
                 when 'add'
                   AddCommand.new(hbt, args)
-                when 'generate'
-                  Generator.new(hbt).generate
-                  exit
                 else
                   help
                 end

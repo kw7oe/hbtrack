@@ -19,6 +19,7 @@ module Hbtrack
           value + string + "\e[0m"
         end
       end
+      
       # Format the string with title style.
       #
       # @param string [String] the string to be styled as title
