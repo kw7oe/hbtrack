@@ -5,10 +5,11 @@ require 'hbtrack/command'
 
 module Hbtrack
   class ListCommand < Command
-    attr_reader :printer, :formatter
+    attr_reader :printer, :formatter, :month
 
     def initialize(hbt, options)
       @percentage = false
+      @month = Habit.get_progress_key_from(Date.today)
 
       super(hbt, options)
       @formatter = @percentage ? CompletionRateSF.new : CompleteSF.new
@@ -16,7 +17,7 @@ module Hbtrack
     end
 
     def execute
-      return list_all(@printer) if @all
+      return list_all(@printer, @month) if @all
       return list(@names[0], @printer) unless @names.empty?
       super
     end
@@ -33,6 +34,10 @@ module Hbtrack
 
         opts.on('-a', '--all', 'List all habits') do
           @all = true
+        end
+
+        opts.on('--month MONTH', 'List habit(s) according to month provided') do |month|
+          @month = month.to_sym
         end
 
         opts.on_tail('-h', '--help', 'Prints this help') do
@@ -54,14 +59,14 @@ module Hbtrack
       "#{title}#{progress}\n#{footer}"
     end
 
-    def list_all(printer)
+    def list_all(printer, month_key)
       return Util.blue 'No habits added yet.' if @hbt.habits.empty?
 
       title = Util.title Util.current_month
       progress = @hbt.habits.each_with_index.map do |h, index|
         space = @hbt.longest_name.length - h.name_length
         "#{index + 1}. " \
-        "#{printer.print_latest_progress(h, space)}"
+        "#{printer.print_progress_for(habit: h, key: month_key,  no_of_space: space)}"
       end.join("\n")
       footer = "\n" + @hbt.overall_stat_description(@formatter)
 

@@ -28,7 +28,16 @@ RSpec.describe Hbtrack::ListCommand do
     it 'should call #list_all when -a is given' do
       result = @command.execute
 
-      expected = @command.list_all(Hbtrack::HabitPrinter.new)
+      expected = @command.list_all(Hbtrack::HabitPrinter.new, @command.month)
+
+      expect(result).to eq expected
+    end
+
+    it 'should all #list_all with date when -a -d is given' do
+      @command = Hbtrack::ListCommand.new(@hbt, ['-a', '--month', '2017,6'])
+      result = @command.execute
+
+      expected = @command.list_all(Hbtrack::HabitPrinter.new, :'2017,6')
 
       expect(result).to eq expected
     end
@@ -73,7 +82,7 @@ RSpec.describe Hbtrack::ListCommand do
     end
 
     it 'should return the right output' do
-      result = @command.list_all(@printer)
+      result = @command.list_all(@printer, @command.month)
 
       expected = Hbtrack::Util.title Date.today.strftime('%B %Y').to_s
       expected += '1. ' +
@@ -88,7 +97,7 @@ RSpec.describe Hbtrack::ListCommand do
     it 'should return no habits added' do
       @hbt.habits = []
 
-      result = @command.list_all(@printer)
+      result = @command.list_all(@printer, @command.month)
 
       expected = Hbtrack::Util.blue 'No habits added yet.'
 

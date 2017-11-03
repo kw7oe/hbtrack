@@ -25,6 +25,14 @@ module Hbtrack
         )
     end
 
+    def print_progress_for(habit:, key:, no_of_space: 0) 
+      habit.name.to_s + ' ' * no_of_space + ' : ' +
+        print_progress(
+          habit.progress[key],
+          habit.stat_for_progress(key)
+        )
+    end
+
     def print_all_progress(habit)
       habit.progress.map do |key, value|
         space = calculate_space_needed_for(habit, key)
