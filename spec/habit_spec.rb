@@ -51,7 +51,7 @@ RSpec.describe Hbtrack::Habit do
     end
   end
 
-  context '#latest_progrss' do
+  context '#latest_progress' do
     it 'should return the right progress' do
       @habit.done
 
@@ -145,6 +145,14 @@ RSpec.describe Hbtrack::Habit do
       expected = "Workout\n#{@habit.progress_output}\n"
 
       expect(@habit.to_s).to eq expected
+    end
+  end
+
+  context '#done_for' do
+    it 'should return false if not habit not done' do
+      result = @habit.done_for(date: Date.today)
+
+      expect(result).to be false
     end
   end
 

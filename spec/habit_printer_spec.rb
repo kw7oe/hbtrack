@@ -17,11 +17,13 @@ RSpec.describe Hbtrack::HabitPrinter do
     let(:hp) { Hbtrack::HabitPrinter.new(Hbtrack::CompleteSF.new) }
     let(:util) { Hbtrack::Util }
 
-    it '#print_latest_progress should return right output' do
-      expected_result = 'workout : ' + util.green('*') +
+    it '#print_progress_for should return right output' do
+      result = hp.print_progress_for(habit: habit, key: latest_key)
+
+      expected = 'workout : ' + util.green('*') +
         ' ' * 31 +
         'All: 1, Done: 1, Undone: 0'
-      expect(hp.print_latest_progress(habit)).to eq expected_result
+      expect(result).to eq expected
     end
 
     it '#pretty_print_all should return right output' do

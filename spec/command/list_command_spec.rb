@@ -82,13 +82,14 @@ RSpec.describe Hbtrack::ListCommand do
     end
 
     it 'should return the right output' do
-      result = @command.list_all(@printer, @command.month)
+      key = @command.month
+      result = @command.list_all(@printer, key)
 
       expected = Hbtrack::Util.title Date.today.strftime('%B %Y').to_s
       expected += '1. ' +
-                  @command.printer.print_latest_progress(@hbt.habits[0]) + "\n"
+                  @command.printer.print_progress_for(habit: @hbt.habits[0], key: key) + "\n"
       expected += '2. ' +
-                  @command.printer.print_latest_progress(@hbt.habits[1], 3) + "\n\n"
+                  @command.printer.print_progress_for(habit: @hbt.habits[1], key: key, no_of_space: 3) + "\n\n"
       expected += @hbt.overall_stat_description(@command.formatter)
 
       expect(result).to eq expected

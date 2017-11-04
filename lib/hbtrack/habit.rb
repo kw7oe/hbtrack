@@ -109,12 +109,11 @@ module Hbtrack
       update_progress_for(key, date.day, done)
     end
 
-    # TODO: test needed
-    # Get the done status for specific date
+    #  Get the done status for specific date
     #
     # @return [Integer]
-    def done_for(date:) # TODO: Test needed
-      latest_progress.split('')[date.day - 1]
+    def done_for(date:)
+      latest_progress.split('').fetch(date.day - 1, false)
     end
 
     # Get the stat of the progress.

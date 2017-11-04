@@ -63,14 +63,23 @@ module Hbtrack
       return Util.blue 'No habits added yet.' if @hbt.habits.empty?
 
       title = Util.title Util.current_month
+      longest_name_length = @hbt.longest_name.length
+
       progress = @hbt.habits.each_with_index.map do |h, index|
-        space = @hbt.longest_name.length - h.name_length
-        "#{index + 1}. " \
-        "#{printer.print_progress_for(habit: h, key: month_key,  no_of_space: space)}"
+        space = longest_name_length - h.name.length
+        get_output_of(habit: h,
+                      number: index + 1,
+                      space: space,
+                      key: month_key)
       end.join("\n")
       footer = "\n" + @hbt.overall_stat_description(@formatter)
 
       "#{title}#{progress}\n#{footer}"
+    end
+
+    def get_output_of(habit:, number:, space:, key:)
+        "#{number}. " \
+        "#{printer.print_progress_for(habit: habit, key: key,  no_of_space: space)}"
     end
   end
 end

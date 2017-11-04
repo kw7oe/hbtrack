@@ -77,7 +77,7 @@ module Hbtrack
 
     def update_remaining(day, is_done)
       @hbt.habits.each do |habit|
-        habit.done(is_done, day) if habit.done_for(date: day).nil?
+        habit.done(is_done, day) unless habit.done_for(date: day)
       end
 
       Store.new(@hbt.habits, @hbt.output_file_name).save
