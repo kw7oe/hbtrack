@@ -84,4 +84,22 @@ RSpec.describe Hbtrack::HabitTracker do
       expect(habit_tracker.habits.count).to eq(habit_count + 1)
     end
   end
+
+  context '#invalid_key?' do
+    it 'should return false if key is valid' do
+      result = habit_tracker.invalid_key? key
+      expect(result).to be false
+    end
+
+    it 'should return true if key is invalid' do
+      result = habit_tracker.invalid_key? :"2015,7"
+      expect(result).to be true
+    end
+
+    it 'should return true if there is no habits' do
+      habit_tracker.habits = []
+      result = habit_tracker.invalid_key? key
+      expect(result).to be true
+    end
+  end
 end

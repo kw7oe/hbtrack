@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require 'simplecov'
+SimpleCov.start do
+  add_group 'lib', 'lib'
+  add_group 'spec', 'spec'
+end
+
 require 'hbtrack'
 
 RSpec.configure do |config|

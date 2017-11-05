@@ -82,7 +82,6 @@ module Hbtrack
         habit_name.length > 11
     end
 
-    # TODO: Test needed
     def invalid_key?(key)
       habits.empty? || !habits.first.progress.has_key?(key)
     end
