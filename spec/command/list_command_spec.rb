@@ -82,26 +82,31 @@ RSpec.describe Hbtrack::ListCommand do
     end
 
     it 'should return the right output' do
+      @command = Hbtrack::ListCommand.new(@hbt, ['-a', '--month', '2017,6'])
       key = @command.month
+      date = Hbtrack::Util.get_date_from(key: key)
       result = @command.list_all(@printer, key)
 
-      expected = Hbtrack::Util.title Date.today.strftime('%B %Y').to_s
+      expected = Hbtrack::Util.title date.strftime('%B %Y').to_s
       expected += '1. ' +
                   @command.printer.print_progress_for(habit: @hbt.habits[0], key: key) + "\n"
       expected += '2. ' +
                   @command.printer.print_progress_for(habit: @hbt.habits[1], key: key, no_of_space: 3) + "\n\n"
-      expected += @hbt.overall_stat_description(@command.formatter)
+      expected += @hbt.overall_stat_description_for(key:key, formatter:  @command.formatter)
 
+      expect(result).to eq expected
+    end
+
+    it 'should return error message if key provided invalid' do
+      result = @command.list_all(@printer, :'2015,9')
+      expected = Hbtrack::Util.red 'Invalid month provided.'
       expect(result).to eq expected
     end
 
     it 'should return no habits added' do
       @hbt.habits = []
-
       result = @command.list_all(@printer, @command.month)
-
       expected = Hbtrack::Util.blue 'No habits added yet.'
-
       expect(result).to eq expected
     end
   end

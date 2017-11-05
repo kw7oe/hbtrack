@@ -44,10 +44,10 @@ module Hbtrack
       @habits.max_by(&:name_length).name
     end
 
-    def total_habits_stat
+    def total_habits_stat_for(key:)
       @habits.each_with_object(done: 0, undone: 0) do |habit, stat|
-        stat[:done] += habit.latest_stat[:done]
-        stat[:undone] += habit.latest_stat[:undone]
+        stat[:done] += habit.stat_for_progress(key)[:done]
+        stat[:undone] += habit.stat_for_progress(key)[:undone]
       end
     end
 
@@ -59,8 +59,10 @@ module Hbtrack
       count_for(date, '0')
     end
 
-    def overall_stat_description(formatter)
-      Util.title('Total') + formatter.format(total_habits_stat)
+    def overall_stat_description_for(key:, formatter:)
+      Util.title('Total') + formatter.format(
+        total_habits_stat_for(key: key)
+      )
     end
 
     def create(habit_name)
@@ -80,7 +82,13 @@ module Hbtrack
         habit_name.length > 11
     end
 
-    private def count_for(d, value)
+    # TODO: Test needed
+    def invalid_key?(key)
+      habits.empty? || !habits.first.progress.has_key?(key)
+    end
+
+    private 
+    def count_for(d, value)
       habits.reduce(0) do |a, habit|
         val = habit.done_for(date: d) == value ? 1 : 0
         a + val

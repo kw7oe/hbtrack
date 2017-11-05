@@ -36,7 +36,7 @@ module Hbtrack
           @all = true
         end
 
-        opts.on('--month MONTH', 'List habit(s) according to month provided') do |month|
+        opts.on('-m', '--month MONTH', 'List habit(s) according to month provided') do |month|
           @month = month.to_sym
         end
 
@@ -61,8 +61,10 @@ module Hbtrack
 
     def list_all(printer, month_key)
       return Util.blue 'No habits added yet.' if @hbt.habits.empty?
+      return Util.red 'Invalid month provided.' if @hbt.invalid_key? month_key 
 
-      title = Util.title Util.current_month
+      date = Util.get_date_from(key: month_key)
+      title = Util.title date.strftime('%B %Y') 
       longest_name_length = @hbt.longest_name.length
 
       progress = @hbt.habits.each_with_index.map do |h, index|
@@ -72,14 +74,16 @@ module Hbtrack
                       space: space,
                       key: month_key)
       end.join("\n")
-      footer = "\n" + @hbt.overall_stat_description(@formatter)
+      footer = "\n" + @hbt.overall_stat_description_for(key: month_key, formatter: @formatter)
 
       "#{title}#{progress}\n#{footer}"
     end
 
     def get_output_of(habit:, number:, space:, key:)
-        "#{number}. " \
-        "#{printer.print_progress_for(habit: habit, key: key,  no_of_space: space)}"
+      progress = printer.print_progress_for(habit: habit,
+                                            key: key,
+                                            no_of_space: space)
+      "#{number}. #{progress}"
     end
   end
 end

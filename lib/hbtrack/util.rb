@@ -54,16 +54,10 @@ module Hbtrack
           " #{year}" + ' : '
       end
 
-      # Format the current month and year into string
-      #
-      # @return [String] Month and Year in String.
-      #
-      # == Example
-      #
-      #  Util.current_month
-      #  #=> "August 2017"
-      def current_month
-        Date.today.strftime('%B %Y')
+      # TODO: Test needed
+      def get_date_from(key: )
+        date_component = key.to_s.split(',').map(&:to_i)
+        Date.new(date_component[0], date_component[1], 1)
       end
 
       # Get the month in string form from given key
