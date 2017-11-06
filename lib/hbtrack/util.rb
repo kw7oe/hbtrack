@@ -54,7 +54,6 @@ module Hbtrack
           " #{year}" + ' : '
       end
 
-      # TODO: Test needed
       def get_date_from(key: )
         date_component = key.to_s.split(',').map(&:to_i)
         Date.new(date_component[0], date_component[1], 1)
