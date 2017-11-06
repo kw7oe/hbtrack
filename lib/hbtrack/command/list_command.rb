@@ -17,8 +17,8 @@ module Hbtrack
     end
 
     def execute
-      return list_all(@printer, @month) if @all
-      return list(@names[0], @printer) unless @names.empty?
+      return list_all(@month) if @all
+      return list(@names[0]) unless @names.empty?
       super
     end
 
@@ -47,7 +47,7 @@ module Hbtrack
       end
     end
 
-    def list(name, printer)
+    def list(name)
       habit = @hbt.find(name) do
         return ErrorHandler.raise_habit_not_found(name)
       end
@@ -59,7 +59,7 @@ module Hbtrack
       "#{title}#{progress}\n#{footer}"
     end
 
-    def list_all(printer, month_key)
+    def list_all(month_key)
       return Util.blue 'No habits added yet.' if @hbt.habits.empty?
       return Util.red 'Invalid month provided.' if @hbt.invalid_key? month_key 
 
