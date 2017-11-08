@@ -71,8 +71,7 @@ module Hbtrack
         @habits << habit
         return habit
       end
-
-      return ErrorHandler.raise_habit_name_too_long if habit_name.length > 11
+      return ErrorHandler.raise_habit_name_too_long if habit_name && habit_name.length > 11
 
       ErrorHandler.raise_invalid_arguments
     end
