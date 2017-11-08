@@ -54,9 +54,9 @@ module Hbtrack
         habit = if is_done
                   @hbt.find_or_create(name)
                 else
-                  @hbt.find(name) do
+                  @hbt.find habit_name: name, if_fail: (proc do
                     return ErrorHandler.raise_if_habit_error(name)
-                  end
+                  end)
                 end
 
         habit.done(is_done, day)

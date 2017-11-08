@@ -147,7 +147,7 @@ module Hbtrack
     def overall_stat
       done = 0
       undone = 0
-      @progress.each do |key, _value|
+      @progress.each_key do |key|
         stat = stat_for_progress(key)
         done += stat[:done]
         undone += stat[:undone]

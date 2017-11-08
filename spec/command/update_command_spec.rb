@@ -14,7 +14,7 @@ RSpec.describe Hbtrack::UpdateCommand do
   context '#execute' do
     before do
       @name = 'workout'
-      @habit = @hbt.find(@name)
+      @habit = @hbt.find(habit_name: @name)
     end
 
     it 'should mark habit as done' do
@@ -46,8 +46,8 @@ RSpec.describe Hbtrack::UpdateCommand do
     end
 
     it 'should mark multiple tasks as done' do
-      habit1 = @hbt.find('workout')
-      habit2 = @hbt.find('read')
+      habit1 = @hbt.find(habit_name: 'workout')
+      habit2 = @hbt.find(habit_name: 'read')
       @command = Hbtrack::UpdateCommand.new(@hbt, %w[workout read], true)
 
       count1 = habit1.latest_stat[:done]
@@ -105,14 +105,13 @@ RSpec.describe Hbtrack::UpdateCommand do
 
       expected = Hbtrack::Util.green('Done workout!')
 
-      if (Date.today.day > 1)
+      if Date.today.day > 1
         expected_count = count + 1
         expected_progress = '0' * (Date.today.day - 2) + '1'
       else
         expected_count = 0
         expected_progress = ''
       end
-      
 
       expect(result).to eq expected
       expect(result_count).to eq expected_count

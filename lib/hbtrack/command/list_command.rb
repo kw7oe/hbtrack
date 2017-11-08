@@ -48,9 +48,9 @@ module Hbtrack
     end
 
     def list(name)
-      habit = @hbt.find(name) do
+      habit = @hbt.find habit_name: name, if_fail: (proc do
         return ErrorHandler.raise_habit_not_found(name)
-      end
+      end)
 
       title = Util.title habit.name
       progress = printer.print_all_progress(habit)
@@ -61,10 +61,10 @@ module Hbtrack
 
     def list_all(month_key)
       return Util.blue 'No habits added yet.' if @hbt.habits.empty?
-      return Util.red 'Invalid month provided.' if @hbt.invalid_key? month_key 
+      return Util.red 'Invalid month provided.' if @hbt.invalid_key? month_key
 
       date = Util.get_date_from(key: month_key)
-      title = Util.title date.strftime('%B %Y') 
+      title = Util.title date.strftime('%B %Y')
       longest_name_length = @hbt.longest_name.length
 
       progress = @hbt.habits.each_with_index.map do |h, index|

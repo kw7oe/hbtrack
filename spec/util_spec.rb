@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 RSpec.describe Hbtrack::Util do
-   let(:util) { Hbtrack::Util }
+  let(:util) { Hbtrack::Util }
 
   it '#convert_key_to_date should work' do
     result = util.convert_key_to_date(:'2017,6', 0)
@@ -22,6 +22,6 @@ RSpec.describe Hbtrack::Util do
 
     expected = 'January'
 
-    expect(result).to eq expected    
+    expect(result).to eq expected
   end
 end

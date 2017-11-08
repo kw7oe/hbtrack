@@ -25,19 +25,19 @@ module Hbtrack
 
     # This methods find a habit based on the name given.
     # Blocks are executed when habit is not found.
-    def find(habit_name)
+    def find(habit_name:, if_fail: nil)
       habit = @habits.find do |h|
         h.name == habit_name
       end
-      yield if habit.nil? && block_given?
+      if_fail.call if habit.nil? && !if_fail.nil?
       habit
     end
 
     def find_or_create(habit_name)
-      habit = find(habit_name) do
+      habit = find habit_name: habit_name, if_fail: (proc do
         habit = create(habit_name)
         return habit
-      end
+      end)
     end
 
     def longest_name
@@ -72,7 +72,7 @@ module Hbtrack
         return habit
       end
 
-      return ErrorHandler.raise_habit_name_too_long if habit_name && habit_name.length > 11
+      return ErrorHandler.raise_habit_name_too_long if habit_name.length > 11
 
       ErrorHandler.raise_invalid_arguments
     end
@@ -83,16 +83,16 @@ module Hbtrack
     end
 
     def invalid_key?(key)
-      habits.empty? || !habits.first.progress.has_key?(key)
+      habits.empty? || !habits.first.progress.key?(key)
     end
 
-    private 
+    private
+
     def count_for(d, value)
       habits.reduce(0) do |a, habit|
         val = habit.done_for(date: d) == value ? 1 : 0
         a + val
       end
     end
-
   end
 end

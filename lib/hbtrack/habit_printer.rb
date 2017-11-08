@@ -17,12 +17,12 @@ module Hbtrack
       habit.longest_month.length - Util.get_month_from(key).length
     end
 
-    def print_progress_for(habit:, key:, no_of_space: 0) 
+    def print_progress_for(habit:, key:, no_of_space: 0)
       progress = habit.progress.fetch(key)
       stat = habit.stat_for_progress(key)
 
       habit.name.to_s + ' ' * no_of_space + ' : ' +
-      print_progress(progress, stat)
+        print_progress(progress, stat)
     end
 
     def print_all_progress(habit)

@@ -5,16 +5,18 @@ require 'date'
 
 RSpec.describe Hbtrack::HabitTracker do
   let(:key) { Hbtrack::Habit.get_progress_key_from(Date.today) }
-  let(:habit_tracker) { Hbtrack::HabitTracker.new(
-    Hbtrack::TEST_FILE,
-    Hbtrack::OUTPUT_FILE
-  )}
+  let(:habit_tracker) do
+    Hbtrack::HabitTracker.new(
+      Hbtrack::TEST_FILE,
+      Hbtrack::OUTPUT_FILE
+    )
+  end
   let!(:habit_count) { habit_tracker.habits.count }
   let(:done_count) { habit_tracker.habits.count }
   let(:undone_count) { 0 }
   let(:total) { done_count + undone_count }
 
-  before do 
+  before do
     habit_tracker.habits.each(&:done)
   end
 
@@ -31,7 +33,8 @@ RSpec.describe Hbtrack::HabitTracker do
   it '#overall_stat_description_for should return the right string' do
     result = habit_tracker.overall_stat_description_for(
       key: key,
-      formatter: Hbtrack::CompleteSF.new)
+      formatter: Hbtrack::CompleteSF.new
+    )
 
     expected = Hbtrack::Util.title 'Total'
     expected += "All: #{total}, Done: #{done_count}, Undone: #{undone_count}"
@@ -40,8 +43,9 @@ RSpec.describe Hbtrack::HabitTracker do
   end
 
   it '#find should return the right habit' do
-    result = 'workout'
-    expect(habit_tracker.find('workout').name).to eq result
+    result = habit_tracker.find(habit_name: 'workout').name
+    expected = 'workout'
+    expect(result).to eq expected
   end
 
   it '#done_count_for should return the right done count' do
@@ -79,8 +83,9 @@ RSpec.describe Hbtrack::HabitTracker do
     end
 
     it "should create the habit if it doesn't exists" do
-      result = 'ukulele'
-      expect(habit_tracker.find_or_create('ukulele').name).to eq result
+      result = habit_tracker.find_or_create('ukulele').name
+      expected = 'ukulele'
+      expect(result).to eq expected
       expect(habit_tracker.habits.count).to eq(habit_count + 1)
     end
   end

@@ -24,10 +24,10 @@ module Hbtrack
     def add(names)
       added = []
       names.each do |name|
-        @hbt.find(name) do
+        @hbt.find habit_name: name, if_fail: (proc do
           @hbt.create(name)
           added << name
-        end
+        end)
       end
 
       Store.new(@hbt.habits, @hbt.output_file_name).save

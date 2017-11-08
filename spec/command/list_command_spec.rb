@@ -16,7 +16,7 @@ RSpec.describe Hbtrack::ListCommand do
     it 'shoud call #list when habit name is given' do
       @command = Hbtrack::ListCommand.new(@hbt, ['workout', '-p'])
       result = @command.execute
-      expected = @command.list( 'workout')
+      expected = @command.list('workout')
       expect(result).to eq expected
     end
 
@@ -43,7 +43,7 @@ RSpec.describe Hbtrack::ListCommand do
 
   context '#list' do
     it 'should have the right output' do
-      habit = @hbt.find('workout')
+      habit = @hbt.find(habit_name: 'workout')
       result = @command.list('workout')
       expected = Hbtrack::Util.title 'workout'
       expected +=
@@ -72,7 +72,7 @@ RSpec.describe Hbtrack::ListCommand do
                   @command.printer.print_progress_for(habit: @hbt.habits[0], key: key) + "\n"
       expected += '2. ' +
                   @command.printer.print_progress_for(habit: @hbt.habits[1], key: key, no_of_space: 3) + "\n\n"
-      expected += @hbt.overall_stat_description_for(key:key, formatter:  @command.formatter)
+      expected += @hbt.overall_stat_description_for(key: key, formatter: @command.formatter)
 
       expect(result).to eq expected
     end

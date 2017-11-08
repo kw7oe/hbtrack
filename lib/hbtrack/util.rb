@@ -19,7 +19,7 @@ module Hbtrack
           value + string + "\e[0m"
         end
       end
-      
+
       # Format the string with title style.
       #
       # @param string [String] the string to be styled as title
@@ -54,7 +54,7 @@ module Hbtrack
           " #{year}" + ' : '
       end
 
-      def get_date_from(key: )
+      def get_date_from(key:)
         date_component = key.to_s.split(',').map(&:to_i)
         Date.new(date_component[0], date_component[1], 1)
       end

@@ -23,9 +23,9 @@ module Hbtrack
 
     def remove(names)
       names.each do |name|
-        habit = @hbt.find(name) do
+        habit = @hbt.find habit_name: name, if_fail: (proc do
           return ErrorHandler.raise_if_habit_error(name)
-        end
+        end)
 
         @hbt.habits.delete(habit)
       end

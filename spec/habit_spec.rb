@@ -9,12 +9,12 @@ RSpec.describe Hbtrack::Habit do
   end
 
   def initialize_habit_from_string
-    string = <<~EOF
+    string = <<~HABITS_STRING
       workout
       2017,5: 0000000000011111
       2017,6: 0000000000011111
       2017,7: 1
-    EOF
+    HABITS_STRING
     @habit = Hbtrack::Habit.initialize_from_string(string)
   end
 
@@ -27,13 +27,13 @@ RSpec.describe Hbtrack::Habit do
     end
 
     it 'should equal to_s' do
-      string = <<~EOF
+      string = <<~HABITS_STRING
         workout
         2017,5: 0000000000011111
         2017,6: 0000000000011111
         2017,7: 1
 
-      EOF
+      HABITS_STRING
 
       initialize_habit_from_string
 
@@ -132,10 +132,10 @@ RSpec.describe Hbtrack::Habit do
       @habit = Hbtrack::Habit.new('Workout',
                                   key1 => '00010',
                                   key2 => '11101')
-      expected = <<~EOF
+      expected = <<~HABIT_OUTPUT
         2017,4: 00010
         2017,5: 11101
-      EOF
+      HABIT_OUTPUT
       expect(@habit.progress_output).to eq expected
     end
   end
