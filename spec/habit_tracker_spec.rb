@@ -96,12 +96,22 @@ RSpec.describe Hbtrack::HabitTracker do
       expect(result).to be false
     end
 
+    it 'should return false if key is in between this month' do
+      habit_tracker = Hbtrack::HabitTracker.new(
+        Hbtrack::TEST_FILE,
+        Hbtrack::OUTPUT_FILE
+      )
+      result = habit_tracker.invalid_key? key
+      expect(result).to be false
+    end
+
     it 'should return true if key is invalid' do
       result = habit_tracker.invalid_key? :"2015,7"
       expect(result).to be true
     end
 
     it 'should return true if there is no habits' do
+      key = "2017,6"
       habit_tracker.habits = []
       result = habit_tracker.invalid_key? key
       expect(result).to be true

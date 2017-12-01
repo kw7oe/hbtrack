@@ -82,6 +82,16 @@ module Hbtrack
     end
 
     def invalid_key?(key)
+      # If the key is between current month, it is a valid key.
+      #
+      # This is because there will be occasion during the first
+      # day of a month where the progress is empty, which make it
+      # invalid in previous implementation.
+      #
+      # It should be valid as during `ListCommand#list_all`, we 
+      # still need to list the habits' progress of a new month,
+      # even the progress is empty.
+      return false if key == Habit.get_progress_key_from(Date.today).to_sym
       habits.empty? || !habits.first.progress.key?(key)
     end
 

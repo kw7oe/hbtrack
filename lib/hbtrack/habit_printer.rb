@@ -18,7 +18,14 @@ module Hbtrack
     end
 
     def print_progress_for(habit:, key:, no_of_space: 0)
-      progress = habit.progress.fetch(key)
+      progress = habit.progress.fetch(key) do |k|
+        # If the key is between this month, call `habit#latest_key`
+        # to initialize the progress for the key.
+        if k == Habit.get_progress_key_from(Date.today)
+          habit.latest_key
+        end
+        habit.progress.fetch(key)
+      end
       stat = habit.stat_for_progress(key)
 
       habit.name.to_s + ' ' * no_of_space + ' : ' +
