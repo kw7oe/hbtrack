@@ -36,7 +36,7 @@ module Hbtrack
     # @return [String] formatted result
     def format(hash)
       percentage = to_percentage(hash)[:done]
-      sprintf('Completion rate: %.2f%', percentage)
+      sprintf("Completion rate: %.2f%%", percentage)
     end
 
     # Convert the value in the hash into percentage
