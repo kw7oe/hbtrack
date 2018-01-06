@@ -9,6 +9,7 @@ require 'hbtrack/command/list_command'
 require 'hbtrack/command/update_command'
 require 'hbtrack/command/remove_command'
 require 'hbtrack/command/add_command'
+require 'hbtrack/adapter/streaks_adapter'
 require 'hbtrack/error_handler'
 
 module Hbtrack
