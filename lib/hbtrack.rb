@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: Reorganise import files
 require 'hbtrack/habit_tracker'
 require 'hbtrack/habit'
 require 'hbtrack/config'
@@ -10,6 +11,7 @@ require 'hbtrack/command/update_command'
 require 'hbtrack/command/remove_command'
 require 'hbtrack/command/add_command'
 require 'hbtrack/importer/streaks_importer'
+require 'hbtrack/database/sequel_store'
 require 'hbtrack/error_handler'
 
 module Hbtrack

@@ -12,5 +12,6 @@ test/test_output
 /tmp/
 *.gem
 *.html
+*.db
 
 
