@@ -24,6 +24,7 @@ module Hbtrack
           extract_streaks_data(row)
         end
         # Handle the parsed data
+        [@habits, @entries]
       end
 
       private
