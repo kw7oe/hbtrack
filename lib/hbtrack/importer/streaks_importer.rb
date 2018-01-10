@@ -6,9 +6,8 @@ require 'csv'
 module Hbtrack
   module Importer
     class StreaksImporter < AbstractImporter
-      # Data Abstraction for Streaks Domain
-      Habit = Struct.new(:id, :title, :page, :display_order)
-      Entry = Struct.new(:timestamp, :type, :habit_id)
+      Habit = Hbtrack::Importer::AbstractImporter::Habit
+      Entry = Hbtrack::Importer::AbstractImporter::Entry
 
       # Import and parse the  CSV from Streaks
       def import_from(file)
