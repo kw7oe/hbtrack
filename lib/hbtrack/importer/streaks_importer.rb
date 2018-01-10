@@ -9,13 +9,22 @@ module Hbtrack
 
       def initialize
         @habits = {}
-        @entries = []
+        @entries = {}
       end
 
-      # Import from Streaks CSV file
-      def self.call(file)
-        StreaksImporter.new.import_from(file)
-        # handle other logic
+      # Store in database
+      def store_in(store)
+        ids = {}
+        @habits.each do |id, habit|
+          ids[id] = store.add_habit(habit)
+        end
+
+        @entries.each do |key, entries|
+          id = ids[key]
+          entries.each do |entry|
+            store.add_entry_of(id, entry)
+          end
+        end
       end
 
       # Import and parse the  CSV from Streaks
@@ -49,7 +58,8 @@ module Hbtrack
       def create_entry(task_id, line)
         timestamp = line.fetch('entry_timestamp')
         type = line.fetch('entry_type')
-        @entries << Entry.new(timestamp, type, task_id)
+        @entries[task_id] = [] unless @entries[task_id]
+        @entries[task_id] << Entry.new(timestamp, type)
       end
 
     end

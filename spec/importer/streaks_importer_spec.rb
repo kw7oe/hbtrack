@@ -19,17 +19,31 @@ RSpec.describe Hbtrack::Importer::StreaksImporter do
     f.close
     f
   end
+  let(:importer) { Hbtrack::Importer::StreaksImporter.new }
 
   it 'should parse streaks.csv correctly' do
-    habits, entries = Hbtrack::Importer::StreaksImporter.(file.path)
+    habits, entries = importer.import_from(file.path)
 
     expect(habits.count).to eq 1
-    expect(entries.count).to eq 4
+    expect(entries.count).to eq 1
 
     habit = habits['p2']
-    entry = entries.first
+    entry = entries['p2'].first
     expect(habit.title).to eq 'Wake Up Before 7.30'
     expect(entry.timestamp).to eq '2017-02-26T12:24:16+08:00'
+  end
+
+  # TODO: Migrate test to somewhere related
+  it 'should transfer result into storage accordingly' do
+    store = Hbtrack::Database::SequelStore.start(name: 'test.db')
+    importer.import_from(file.path)
+    importer.store_in(store)
+
+    habit = store.get_habit(1)
+    expect(habit[:title]).to eq 'Wake Up Before 7.30'
+
+    # TODO: Refactor out logic
+    File.delete('test.db')
   end
 
 end
