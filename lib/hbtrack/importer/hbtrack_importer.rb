@@ -19,36 +19,34 @@ module Hbtrack
       def initialize
         super
         @index = 1
-        @id = 1
       end
 
       # Import and parse the CSV from Streaks
       def import_from(file)
         return unless File.exist?(file)
         input = File.read(file).split(/\n\n/)
-        input.each { |block| extract_from(block) }
+        input.each_with_index do |collection, index|
+          extract_from(index, collection)
+        end
 
         [@habits, @entries]
       end
 
-      def extract_from(block)
-        arr = block.split("\n")
+      def extract_from(id, collection)
+        arr = collection.split("\n")
 
         # Get habit name
         habit_name = arr.shift
-        id = create_habit(habit_name)
+        @habits[id] = create_habit(habit_name)
 
         create_entries_of(id, arr)
       end
 
-      # Create a Habit and return its id.
+      # Create a Habit
       def create_habit(habit)
-        id = @id
-        @habits[id] = Habit.new(1, habit, 1, @index)
-        @id += 1
+        habit = Habit.new(habit, @index)
         @index += 1
-
-        id
+        habit
       end
 
       def create_entries_of(id, entries)

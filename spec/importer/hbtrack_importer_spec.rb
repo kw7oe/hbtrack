@@ -33,8 +33,8 @@ RSpec.describe Hbtrack::Importer::HbtrackImporter do
     expect(habits.count).to eq 2
     expect(entries.count).to eq 2
 
-    habit = habits[1]
-    entry = entries[1].first
+    habit = habits[0]
+    entry = entries[0].first
     expect(habit.title).to eq 'workout'
     expect(entry.timestamp).to eq '2017-09-01T00:00:00+00:00'
   end

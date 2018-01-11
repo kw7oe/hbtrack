@@ -24,7 +24,6 @@ module Hbtrack
       def add_habit(habit)
         habits.insert(
           title: habit.title,
-          page: habit.page,
           display_order: habit.display_order
         )
       end

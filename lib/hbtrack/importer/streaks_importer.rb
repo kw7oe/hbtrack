@@ -31,9 +31,10 @@ module Hbtrack
       def find_or_create_habit(id, line)
         unless @habits.has_key? id
           title = line.fetch('title').strip
-          page = line.fetch('page')
-          display_order = line.fetch('display_order')
-          @habits[id] = Habit.new(id, title, page, display_order)
+          page = line.fetch('page').to_i
+          display_order = line.fetch('display_order').to_i
+          display_order = page * display_order
+          @habits[id] = Habit.new(title, display_order)
         end
       end
 
