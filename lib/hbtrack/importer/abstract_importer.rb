@@ -3,9 +3,6 @@
 module Hbtrack
   module Importer
     class AbstractImporter
-      # Data Abstraction for Streaks Domain
-      Habit = Struct.new(:id, :title, :page, :display_order)
-      Entry = Struct.new(:timestamp, :type, :habit_id)
 
       def initialize
         @habits = {}

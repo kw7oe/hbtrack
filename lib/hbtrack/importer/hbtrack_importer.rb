@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require 'hbtrack/importer/abstract_importer'
+require 'hbtrack/database/model'
 require 'date'
 
 module Hbtrack
   module Importer
     class HbtrackImporter < AbstractImporter
-      Habit = Hbtrack::Importer::AbstractImporter::Habit
-      Entry = Hbtrack::Importer::AbstractImporter::Entry
+      Habit = Hbtrack::Database::Habit
+      Entry = Hbtrack::Database::Entry
 
       ENTRY_TYPE = {
         '0' => 'missed',

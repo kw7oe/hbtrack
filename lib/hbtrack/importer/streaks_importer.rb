@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 require 'hbtrack/importer/abstract_importer'
+require 'hbtrack/database/model'
 require 'csv'
 
 module Hbtrack
   module Importer
     class StreaksImporter < AbstractImporter
-      Habit = Hbtrack::Importer::AbstractImporter::Habit
-      Entry = Hbtrack::Importer::AbstractImporter::Entry
+      Habit = Hbtrack::Database::Habit
+      Entry = Hbtrack::Database::Entry
 
       # Import and parse the  CSV from Streaks
       def import_from(file)
