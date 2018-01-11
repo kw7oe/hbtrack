@@ -11,6 +11,7 @@ require 'hbtrack/command/update_command'
 require 'hbtrack/command/remove_command'
 require 'hbtrack/command/add_command'
 require 'hbtrack/importer/streaks_importer'
+require 'hbtrack/importer/hbtrack_importer'
 require 'hbtrack/database/sequel_store'
 require 'hbtrack/error_handler'
 

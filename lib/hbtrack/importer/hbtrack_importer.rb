@@ -43,7 +43,7 @@ module Hbtrack
       # Create a Habit and return its id.
       def create_habit(habit)
         id = @id
-        @habits[id] = Habit.new(habit, 1, @index)
+        @habits[id] = Habit.new(1, habit, 1, @index)
         @id += 1
         @index += 1
 
@@ -51,7 +51,7 @@ module Hbtrack
       end
 
       def create_entries_of(id, entries)
-        @entries[id] = entries.map do |entry|
+        @entries[id] = entries.flat_map do |entry|
           month, values = entry.split(': ')
 
           values.split("").map.with_index(1) do |value, index|
