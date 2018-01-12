@@ -11,23 +11,33 @@ RSpec.describe Hbtrack::Database::SequelStore do
     File.delete('test.db')
   end
 
-  Habit = Struct.new(:title, :page, :display_order)
+  Habit = Struct.new(:title, :display_order)
   Entry = Struct.new(:timestamp, :type)
 
   describe 'habits' do
     it 'should be able to add habit' do
-      struct = Habit.new("workout", 1, 1)
+      struct = Habit.new("workout", 1)
       @store.add_habit(struct)
 
       habit = @store.get_habit(1)
 
       expect(habit[:title]).to eq "workout"
     end
+
+    it 'should be able to get habits count' do
+      struct = Habit.new("workout", 1)
+      struct2 = Habit.new("workout", 2)
+      @store.add_habit(struct)
+      @store.add_habit(struct2)
+      count = @store.get_habits_count
+
+      expect(count).to eq 2
+    end
   end
 
   describe 'entries' do
     let(:habit) do
-      struct = Habit.new("workout", 1, 1)
+      struct = Habit.new("workout", 1)
       @store.add_habit(struct)
       @store.get_habit(1)
     end

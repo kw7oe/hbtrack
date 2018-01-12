@@ -33,6 +33,11 @@ module Hbtrack
         habits.filter(id: id).first
       end
 
+      # Get count of habits
+      def get_habits_count
+        habits.count
+      end
+
       # Data Abstrack for Entry
       # Entry = Struct.new(:timestamp, :type, :habit_id)
 
