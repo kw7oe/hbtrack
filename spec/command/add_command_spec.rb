@@ -32,7 +32,7 @@ RSpec.describe Hbtrack::AddCommand do
       result = @command.add(['sleeping'])
       result_count = @hbt.habits.count
 
-      expected = Hbtrack::Util.green('Add sleeping!')
+      expected = Hbtrack::Util.green('Add sleeping!') + "\n"
       expected_count = @initial_count + 1
 
       expect(result).to eq expected
@@ -43,7 +43,7 @@ RSpec.describe Hbtrack::AddCommand do
       result = @command.add(%w[sleeping eating])
       result_count = @hbt.habits.count
 
-      expected = Hbtrack::Util.green('Add sleeping,eating!')
+      expected = Hbtrack::Util.green('Add sleeping,eating!') + "\n"
       expected_count = @initial_count + 2
 
       expect(result).to eq expected
