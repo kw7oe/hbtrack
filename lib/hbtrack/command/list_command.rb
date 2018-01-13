@@ -10,6 +10,8 @@ module Hbtrack
     def initialize(hbt, options)
       @percentage = false
       @month = Habit.get_progress_key_from(Date.today)
+      @db = false
+      @store = Hbtrack::Database::SequelStore.start
 
       super(hbt, options)
       @formatter = @percentage ? CompletionRateSF.new : CompleteSF.new
@@ -17,8 +19,11 @@ module Hbtrack
     end
 
     def execute
-      return list_all(@month) if @all
-      return list(@names[0]) unless @names.empty?
+      return list_from_db(@store, @names) if @db
+      unless @names.empty?
+        return list(@names[0])
+      end
+      return list_all(@month)
       super
     end
 
@@ -32,8 +37,8 @@ module Hbtrack
           @percentage = true
         end
 
-        opts.on('-a', '--all', 'List all habits') do
-          @all = true
+        opts.on('--db', 'List habit(s) from database') do
+          @db = true
         end
 
         opts.on('-m', '--month MONTH', 'List habit(s) according to month provided') do |month|
@@ -51,11 +56,13 @@ module Hbtrack
       habit = @hbt.find habit_name: name, if_fail: (proc do
         return ErrorHandler.raise_habit_not_found(name)
       end)
+      feedback_single(habit)
+    end
 
+    def feedback_single(habit)
       title = Util.title habit.name
       progress = printer.print_all_progress(habit)
       footer = "\n" + habit.overall_stat_description(printer.formatter)
-
       "#{title}#{progress}\n#{footer}"
     end
 
@@ -84,6 +91,21 @@ module Hbtrack
                                             key: key,
                                             no_of_space: space)
       "#{number}. #{progress}"
+    end
+
+    def list_from_db(store, names)
+      habits = []
+      habits = if names.empty?
+                 get_from_db(store)
+               else
+                 get_from_db(store, title: names[0])
+               end
+      feedback(habits)
+    end
+
+    def get_from_db(store, title: nil)
+      return store.get_all_habits unless title
+      store.get_habit_by_title(title)
     end
   end
 end

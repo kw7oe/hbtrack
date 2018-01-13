@@ -33,6 +33,16 @@ module Hbtrack
         habits.filter(id: id).first
       end
 
+      # Get habit by title
+      def get_habit_by_title(title)
+        habits.filter(title: title).first
+      end
+
+      # Get all habits
+      def get_all_habits
+        habits.all
+      end
+
       # Get count of habits
       def get_habits_count
         habits.count

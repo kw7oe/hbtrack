@@ -9,7 +9,7 @@ RSpec.describe Hbtrack::ListCommand do
       Hbtrack::OUTPUT_FILE
     )
     @hbt.habits.each(&:done)
-    @command = Hbtrack::ListCommand.new(@hbt, ['-a'])
+    @command = Hbtrack::ListCommand.new(@hbt, [])
   end
 
   context '#execute' do
@@ -20,23 +20,16 @@ RSpec.describe Hbtrack::ListCommand do
       expect(result).to eq expected
     end
 
-    it 'should call #list_all when -a is given' do
+    it 'should call #list_all when no option is given' do
       result = @command.execute
       expected = @command.list_all(@command.month)
       expect(result).to eq expected
     end
 
-    it 'should all #list_all with date when -a -d is given' do
-      @command = Hbtrack::ListCommand.new(@hbt, ['-a', '--month', '2017,6'])
+    it 'should all #list_all with date when only -d is given' do
+      @command = Hbtrack::ListCommand.new(@hbt, ['--month', '2017,6'])
       result = @command.execute
       expected = @command.list_all(:'2017,6')
-      expect(result).to eq expected
-    end
-
-    it 'should call #help when no arguments given' do
-      @command = Hbtrack::ListCommand.new(@hbt, [])
-      result = @command.execute
-      expected = @command.help
       expect(result).to eq expected
     end
   end
@@ -62,7 +55,7 @@ RSpec.describe Hbtrack::ListCommand do
 
   context '#list_all' do
     it 'should return the right output' do
-      @command = Hbtrack::ListCommand.new(@hbt, ['-a', '--month', '2017,6'])
+      @command = Hbtrack::ListCommand.new(@hbt, ['--month', '2017,6'])
       key = @command.month
       date = Hbtrack::Util.get_date_from(key: key)
       result = @command.list_all(key)
