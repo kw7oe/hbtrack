@@ -33,6 +33,11 @@ module Hbtrack
         habits.filter(id: id).first
       end
 
+      # Get ID of a habit by title
+      def get_habit_id_for(title)
+        get_habit_by_title(title)[:id]
+      end
+
       # Get habit by title
       def get_habit_by_title(title)
         habits.filter(title: title).first
@@ -63,6 +68,15 @@ module Hbtrack
       # Get all entries of a habit
       def get_entries_of(habit_id)
         entries.where(habit_id: habit_id)
+      end
+
+      def get_entries_of_month(habit_id, month, year)
+        get_entries_of(habit_id).where(timestamp:
+                                       in_range(month, year))
+      end
+
+      def in_range(month, year)
+        Date.new(year, month, 1)..Date.new(year, month, -1)
       end
 
       private
