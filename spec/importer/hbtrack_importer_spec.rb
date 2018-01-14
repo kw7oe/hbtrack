@@ -41,7 +41,7 @@ RSpec.describe Hbtrack::Importer::HbtrackImporter do
 
   # TODO: Migrate test to somewhere related
   it 'should transfer result into storage accordingly' do
-    store = Hbtrack::Database::SequelStore.start(name: 'test.db')
+    store = Hbtrack::Database::SequelStore.new(name: 'test.db')
     importer.import_from(file.path)
     importer.store_in(store)
 

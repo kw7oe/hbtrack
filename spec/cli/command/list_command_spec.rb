@@ -3,20 +3,22 @@
 require 'spec_helper'
 
 RSpec.describe Hbtrack::ListCommand do
-  let(:store) { Hbtrack::Database::SequelStore.start(name: 'test.db') }
+  let(:store) { Hbtrack::Database::SequelStore.new(name: 'test.db') }
+  let(:add_command) { Hbtrack::AddCommand.new(nil, nil, nil) }
+  let(:list_command) { Hbtrack::ListCommand.new(nil, nil, nil) }
 
-  before :each do
+  before do
     titles = ['workout', 'read']
-    Hbtrack::AddCommand.new(nil, nil).add_to_db(titles, store)
+    add_command.add_to_db(titles, store)
   end
 
-  after :each do
+  after do
     File.delete('test.db')
   end
 
   describe '#get_habits_from_db' do
     it 'should get all habits from database' do
-      habits, entries = Hbtrack::ListCommand.new(nil, nil).get_habits_from_db(store)
+      habits, entries = list_command.get_habits_from_db(store)
 
       habit1 = habits[0]
       habit2 = habits[1]
@@ -31,7 +33,7 @@ RSpec.describe Hbtrack::ListCommand do
 
   describe '#get_habit_from_db' do
     it 'should get the specfic habit from database' do
-      habit , entry = Hbtrack::ListCommand.new(nil, nil).get_habit_from_db(store, 'workout')
+      habit , entry = list_command.get_habit_from_db(store, 'workout')
 
       expect(habit[:title]).to eq 'workout'
       expect(habit[:display_order]).to be 1

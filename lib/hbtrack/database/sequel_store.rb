@@ -5,13 +5,8 @@ module Hbtrack
     class SequelStore
       require 'sequel'
 
-      # Start DB connection
-      def self.start(name: 'hbtrack.db')
-        SequelStore.new(name)
-      end
-
       attr_reader :db
-      def initialize(name)
+      def initialize(name: 'hbtrack.rb')
         @db = Sequel.sqlite(name)
         create_table?
       end
@@ -70,11 +65,20 @@ module Hbtrack
         entries.where(habit_id: habit_id)
       end
 
-      def get_entries_of_month(habit_id, month, year)
-        get_entries_of(habit_id).where(timestamp:
-                                       in_range(month, year)).select(:type)
+      # Get entries count of a habit
+      def get_entries_count_of(habit_id)
+        get_entries_of(habit_id).count
       end
 
+      # Get entries of a habit in a period of month
+      # according to month and year given.
+      def get_entries_of_month(habit_id, month, year)
+        get_entries_of(habit_id).where(timestamp:
+                                       in_range(month, year)).select(:type).all
+      end
+
+      # Create a range of date from the first day
+      # to the last day of a month
       def in_range(month, year)
         Date.new(year, month, 1)..Date.new(year, month, -1)
       end

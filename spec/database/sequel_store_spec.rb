@@ -3,52 +3,62 @@
 require 'spec_helper'
 
 RSpec.describe Hbtrack::Database::SequelStore do
-  before :each do
-    @store = Hbtrack::Database::SequelStore.start(name: 'test.db')
-  end
+
+  # TODO: Should refactor out
+  Habit = Struct.new(:title, :display_order)
+  Entry = Struct.new(:timestamp, :type)
+
+  let(:store) { Hbtrack::Database::SequelStore.new(name: 'test.db') }
 
   after :each do
     File.delete('test.db')
   end
 
-  Habit = Struct.new(:title, :display_order)
-  Entry = Struct.new(:timestamp, :type)
-
   describe 'habits' do
-    it 'should be able to add habit' do
+    before do
       struct = Habit.new("workout", 1)
-      @store.add_habit(struct)
+      struct2 = Habit.new("read", 2)
+      store.add_habit(struct)
+      store.add_habit(struct2)
+    end
 
-      habit = @store.get_habit(1)
-
-      expect(habit[:title]).to eq "workout"
+    it 'should be able to get all habits' do
+      habits = store.get_all_habits
+      expect(habits.count).to eq 2
     end
 
     it 'should be able to get habits count' do
-      struct = Habit.new("workout", 1)
-      struct2 = Habit.new("workout", 2)
-      @store.add_habit(struct)
-      @store.add_habit(struct2)
-      count = @store.get_habits_count
-
+      count = store.get_habits_count
       expect(count).to eq 2
+    end
+
+    it 'should be able to get habit id from title' do
+      id = store.get_habit_id_for('workout')
+      expect(id).to eq 1
     end
   end
 
   describe 'entries' do
     let(:habit) do
       struct = Habit.new("workout", 1)
-      @store.add_habit(struct)
-      @store.get_habit(1)
+      store.add_habit(struct)
+      store.get_habit(1)
     end
 
-    it 'should be able to add entries for a habit' do
-      struct = Entry.new('2017-02-26T12:24:16+08:00', 'partially_compleed')
+    before do
+      struct = Entry.new('2017-02-25T12:24:16+08:00', 'missed')
+      struct1 = Entry.new('2017-02-26T12:24:16+08:00', 'partially_completed')
       id = habit[:id]
-      @store.add_entry_of(id, struct)
-      entries = @store.get_entries_of(id)
+      store.add_entry_of(id, struct)
+      store.add_entry_of(id, struct1)
+    end
 
-      expect(entries.count).to eq 1
+    it 'should be able to get entries of a habit' do
+      entries = store.get_entries_of_month(habit[:id], 2, 2017)
+
+      expect(entries.count).to eq 2
+      expect(entries[0][:type]).to eq 'missed'
+      expect(entries[1][:type]).to eq 'partially_completed'
     end
   end
 
