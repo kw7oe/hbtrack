@@ -14,9 +14,12 @@ RSpec.describe Hbtrack::ListCommand do
     File.delete('test.db')
   end
 
-  describe '#get_from_db' do
-    it 'should get all habits from database if title not provided' do
-      habit1, habit2 = Hbtrack::ListCommand.new(nil, nil).get_from_db(store)
+  describe '#get_habits_from_db' do
+    it 'should get all habits from database' do
+      habits, entries = Hbtrack::ListCommand.new(nil, nil).get_habits_from_db(store)
+
+      habit1 = habits[0]
+      habit2 = habits[1]
 
       expect(habit1[:title]).to eq 'workout'
       expect(habit2[:title]).to eq 'read'
@@ -24,9 +27,11 @@ RSpec.describe Hbtrack::ListCommand do
       expect(habit1[:display_order]).to be 1
       expect(habit2[:display_order]).to be 2
     end
+  end
 
-    it 'should get the specfic habit from database if title is provided' do
-      habit = Hbtrack::ListCommand.new(nil, nil).get_from_db(store, title: 'workout')
+  describe '#get_habit_from_db' do
+    it 'should get the specfic habit from database' do
+      habit , entry = Hbtrack::ListCommand.new(nil, nil).get_habit_from_db(store, 'workout')
 
       expect(habit[:title]).to eq 'workout'
       expect(habit[:display_order]).to be 1

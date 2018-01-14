@@ -72,7 +72,7 @@ module Hbtrack
 
       def get_entries_of_month(habit_id, month, year)
         get_entries_of(habit_id).where(timestamp:
-                                       in_range(month, year))
+                                       in_range(month, year)).select(:type)
       end
 
       def in_range(month, year)

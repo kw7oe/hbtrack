@@ -95,17 +95,35 @@ module Hbtrack
 
     def list_from_db(store, names)
       habits = []
-      habits = if names.empty?
-                 get_from_db(store)
-               else
-                 get_from_db(store, title: names[0])
-               end
-      feedback(habits)
+      habits, entries = if names.empty?
+                          get_habits_from_db(store)
+                        else
+                          get_habit_from_db(store, title: names[0])
+                        end
+      feedback(habits, entries)
     end
 
-    def get_from_db(store, title: nil)
-      return store.get_all_habits unless title
-      store.get_habit_by_title(title)
+    def get_habits_from_db(store)
+      habits = []
+      entries = {}
+      habits = store.get_all_habits
+      habits.each do |habit|
+        entries[habit[:title]] = get_entry_from_db(store, habit[:id])
+      end
+      [habits, entries]
+    end
+
+    def get_habit_from_db(store, title)
+      entry = {}
+      habit = store.get_habit_by_title(title)
+      entry[habit[:title]] = get_entry_from_db(store, habit[:id])
+      [habit, entry]
+    end
+
+    def get_entry_from_db(store, id)
+      month = Date.today.month
+      year = Date.today.year
+      store.get_entries_of_month(id, month, year)
     end
   end
 end
