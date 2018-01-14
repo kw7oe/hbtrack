@@ -11,6 +11,11 @@ module Hbtrack
       @names = unprocess_option
     end
 
+    def local_store
+      return @store if @store
+      @store = SequelStore.new
+    end
+
     def execute
       help
     end

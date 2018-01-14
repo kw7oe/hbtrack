@@ -7,11 +7,10 @@ module Hbtrack
   class ListCommand < Command
     attr_reader :printer, :formatter, :month
 
-    def initialize(hbt, store_name = 'hbtrack.db', options)
+    def initialize(hbt, options)
       @percentage = false
       @month = Habit.get_progress_key_from(Date.today)
       @db = false
-      @store = Hbtrack::Database::SequelStore.new(name: store_name)
 
       super(hbt, options)
       @formatter = @percentage ? CompletionRateSF.new : CompleteSF.new
@@ -19,7 +18,7 @@ module Hbtrack
     end
 
     def execute
-      return list_from_db(@store, @names) if @db
+      return list_from_db(local_store, @names) if @db
       unless @names.empty?
         return list(@names[0])
       end

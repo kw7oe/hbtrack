@@ -4,8 +4,8 @@ require 'spec_helper'
 
 RSpec.describe Hbtrack::ListCommand do
   let(:store) { Hbtrack::Database::SequelStore.new(name: 'test.db') }
-  let(:add_command) { Hbtrack::AddCommand.new(nil, nil, nil) }
-  let(:list_command) { Hbtrack::ListCommand.new(nil, nil, nil) }
+  let(:add_command) { Hbtrack::AddCommand.new(nil, nil) }
+  let(:list_command) { Hbtrack::ListCommand.new(nil, nil) }
 
   before do
     titles = ['workout', 'read']

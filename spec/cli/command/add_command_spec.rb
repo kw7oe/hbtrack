@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Hbtrack::AddCommand do
   let(:store) { Hbtrack::Database::SequelStore.new(name: 'test.db') }
-  let(:add_command) { Hbtrack::AddCommand.new(nil, nil, nil) }
+  let(:add_command) { Hbtrack::AddCommand.new(nil, nil) }
 
   after do
     File.delete('test.db')

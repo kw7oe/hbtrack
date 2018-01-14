@@ -9,15 +9,14 @@ module Hbtrack
   # AddCommand class is responsible for handling
   # `hbtrack add` command in CLI
   class AddCommand < Command
-    def initialize(hbt, store_name = 'hbtrack.db', options)
+    def initialize(hbt, options)
       @db = false
-      @store = Hbtrack::Database::SequelStore.new(name: store_name)
       super(hbt, options)
     end
 
     def execute
       unless @names.empty?
-        return add_to_db(@names, @store) if @db
+        return add_to_db(@names, local_store) if @db
         return add(@names)
       end
       super
