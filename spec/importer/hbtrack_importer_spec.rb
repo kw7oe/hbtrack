@@ -36,18 +36,26 @@ RSpec.describe Hbtrack::Importer::HbtrackImporter do
     habit = habits[0]
     entry = entries[0].first
     expect(habit.title).to eq 'workout'
-    expect(entry.timestamp).to eq '2017-09-01T00:00:00+00:00'
+    expect(entry.timestamp).to eq '2017-09-01T00:00:00+08:00'
   end
 
-  # TODO: Migrate test to somewhere related
-  it 'should transfer result into storage accordingly' do
-    store = Hbtrack::Database::SequelStore.new(name: 'test.db')
-    importer.import_from(file.path)
-    importer.store_in(store)
+  describe 'storage' do
+    after { File.delete('test.db') }
 
-    habit = store.get_habit(1)
-    expect(habit[:title]).to eq 'workout'
-    File.delete('test.db')
+    # TODO: Migrate test to somewhere related
+    it 'should transfer result into storage accordingly' do
+      store = Hbtrack::Database::SequelStore.new(name: 'test.db')
+      importer.import_from(file.path)
+      importer.store_in(store)
+
+      habit = store.get_habit(1)
+      entries = store.get_entries_of_month(1, 10, 2017)
+
+      expect(habit[:title]).to eq 'workout'
+      expect(entries.first[:type]).to eq 'completed'
+      expect(entries.last[:type]).to eq 'completed'
+      expect(entries.count).to eq 31
+    end
   end
 
 end

@@ -33,17 +33,23 @@ RSpec.describe Hbtrack::Importer::StreaksImporter do
     expect(entry.timestamp).to eq '2017-02-26T12:24:16+08:00'
   end
 
-  # TODO: Migrate test to somewhere related
-  it 'should transfer result into storage accordingly' do
-    store = Hbtrack::Database::SequelStore.new(name: 'test.db')
-    importer.import_from(file.path)
-    importer.store_in(store)
+  describe 'storage' do
+    after { File.delete('test.db') }
 
-    habit = store.get_habit(1)
-    expect(habit[:title]).to eq 'Wake Up Before 7.30'
+    # TODO: Migrate test to somewhere related
+    it 'should transfer result into storage accordingly' do
+      store = Hbtrack::Database::SequelStore.new(name: 'test.db')
+      importer.import_from(file.path)
+      importer.store_in(store)
 
-    # TODO: Refactor out logic
-    File.delete('test.db')
+      habit = store.get_habit(1)
+      entries = store.get_entries_of_month(1, 2, 2017)
+
+      expect(entries.first[:type]).to eq 'missed_auto'
+      expect(entries.last[:type]).to eq 'missed_auto'
+      expect(entries.count).to eq 3
+      expect(habit[:title]).to eq 'Wake Up Before 7.30'
+    end
   end
 
 end

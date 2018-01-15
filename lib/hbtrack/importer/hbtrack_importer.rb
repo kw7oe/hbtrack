@@ -67,7 +67,8 @@ module Hbtrack
 
       def create_timestamp_for(month, day)
         year, month = month.split(',').map(&:to_i)
-        DateTime.new(year, month, day).to_s
+        time_zone = Time.new.zone
+        DateTime.new(year, month, day, 0, 0, 0, "#{time_zone}:00").to_s
       end
 
     end
