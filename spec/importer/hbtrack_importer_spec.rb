@@ -35,9 +35,9 @@ RSpec.describe Hbtrack::Importer::HbtrackImporter do
 
     habit = habits[0]
     entry = entries[0].first
-    time_zone = Time.new.zone
+    time_zone = Time.new(2017,9,1).iso8601
     expect(habit.title).to eq 'workout'
-    expect(entry.timestamp).to eq "2017-09-01T00:00:00#{time_zone}:00"
+    expect(entry.timestamp).to eq time_zone
   end
 
   describe 'storage' do
