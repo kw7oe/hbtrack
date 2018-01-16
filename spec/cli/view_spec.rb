@@ -8,23 +8,57 @@ RSpec.describe Hbtrack::CLI::View do
 
   View = Hbtrack::CLI::View
   Util = Hbtrack::Util
+  let(:entries) do
+    [
+      {type: 'missed_auto'},
+      {type: 'partially_completed'},
+      {type: 'skip'},
+      {type: 'missed'},
+      {type: 'missed'},
+      {type: 'completed_manually'},
+      {type: 'completed_auto'},
+    ]
+  end
+  let(:habits) do
+    [
+      {title: 'workout'},
+      {title: 'programming'}
+    ]
+  end
+  let(:habit_entries) do
+    {
+      'workout' => entries,
+      'programming' => entries
+    }
+  end
+  let(:expected_entry_string) do
+    Util.red('*') * 5 + Util.green('*') * 2
+  end
+
+  describe '#print_habits' do
+    it 'should print a list of habits associated with its progress' do
+      result = View.print_habits(habits, habit_entries)
+      expected = '1. workout    : ' + expected_entry_string +
+        "\n2. programming: " + expected_entry_string
+
+      expect(result).to eq expected
+    end
+  end
+
+  describe '#print_habit' do
+    it 'should print habit name and progress' do
+      title = 'workout'
+      result = View.print_habit(1, title, entries)
+      expected = "1. #{title}: " + expected_entry_string
+
+      expect(result).to eq expected
+    end
+  end
 
   describe '#convert_entry_to_view' do
     it 'should convert entry correctly' do
-      entry = [
-        {type: 'missed_auto'},
-        {type: 'partially_completed'},
-        {type: 'skip'},
-        {type: 'missed'},
-        {type: 'missed'},
-        {type: 'completed_manually'},
-        {type: 'completed_auto'},
-      ]
-
-      result = View.convert_entry_to_view(entry)
-      expected = Util.red('*') * 5 + Util.green('*') * 2
-
-      expect(result).to eq expected
+      result = View.convert_entry_to_view(entries)
+      expect(result).to eq expected_entry_string
     end
   end
 
@@ -44,6 +78,15 @@ RSpec.describe Hbtrack::CLI::View do
     it 'should create green * when is completed' do
       result = View.convert_status_to_view('completed')
       expected = Util.green('*')
+      expect(result).to eq expected
+    end
+  end
+
+  describe '#max_char_count' do
+    it 'should return the maximum char count among an array of string' do
+      input = ['workout', 'programming', 'sleep']
+      result = View.max_char_count(input)
+      expected = 'programming'.size
       expect(result).to eq expected
     end
   end

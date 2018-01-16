@@ -11,12 +11,19 @@ module Hbtrack
       # the habits and its entries to be presented
       # to the user
       def print_habits(habits, entries)
+        char_count = max_char_count habits.map { |h| h[:title] }
+        habits.map.with_index(1) do |habit, index|
+          title = habit[:title]
+          print_habit(index, title, entries[title], char_count - title.size)
+        end.join("\n")
       end
 
       # Create the string representation of
       # a habit and its entries to be presented
       # to the user
-      def print_habit(habit, entry)
+      def print_habit(index, title, entry, space = 0)
+        "#{index}. #{title}#{' ' * space}: " +
+        convert_entry_to_view(entry)
       end
 
       # Create the string representation of
@@ -32,6 +39,9 @@ module Hbtrack
         return Util.red '*'
       end
 
+      def max_char_count(strings)
+        strings.map(&:size).max
+      end
     end
   end
 end
