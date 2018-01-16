@@ -4,12 +4,19 @@ require 'spec_helper'
 
 RSpec.describe Hbtrack::ListCommand do
   let(:store) { Hbtrack::Database::SequelStore.new(name: 'test.db') }
-  let(:add_command) { Hbtrack::AddCommand.new(nil, nil) }
-  let(:list_command) { Hbtrack::ListCommand.new(nil, nil) }
+  let(:list_command) { Hbtrack::ListCommand.new(nil, ['--month', '2017,1']) }
 
   before do
-    titles = ['workout', 'read']
-    add_command.add_to_db(titles, store)
+    habit1 = Habit.new('workout', 1)
+    habit2 = Habit.new('read', 2)
+    entry1 = Entry.new('2017-01-01T12:24:16+08:00', 'missed')
+    entry2 = Entry.new('2017-01-02T12:24:16+08:00', 'partially_completed')
+    store.add_habit(habit1)
+    store.add_habit(habit2)
+    store.add_entry_of(1, entry1)
+    store.add_entry_of(2, entry1)
+    store.add_entry_of(1, entry2)
+    store.add_entry_of(2, entry2)
   end
 
   after do
@@ -26,17 +33,25 @@ RSpec.describe Hbtrack::ListCommand do
       expect(habit1[:title]).to eq 'workout'
       expect(habit2[:title]).to eq 'read'
 
-      expect(habit1[:display_order]).to be 1
-      expect(habit2[:display_order]).to be 2
+      expect(habit1[:display_order]).to eq 1
+      expect(habit2[:display_order]).to eq 2
+
+      entry1 = entries['workout'][0]
+      entry2 = entries['read'][1]
+
+      expect(entry1[:type]).to eq 'missed'
+      expect(entry2[:type]).to eq 'partially_completed'
     end
   end
 
   describe '#get_habit_from_db' do
     it 'should get the specfic habit from database' do
-      habit , entry = list_command.get_habit_from_db(store, 'workout')
+      habit, entry = list_command.get_habit_from_db(store, 'workout')
 
       expect(habit[:title]).to eq 'workout'
       expect(habit[:display_order]).to be 1
+
+      expect(entry['workout'][0][:type]).to eq 'missed'
     end
   end
 end

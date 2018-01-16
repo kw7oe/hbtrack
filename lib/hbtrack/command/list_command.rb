@@ -40,8 +40,13 @@ module Hbtrack
           @db = true
         end
 
+
+        # TODO: Renamed to better describe the functionality
+        #       as in this case user are required toe enter
+        #       the input in the form of <year>,<month>
         opts.on('-m', '--month MONTH', 'List habit(s) according to month provided') do |month|
           @month = month.to_sym
+          @year, @mon = month.split(',')
         end
 
         opts.on_tail('-h', '--help', 'Prints this help') do
@@ -120,8 +125,8 @@ module Hbtrack
     end
 
     def get_entry_from_db(store, id)
-      month = Date.today.month
-      year = Date.today.year
+      month = @mon.to_i || Date.today.month
+      year = @year.to_i || Date.today.year
       store.get_entries_of_month(id, month, year)
     end
   end
