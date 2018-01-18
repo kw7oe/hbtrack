@@ -35,6 +35,15 @@ RSpec.describe Hbtrack::CLI::View do
     Util.red('*') * 5 + Util.green('*') * 2
   end
 
+  describe 'list_all_habits' do
+    it 'should print the date title and habits with progress' do
+      result = View.list_all_habits(habits, habit_entries, '2017,7')
+      expected = "July 2017\n---------\n" + View.print_habits(habits, habit_entries)
+
+      expect(result).to eq expected
+    end
+  end
+
   describe '#print_habits' do
     it 'should print a list of habits associated with its progress' do
       result = View.print_habits(habits, habit_entries)

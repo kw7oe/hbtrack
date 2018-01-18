@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'hbtrack/database/sequel_store'
+
 module Hbtrack
   class Command
     def initialize(hbt, options)
@@ -13,7 +15,7 @@ module Hbtrack
 
     def local_store
       return @store if @store
-      @store = SequelStore.new
+      @store = Hbtrack::Database::SequelStore.new
     end
 
     def execute

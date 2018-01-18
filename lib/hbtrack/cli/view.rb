@@ -7,6 +7,14 @@ module Hbtrack
     module View
       extend self
 
+      # Create the string output of command
+      # `hbtrack list` a.k.a ListCommand.list_all
+      def list_all_habits(habits, entries, month_key)
+        date = Util.get_date_from(key: month_key)
+        Util.title(date.strftime('%B %Y')) +
+          print_habits(habits, entries)
+      end
+
       # Create the string representation of
       # the habits and its entries to be presented
       # to the user

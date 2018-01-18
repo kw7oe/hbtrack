@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'hbtrack/command'
+require 'hbtrack/cli/view'
 
 module Hbtrack
   class ListCommand < Command
@@ -104,7 +105,7 @@ module Hbtrack
                         else
                           get_habit_from_db(store, title: names[0])
                         end
-      feedback(habits, entries)
+      Hbtrack::CLI::View.list_all_habits(habits, entries, @month)
     end
 
     def get_habits_from_db(store)
