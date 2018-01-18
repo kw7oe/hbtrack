@@ -105,7 +105,6 @@ module Hbtrack
                         else
                           get_habit_from_db(store, title: names[0])
                         end
-      p habits
       Hbtrack::CLI::View.list_all_habits(habits, entries, @month)
     end
 
@@ -127,8 +126,8 @@ module Hbtrack
     end
 
     def get_entry_from_db(store, id)
-      month = @mon.to_i || Date.today.month
-      year = @year.to_i || Date.today.year
+      month = @mon.to_i > 1 ? @year.to_i : Date.today.month
+      year = @year.to_i > 1 ? @mon.to_i : Date.today.year
       store.get_entries_of_month(id, month, year)
     end
   end
