@@ -23,7 +23,7 @@ module Hbtrack
 
       # Import and parse the CSV from Streaks
       def import_from(file)
-        return unless File.exist?(file)
+        raise 'File not found' unless File.exist?(file)
         input = File.read(file).split(/\n\n/)
         input.each_with_index do |collection, index|
           extract_from(index, collection)

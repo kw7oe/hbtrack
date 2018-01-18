@@ -12,6 +12,7 @@ module Hbtrack
 
       # Import and parse the  CSV from Streaks
       def import_from(file)
+        raise 'File not found' unless File.exist?(file)
         CSV.foreach(file, headers: true) do |row|
           extract_streaks_data(row)
         end

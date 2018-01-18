@@ -6,7 +6,7 @@ module Hbtrack
       require 'sequel'
 
       attr_reader :db
-      def initialize(name: 'hbtrack.rb')
+      def initialize(name: 'hbtrack.db')
         @db = Sequel.sqlite(name)
         create_table?
       end

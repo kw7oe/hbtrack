@@ -105,6 +105,7 @@ module Hbtrack
                         else
                           get_habit_from_db(store, title: names[0])
                         end
+      p habits
       Hbtrack::CLI::View.list_all_habits(habits, entries, @month)
     end
 
