@@ -60,6 +60,27 @@ RSpec.describe Hbtrack::Database::SequelStore do
       expect(entries[0][:type]).to eq 'missed'
       expect(entries[1][:type]).to eq 'partially_completed'
     end
+
+    it 'should return empty array if entries not available for that date' do
+      entries = store.get_entries_of_month(habit[:id], 1, 2018)
+      expect(entries).to eq []
+    end
+  end
+
+  describe '#in_range' do
+    it 'should return the correct period' do
+      result = store.in_range(1, 2017)
+      expected = Date.new(2017,1,1)..Date.new(2017, 2, 1)
+
+      expect(result).to eq expected
+    end
+
+    it 'should return a new year if month given is 12' do
+      result = store.in_range(12, 2017)
+      expected = Date.new(2017,12,1)..Date.new(2018, 1, 1)
+
+      expect(result).to eq expected
+    end
   end
 
 end

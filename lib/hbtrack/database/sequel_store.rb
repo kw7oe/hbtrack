@@ -80,7 +80,9 @@ module Hbtrack
       # Create a range of date from the first day
       # to the last day of a month
       def in_range(month, year)
-        Date.new(year, month, 1)..Date.new(year, month + 1, 1)
+        next_month = month == 12 ? 1 : month + 1
+        next_year = month == 12 ? year + 1 : year
+        Date.new(year, month, 1)..Date.new(next_year, next_month, 1)
       end
 
       private
