@@ -30,7 +30,7 @@ module Hbtrack
       # a habit and its entries to be presented
       # to the user
       def print_habit(index, title, entry, space = 0)
-        "#{index}. #{title}#{' ' * space}: " +
+        "#{index}. #{title}#{' ' * space} : " +
         convert_entry_to_view(entry)
       end
 
