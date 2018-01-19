@@ -19,7 +19,7 @@ module Hbtrack
     end
 
     def execute
-      import(@names[0])
+      return import(@names[0])
       super
     end
 
@@ -35,6 +35,9 @@ module Hbtrack
     def import(file_path)
       @importer.import_from(file_path)
       @importer.store_in(local_store)
+      Util.green "Succesfully imported from #{file_path}"
+    rescue => e
+      Util.red "Error: #{e}"
     end
 
   end
