@@ -100,11 +100,7 @@ module Hbtrack
 
     def list_from_db(store, names)
       habits = []
-      habits, entries = if names.empty?
-                          get_habits_from_db(store)
-                        else
-                          get_habit_from_db(store, title: names[0])
-                        end
+      habits, entries = get_habits_from_db(store)
       Hbtrack::CLI::View.list_all_habits(habits, entries, @month)
     end
 
@@ -118,17 +114,11 @@ module Hbtrack
       [habits, entries]
     end
 
-    def get_habit_from_db(store, title)
-      entry = {}
-      habit = store.get_habit_by_title(title)
-      entry[habit[:title]] = get_entry_from_db(store, habit[:id])
-      [habit, entry]
-    end
-
     def get_entry_from_db(store, id)
       month = @mon.to_i >= 1 ? @mon.to_i : Date.today.month
       year = @year.to_i >= 1 ? @year.to_i : Date.today.year
       store.get_entries_of_month(id, month, year)
     end
+
   end
 end

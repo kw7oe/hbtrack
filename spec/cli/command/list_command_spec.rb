@@ -43,15 +43,4 @@ RSpec.describe Hbtrack::ListCommand do
       expect(entry2[:type]).to eq 'partially_completed'
     end
   end
-
-  describe '#get_habit_from_db' do
-    it 'should get the specfic habit from database' do
-      habit, entry = list_command.get_habit_from_db(store, 'workout')
-
-      expect(habit[:title]).to eq 'workout'
-      expect(habit[:display_order]).to be 1
-
-      expect(entry['workout'][0][:type]).to eq 'missed'
-    end
-  end
 end

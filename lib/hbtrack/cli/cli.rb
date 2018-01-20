@@ -2,6 +2,7 @@
 
 require 'hbtrack/habit_tracker'
 require 'hbtrack/command/list_command'
+require 'hbtrack/command/show_command'
 require 'hbtrack/command/update_command'
 require 'hbtrack/command/remove_command'
 require 'hbtrack/command/add_command'
