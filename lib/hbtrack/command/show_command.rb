@@ -14,7 +14,7 @@ module Hbtrack
     end
 
     def execute
-      return show(local_store, @names[0])
+      return show(local_store, @names[0]) if @names[0]
       super
     end
 
@@ -25,15 +25,15 @@ module Hbtrack
     end
 
     def show(store, title)
-      habit, entries = get_habit_from_db(store, title)
+      habit = store.get_habit_by_title(title)
+      return ErrorHandler.raise_habit_not_found(title) unless habit
+
+      entries = get_entries_from_db(store, habit)
     end
 
-    def get_habit_from_db(store, title)
-      entry = {}
-      habit = store.get_habit_by_title(title)
+    def get_entries_from_db(store, habit)
       entries = store.get_entries_of(habit[:id]).all
-      entries = entries.group_by { |e| e[:timestamp].strftime('%Y-%m') }
-      [habit, entries]
+      entries.group_by { |e| e[:timestamp].strftime('%Y-%m') }
     end
   end
 end

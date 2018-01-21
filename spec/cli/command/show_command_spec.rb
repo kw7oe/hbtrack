@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'hbtrack/util'
 
 RSpec.describe Hbtrack::ShowCommand do
   let(:store) { Hbtrack::Database::SequelStore.new(name: 'test.db') }
@@ -19,14 +20,21 @@ RSpec.describe Hbtrack::ShowCommand do
     File.delete('test.db')
   end
 
-  describe '#get_habit_from_db' do
-    it 'should get the specfic habit from database' do
-      habit, entry = show_command.get_habit_from_db(store, 'workout')
+  describe '#show' do
+    it 'should show no habit error if habit not found' do
+      result = show_command.show(store, 'read')
+      expected = Hbtrack::ErrorHandler.raise_habit_not_found('read')
 
-      expect(habit[:title]).to eq 'workout'
-      expect(habit[:display_order]).to be 1
+      expect(result).to eq expected
+    end
+  end
 
-      expect(entry['2017-01'][0][:type]).to eq 'missed'
+  describe '#get_entries_from_db' do
+    it 'should get all entries of a habit' do
+      habit, = store.get_habit_by_title('workout')
+      entries = show_command.get_entries_from_db(store, habit)
+
+      expect(entries['2017-01'][0][:type]).to eq 'missed'
     end
   end
 end

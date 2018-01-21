@@ -13,6 +13,11 @@ module Hbtrack
         date = Util.get_date_from(key: month_key)
         Util.title(date.strftime('%B %Y')) +
           print_habits(habits, entries)
+     end
+
+      def list_habit(habit, entries)
+        Util.title(habit[:title]) +
+          print_entries(entries)
       end
 
       # Create the string representation of
@@ -35,6 +40,22 @@ module Hbtrack
       end
 
       # Create the string representation of
+      # a hash of entries.
+      def print_entries(entries)
+        char_count = max_char_count entries.keys
+        entries.map do |month, entry|
+          print_entry(month, entry, char_count - month.size)
+        end.join("\n")
+      end
+
+      # Create the string representation of
+      # an entry with its date period. E.g
+      # "Septemper 2017".
+      def print_entry(period, entry, space)
+        "#{period}#{' ' * space} : " + convert_entry_to_view(entry)
+      end
+
+      # Create the string representation of
       # a entry to be presented to the user
       def convert_entry_to_view(entry)
         entry.map { |e| convert_status_to_view(e[:type]) }.join
@@ -47,6 +68,9 @@ module Hbtrack
         return Util.red '*'
       end
 
+      # Iterate through an array of string
+      # to find the largest character count
+      # from the array of string.
       def max_char_count(strings)
         strings.map(&:size).max
       end

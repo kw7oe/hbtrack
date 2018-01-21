@@ -31,14 +31,50 @@ RSpec.describe Hbtrack::CLI::View do
       'programming' => entries
     }
   end
+  let(:workout_entries) do
+    {
+      "September 2017": entries,
+      "October 2017": entries
+    }
+  end
   let(:expected_entry_string) do
     Util.red('*') * 5 + Util.green('*') * 2
   end
 
-  describe 'list_all_habits' do
+  describe '#list_all_habits' do
     it 'should print the date title and habits with progress' do
       result = View.list_all_habits(habits, habit_entries, '2017,7')
       expected = "July 2017\n---------\n" + View.print_habits(habits, habit_entries)
+
+      expect(result).to eq expected
+    end
+  end
+
+  describe '#list_habit' do
+    it 'should print the habit title and its entries' do
+      result = View.list_habit(habits[0], workout_entries)
+      expected = "workout\n-------\n" + View.print_entries(workout_entries)
+
+      expect(result).to eq expected
+    end
+  end
+
+  describe '#print_entry' do
+    it 'should print the entries with month and year' do
+      result = View.print_entries(workout_entries)
+      expected = "September 2017 : " + expected_entry_string +
+        "\nOctober 2017   : " + expected_entry_string
+
+      expect(result).to eq expected
+    end
+  end
+
+  describe '#print_entry' do
+    it 'should print the entries with month and year' do
+      month = workout_entries.keys[0]
+      entry = workout_entries.values[0]
+      result = View.print_entry(month, entry, 0)
+      expected = "September 2017 : " + expected_entry_string
 
       expect(result).to eq expected
     end
