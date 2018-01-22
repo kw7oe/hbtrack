@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'hbtrack/command'
+require 'hbtrack/cli/view'
 
 module Hbtrack
   # ShowCommand class is responsible for handling
@@ -29,6 +30,7 @@ module Hbtrack
       return ErrorHandler.raise_habit_not_found(title) unless habit
 
       entries = get_entries_from_db(store, habit)
+      View.show_habit(habit, entries)
     end
 
     def get_entries_from_db(store, habit)

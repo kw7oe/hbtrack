@@ -50,9 +50,9 @@ RSpec.describe Hbtrack::CLI::View do
     end
   end
 
-  describe '#list_habit' do
+  describe '#show_habit' do
     it 'should print the habit title and its entries' do
-      result = View.list_habit(habits[0], workout_entries)
+      result = View.show_habit(habits[0], workout_entries)
       expected = "workout\n-------\n" + View.print_entries(workout_entries)
 
       expect(result).to eq expected

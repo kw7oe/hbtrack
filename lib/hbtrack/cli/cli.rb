@@ -16,6 +16,8 @@ module Hbtrack
         command = case args.shift
                   when 'list'
                     ListCommand.new(hbt, args)
+                  when 'show'
+                    ShowCommand.new(args)
                   when 'done'
                     UpdateCommand.new(hbt, args, true)
                   when 'undone'
@@ -39,6 +41,7 @@ module Hbtrack
         puts '     add: Add habit(s)'
         puts '     remove: Remove habit(s)'
         puts '     list: List habit(s)'
+        puts '     show: Show habit'
         puts '     done: Mark habit(s) as done'
         puts '     undone: Mark habit(s) as undone'
         puts '     import: Import data from files'

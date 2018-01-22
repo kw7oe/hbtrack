@@ -15,7 +15,7 @@ module Hbtrack
           print_habits(habits, entries)
      end
 
-      def list_habit(habit, entries)
+      def show_habit(habit, entries)
         Util.title(habit[:title]) +
           print_entries(entries)
       end
