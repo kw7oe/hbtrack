@@ -30,7 +30,7 @@ module Hbtrack
       return ErrorHandler.raise_habit_not_found(title) unless habit
 
       entries = get_entries_from_db(store, habit)
-      View.show_habit(habit, entries)
+      Hbtrack::CLI::View.show_habit(habit, entries)
     end
 
     def get_entries_from_db(store, habit)

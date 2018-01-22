@@ -4,7 +4,7 @@ module Hbtrack
   # This class contains the methods that
   # are used to format the progress of a Habit
   # into string
-  class Util
+  module Util
     FONT_COLOR = {
       green: "\e[32m",
       red: "\e[31m",

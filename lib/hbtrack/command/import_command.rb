@@ -5,6 +5,7 @@ require 'hbtrack/command'
 require 'hbtrack/importer/streaks_importer'
 require 'hbtrack/importer/hbtrack_importer'
 require 'hbtrack/database/sequel_store'
+require 'hbtrack/util'
 
 module Hbtrack
   # ImportCommand class is responsible for handling
@@ -35,9 +36,9 @@ module Hbtrack
     def import(file_path)
       @importer.import_from(file_path)
       @importer.store_in(local_store)
-      Util.green "Succesfully imported from #{file_path}"
+      Hbtrack::Util.green "Succesfully imported from #{file_path}"
     rescue => e
-      Util.red "Error: #{e}"
+      Hbtrack::Util.red "Error: #{e}"
     end
 
   end

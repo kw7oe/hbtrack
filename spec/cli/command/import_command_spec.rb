@@ -14,7 +14,7 @@ RSpec.describe Hbtrack::ImportCommand do
       output = import_command.execute
       habits = import_command.local_store.get_all_habits
 
-      expect(output).to eq Util.green 'Succesfully imported from test/test_data'
+      expect(output).to eq Hbtrack::Util.green 'Succesfully imported from test/test_data'
       expect(habits[0][:title]).to eq 'workout'
       expect(habits[1][:title]).to eq 'read'
     end
@@ -24,7 +24,7 @@ RSpec.describe Hbtrack::ImportCommand do
       output = import_command.execute
       habits = import_command.local_store.get_all_habits
 
-      expect(output).to eq Util.green 'Succesfully imported from test/streaks.csv'
+      expect(output).to eq Hbtrack::Util.green 'Succesfully imported from test/streaks.csv'
       expect(habits[0][:title]).to eq 'Wake Up Before 7.30'
       expect(habits[1][:title]).to eq 'Work Out for 5 Minutes'
     end
@@ -35,7 +35,7 @@ RSpec.describe Hbtrack::ImportCommand do
       import_command = Hbtrack::ImportCommand.new('test.db', ['nofile'])
       output = import_command.execute
 
-      expect(output).to eq Util.red 'Error: File not found'
+      expect(output).to eq Hbtrack::Util.red 'Error: File not found'
     end
   end
 end

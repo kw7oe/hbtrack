@@ -25,7 +25,6 @@ RSpec.describe Hbtrack::ShowCommand do
       show_command = Hbtrack::ShowCommand.new('test.db', 'workout')
       result = show_command.execute
       expected = show_command.show(store, 'workout')
-      p expected
 
       expect(result).to eq expected
     end
@@ -37,7 +36,7 @@ RSpec.describe Hbtrack::ShowCommand do
       habit = store.get_habit_by_title('workout')
       entries = show_command.get_entries_from_db(store, habit)
 
-      expected = View.show_habit(habit, entries)
+      expected = Hbtrack::CLI::View.show_habit(habit, entries)
 
       expect(result).to eq expected
     end
