@@ -23,6 +23,11 @@ module Hbtrack
         )
       end
 
+      # Delete a habit
+      def delete_habit(title)
+        habits.where(title: title).delete
+      end
+
       # Get habit by id
       def get_habit(id)
         habits.filter(id: id).first
@@ -99,7 +104,7 @@ module Hbtrack
           primary_key :id
           String :type
           DateTime :timestamp
-          foreign_key :habit_id, :habits
+          foreign_key :habit_id, :habits, on_delete: :cascade
         end
       end
 

@@ -14,7 +14,7 @@ require 'hbtrack/cli/cli'
 module Hbtrack
   class << self
     def run(args)
-      Hbtrack::CLI.run(args)
+      CLI.run(args)
     end
   end
 end
