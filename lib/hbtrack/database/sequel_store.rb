@@ -11,11 +11,7 @@ module Hbtrack
         create_table?
       end
 
-      # Data Abstraction for Habit
-      # Habit = Struct.new(:id, :title, :page, :display_order)
-
       # Add a habit
-      # TODO: Add error handling for existed habit
       def add_habit(habit)
         habits.insert(
           title: habit.title,
@@ -63,6 +59,11 @@ module Hbtrack
           type: entry.type,
           habit_id: habit_id
         )
+      end
+
+      def get_latest_entry_of(habit_id)
+        entries.where(habit_id: habit_id)
+          .order(Sequel.desc(:timestamp)).first
       end
 
       # Get all entries of a habit

@@ -10,6 +10,7 @@ module Hbtrack
       @day = Date.today
       @is_done = is_done
       @remaining = false
+      @db = false
       super(hbt, options)
     end
 
@@ -26,6 +27,10 @@ module Hbtrack
         opts.banner = "Usage: hbtrack #{action.downcase} [<habit_name>] [options]"
         opts.separator ''
         opts.separator 'Options:'
+        opts.on('--db', "#{action} habits in database") do
+          @db = true
+        end
+
         opts.on('-a', '--all', "#{action} all habits") do
           @all = true
         end
@@ -58,20 +63,15 @@ module Hbtrack
                     return ErrorHandler.raise_if_habit_error(name)
                   end)
                 end
-
         habit.done(is_done, day)
       end
-
       Store.new(@hbt.habits, @hbt.output_file_name).save
-
       Hbtrack::Util.green("#{action(is_done)} #{names.join(',')}!")
     end
 
     def update_all(day, is_done)
       @hbt.habits.each { |habit| habit.done(is_done, day) }
-
       Store.new(@hbt.habits, @hbt.output_file_name).save
-
       Hbtrack::Util.green("#{action(is_done)} all habits!")
     end
 
@@ -79,14 +79,47 @@ module Hbtrack
       @hbt.habits.each do |habit|
         habit.done(is_done, day) unless habit.done_for(date: day)
       end
-
       Store.new(@hbt.habits, @hbt.output_file_name).save
-
       Hbtrack::Util.green("#{action(is_done)} remaining habit(s)!")
     end
 
-    private
+    def update_in_db(store, name, day, is_done)
+      id = store.get_habit_id_for(name)
+      entry = store.get_latest_entry_of(id)
+      unless entry_exist?(entry, day)
+        add_entry(store, id, day, is_done)
+      end
+    end
 
+    def update_all_in_db(day, is_done)
+    end
+
+    def update_remaining_in_db(date, is_done)
+    end
+
+    def add_entry(store, id, day, is_done)
+      type = is_done ? 'completed' : 'missed'
+      entry = Hbtrack::Database::Entry.new(DateTime.now, type)
+      store.add_entry_of(id, entry)
+    end
+
+    # Check if the entry timestamp are within
+    # the same day
+    def entry_exist?(entry, day)
+      return false unless entry
+      year, month , day = extract_date(day)
+      time = entry[:timestamp]
+      y, m, d = extract_date(time)
+      return y == year && m == month && d == day
+    end
+
+    # Extract out the year, month and day of
+    # a Date or Time object.
+    def extract_date(day)
+      [day.year, day.month, day.day]
+    end
+
+    private
     def action(is_done)
       is_done ? 'Done' : 'Undone'
     end
