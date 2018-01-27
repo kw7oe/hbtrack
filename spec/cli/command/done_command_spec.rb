@@ -36,5 +36,16 @@ RSpec.describe Hbtrack::UpdateCommand do
 
       expect(count).to eq 1
     end
+
+    it 'should update entry if the entry exists' do
+      done_command.update_in_db(store, 'workout', Date.today, true)
+      done_command.update_in_db(store, 'workout', Date.today, false)
+
+      count = store.get_entries_count_of(1)
+      entry = store.get_latest_entry_of(1)
+
+      expect(count).to eq 1
+      expect(entry[:type]).to eq 'missed'
+    end
   end
 end

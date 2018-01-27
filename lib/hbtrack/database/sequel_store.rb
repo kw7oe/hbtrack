@@ -61,6 +61,12 @@ module Hbtrack
         )
       end
 
+      def update_entry_of(habit_id, time, type)
+        entries.where(habit_id: habit_id)
+          .where(timestamp: day_range_for(time))
+          .update(type: type, timestamp: time)
+      end
+
       def get_latest_entry_of(habit_id)
         entries.where(habit_id: habit_id)
           .order(Sequel.desc(:timestamp)).first
@@ -79,16 +85,32 @@ module Hbtrack
       # Get entries of a habit in a period of month
       # according to month and year given.
       def get_entries_of_month(habit_id, month, year)
-        get_entries_of(habit_id).where(timestamp:
-                                       in_range(month, year)).select(:type).all
+        get_entries_of(habit_id)
+          .where(timestamp: month_range(month, year))
+          .select(:type).all
       end
 
       # Create a range of date from the first day
       # to the last day of a month
-      def in_range(month, year)
+      def month_range(month, year)
         next_month = month == 12 ? 1 : month + 1
         next_year = month == 12 ? year + 1 : year
         Date.new(year, month, 1)..Date.new(next_year, next_month, 1)
+      end
+
+      # Create a range from the start of a day
+      # to the end of a day according to the
+      # DateTime object given.
+      def day_range_for(time)
+        year = time.year
+        month = time.month
+        day = time.day
+        timezone = Time.new.zone
+
+        Range.new(
+          DateTime.new(year, month, day, 0, 0, 0, timezone),
+          DateTime.new(year, month, day, 23, 59, 59, timezone)
+        )
       end
 
       private

@@ -7,7 +7,7 @@ require 'hbtrack/store'
 module Hbtrack
   class UpdateCommand < Command
     def initialize(hbt, options, is_done)
-      @day = Date.today
+      @day = DateTime.now
       @is_done = is_done
       @remaining = false
       @db = false
@@ -88,6 +88,8 @@ module Hbtrack
       entry = store.get_latest_entry_of(id)
       unless entry_exist?(entry, day)
         add_entry(store, id, day, is_done)
+      else
+        update_entry(store, id, day, is_done)
       end
     end
 
@@ -95,6 +97,11 @@ module Hbtrack
     end
 
     def update_remaining_in_db(date, is_done)
+    end
+
+    def update_entry(store, id, day, is_done)
+      type = is_done ? 'completed' : 'missed'
+      store.update_entry_of(id, day, type)
     end
 
     def add_entry(store, id, day, is_done)

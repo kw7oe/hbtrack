@@ -67,16 +67,16 @@ RSpec.describe Hbtrack::Database::SequelStore do
     end
   end
 
-  describe '#in_range' do
+  describe '#month_range' do
     it 'should return the correct period' do
-      result = store.in_range(1, 2017)
+      result = store.month_range(1, 2017)
       expected = Date.new(2017,1,1)..Date.new(2017, 2, 1)
 
       expect(result).to eq expected
     end
 
     it 'should return a new year if month given is 12' do
-      result = store.in_range(12, 2017)
+      result = store.month_range(12, 2017)
       expected = Date.new(2017,12,1)..Date.new(2018, 1, 1)
 
       expect(result).to eq expected
