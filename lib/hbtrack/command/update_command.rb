@@ -85,29 +85,29 @@ module Hbtrack
 
     def update_in_db(store, name, day, is_done)
       id = store.get_habit_id_for(name)
-      entry = store.get_latest_entry_of(id)
-      unless entry_exist?(entry, day)
-        add_entry(store, id, day, is_done)
-      else
-        update_entry(store, id, day, is_done)
+      return ErrorHandler.raise_habit_not_found(name) unless id
+
+      add_or_update_entry(store, id, day, is_done)
+      Hbtrack::Util.green("Update successfully!")
+    end
+
+    def update_all_in_db(store, day, is_done)
+      habits = store.get_all_habits
+      habits.each do |h|
+        add_or_update_entry(store, h[:id], day, is_done)
       end
+      Hbtrack::Util.green("Update successfully!")
     end
 
-    def update_all_in_db(day, is_done)
-    end
-
-    def update_remaining_in_db(date, is_done)
-    end
-
-    def update_entry(store, id, day, is_done)
+    def add_or_update_entry(store, id, day, is_done)
+      entry = store.get_latest_entry_of(id)
       type = is_done ? 'completed' : 'missed'
-      store.update_entry_of(id, day, type)
-    end
-
-    def add_entry(store, id, day, is_done)
-      type = is_done ? 'completed' : 'missed'
-      entry = Hbtrack::Database::Entry.new(DateTime.now, type)
-      store.add_entry_of(id, entry)
+      unless entry_exist?(entry, day)
+        entry = Hbtrack::Database::Entry.new(DateTime.now, type)
+        store.add_entry_of(id, entry)
+      else
+        store.update_entry_of(id, day, type)
+      end
     end
 
     # Check if the entry timestamp are within

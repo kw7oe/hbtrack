@@ -31,7 +31,7 @@ module Hbtrack
 
       # Get ID of a habit by title
       def get_habit_id_for(title)
-        get_habit_by_title(title)[:id]
+        get_habit_by_title(title)&.fetch(:id)
       end
 
       # Get habit by title
