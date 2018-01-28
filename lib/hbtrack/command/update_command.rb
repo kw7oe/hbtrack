@@ -15,6 +15,9 @@ module Hbtrack
     end
 
     def execute
+      return update_all_in_db(local_store, @day, @is_done) if @db && @all
+      return update_in_db(local_store, @names, @day, @is_done) if @db
+
       return update_remaining(@day, @is_done) if @remaining
       return update_all(@day, @is_done) if @all
       return update(@names, @day, @is_done) if @names
