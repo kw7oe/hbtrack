@@ -2,22 +2,18 @@
 
 require 'optparse'
 require 'hbtrack/command'
-require 'hbtrack/store'
-require 'hbtrack/database/sequel_store'
 
 module Hbtrack
   # AddCommand class is responsible for handling
   # `hbtrack add` command in CLI
   class AddCommand < Command
     def initialize(hbt, options)
-      @db = false
       super(hbt, options)
     end
 
     def execute
       unless @names.empty?
-        return add_to_db(@names, local_store) if @db
-        return add(@names)
+        return add_to_db(@names, local_store)
       end
       super
     end
@@ -25,23 +21,7 @@ module Hbtrack
     def create_option_parser
       OptionParser.new do |opts|
         opts.banner = 'Usage: hbtrack add [<habit_name>]'
-        opts.on('--db', 'Store habits in database') do
-          @db = true
-        end
       end
-    end
-
-    def add(names)
-      added = []
-      names.each do |name|
-        @hbt.find habit_name: name, if_fail: (proc do
-          @hbt.create(name)
-          added << name
-        end)
-      end
-
-      Store.new(@hbt.habits, @hbt.output_file_name).save
-      feedback(names, added)
     end
 
     def feedback(names, added)

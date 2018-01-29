@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'hbtrack/habit_tracker'
 require 'hbtrack/command/list_command'
 require 'hbtrack/command/show_command'
 require 'hbtrack/command/update_command'
@@ -12,7 +11,7 @@ module Hbtrack
   module CLI
     class << self
       def run(args)
-        hbt = HabitTracker.new
+        hbt = nil
         command = case args.shift
                   when 'list'
                     ListCommand.new(hbt, args)
