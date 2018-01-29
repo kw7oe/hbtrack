@@ -87,7 +87,7 @@ module Hbtrack
       def get_entries_of_month(habit_id, month, year)
         get_entries_of(habit_id)
           .where(timestamp: month_range(month, year))
-          .select(:type).all
+          .all
       end
 
       # Create a range of date from the first day

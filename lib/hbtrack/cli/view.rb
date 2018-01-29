@@ -50,7 +50,7 @@ module Hbtrack
 
       # Create the string representation of
       # an entry with its date period. E.g
-      # "Septemper 2017".
+      # "September 2017".
       def print_entry(period, entry, space)
         "#{period}#{' ' * space} : " + convert_entry_to_view(entry)
       end
@@ -58,7 +58,15 @@ module Hbtrack
       # Create the string representation of
       # a entry to be presented to the user
       def convert_entry_to_view(entry)
-        entry.map { |e| convert_status_to_view(e[:type]) }.join
+        max_day_of_month = 31
+        index = 0
+        result = Array.new(max_day_of_month, ' ')
+        entry.each do |e|
+          date = e[:timestamp]
+          index = date.day
+          result[index - 1] = convert_status_to_view(e[:type])
+        end
+        result.slice!(0, index).join('')
       end
 
       # Create the string representation of

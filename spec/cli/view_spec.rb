@@ -6,19 +6,26 @@ require 'hbtrack/cli/view'
 
 RSpec.describe Hbtrack::CLI::View do
 
-  let(:view) { Hbtrack::CLI::View }
-  let(:util) { Hbtrack::Util }
-  let(:entries) do
+  def mock_entries(type, day, month, year)
+    {
+      type: type,
+      timestamp: DateTime.new(year, month, day, 0, 0, 0)
+    }
+  end
+  def fake_entries(month = 9, year = 2017)
     [
-      {type: 'missed_auto'},
-      {type: 'partially_completed'},
-      {type: 'skip'},
-      {type: 'missed'},
-      {type: 'missed'},
-      {type: 'completed_manually'},
-      {type: 'completed_auto'},
+      mock_entries('missed_auto', 1, month, year),
+      mock_entries('partially_completed', 2, month, year),
+      mock_entries('skip', 3, month, year),
+      mock_entries('missed', 4, month, year),
+      mock_entries('missed', 5, month, year),
+      mock_entries('completed_manually', 6, month, year),
+      mock_entries('completed_auto', 7, month, year),
     ]
   end
+
+  let(:view) { Hbtrack::CLI::View }
+  let(:util) { Hbtrack::Util }
   let(:habits) do
     [
       {title: 'workout'},
@@ -27,14 +34,14 @@ RSpec.describe Hbtrack::CLI::View do
   end
   let(:habit_entries) do
     {
-      'workout' => entries,
-      'programming' => entries
+      'workout' => fake_entries,
+      'programming' => fake_entries
     }
   end
   let(:workout_entries) do
     {
-      "September 2017": entries,
-      "October 2017": entries
+      "September 2017": fake_entries,
+      "October 2017": fake_entries(10, 2017)
     }
   end
   let(:expected_entry_string) do
@@ -93,7 +100,7 @@ RSpec.describe Hbtrack::CLI::View do
   describe '#print_habit' do
     it 'should print habit name and progress' do
       title = 'workout'
-      result = view.print_habit(1, title, entries)
+      result = view.print_habit(1, title, fake_entries)
       expected = "1. #{title} : " + expected_entry_string
 
       expect(result).to eq expected
@@ -102,7 +109,19 @@ RSpec.describe Hbtrack::CLI::View do
 
   describe '#convert_entry_to_view' do
     it 'should convert entry correctly' do
+      result = view.convert_entry_to_view(fake_entries)
+      expect(result).to eq expected_entry_string
+    end
+
+    it 'should show blank for day without entry' do
+      entries = [
+        mock_entries('completed', 10, 1, 2017),
+        mock_entries('completed', 11, 1, 2017)
+      ]
+
       result = view.convert_entry_to_view(entries)
+      expected_entry_string = ' ' * 9 + util.green('*') * 2
+
       expect(result).to eq expected_entry_string
     end
   end
