@@ -41,7 +41,10 @@ module Hbtrack
 
       # Create entry
       def create_entry(task_id, line)
-        timestamp = line.fetch('entry_timestamp')
+        date = line.fetch('entry_date') # Get Date of entry
+        timestamp = line.fetch('entry_timestamp').split("T") # Get Time of entry
+        # Create timestamp
+        timestamp = DateTime.parse(date + "T" + timestamp[1]).to_s
         type = line.fetch('entry_type')
         @entries[task_id] = [] unless @entries[task_id]
         @entries[task_id] << Entry.new(timestamp, type)

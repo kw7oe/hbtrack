@@ -9,7 +9,6 @@ RSpec.describe Hbtrack::Importer::StreaksImporter do
     p2,"Wake Up Before 7.30",missed_auto,20170225,2017-02-26T12:24:16+08:00,1,1
     p2,"Wake Up Before 7.30",missed_auto,20170226,2017-02-27T09:37:49+08:00,1,1
     p2,"Wake Up Before 7.30",missed_auto,20170227,2017-02-28T06:36:25+08:00,1,1
-    p2,"Wake Up Before 7.30",missed_auto,20170228,2017-03-01T07:55:36+08:00,1,1
     CSV
   end
   let(:file) do
@@ -30,7 +29,7 @@ RSpec.describe Hbtrack::Importer::StreaksImporter do
     habit = habits['p2']
     entry = entries['p2'].first
     expect(habit.title).to eq 'Wake Up Before 7.30'
-    expect(entry.timestamp).to eq '2017-02-26T12:24:16+08:00'
+    expect(entry.timestamp).to eq '2017-02-25T12:24:16+08:00'
   end
 
   describe 'storage' do
