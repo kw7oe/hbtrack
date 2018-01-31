@@ -5,8 +5,8 @@ require 'hbtrack/command'
 
 module Hbtrack
   class RemoveCommand < Command
-    def initialize(hbt, options)
-      super(hbt, options)
+    def initialize(store_path, options)
+      super(store_path, options)
     end
 
     def execute

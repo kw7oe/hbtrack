@@ -4,11 +4,12 @@ require 'spec_helper'
 require 'hbtrack/util'
 
 RSpec.describe Hbtrack::ImportCommand do
-  after do
-    File.delete('test.db')
-  end
 
   describe '#execute' do
+    after do
+      File.delete('test.db')
+    end
+
     it 'it should import using HbtrackImporter by default' do
       import_command = Hbtrack::ImportCommand.new('test.db', 'test/test_data')
       output = import_command.execute

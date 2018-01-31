@@ -7,8 +7,8 @@ module Hbtrack
   # AddCommand class is responsible for handling
   # `hbtrack add` command in CLI
   class AddCommand < Command
-    def initialize(hbt, options)
-      super(hbt, options)
+    def initialize(store_path, options)
+      super(store_path, options)
     end
 
     def execute

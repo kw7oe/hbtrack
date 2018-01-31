@@ -10,23 +10,22 @@ require 'hbtrack/command/import_command'
 module Hbtrack
   module CLI
     class << self
-      def run(args)
-        hbt = nil
+      def run(store_path, args)
         command = case args.shift
                   when 'list'
-                    ListCommand.new(hbt, args)
+                    ListCommand.new(store_path, args)
                   when 'show'
-                    ShowCommand.new(args)
+                    ShowCommand.new(store_path, args)
                   when 'done'
-                    UpdateCommand.new(hbt, args, true)
+                    UpdateCommand.new(store_path, args, true)
                   when 'undone'
-                    UpdateCommand.new(hbt, args, false)
+                    UpdateCommand.new(store_path, args, false)
                   when 'remove'
-                    RemoveCommand.new(hbt, args)
+                    RemoveCommand.new(store_path, args)
                   when 'add'
-                    AddCommand.new(hbt, args)
+                    AddCommand.new(store_path, args)
                   when 'import'
-                    ImportCommand.new(args)
+                    ImportCommand.new(store_path, args)
                   else
                     help
                   end

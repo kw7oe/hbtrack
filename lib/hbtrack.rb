@@ -11,8 +11,8 @@ require 'hbtrack/cli/cli'
 
 module Hbtrack
   class << self
-    def run(args)
-      CLI.run(args)
+    def run(store_path = 'hbtrack.db', args)
+      CLI.run(store_path, args)
     end
   end
 end

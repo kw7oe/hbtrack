@@ -5,11 +5,11 @@ require 'hbtrack/command'
 
 module Hbtrack
   class UpdateCommand < Command
-    def initialize(hbt, options, is_done)
+    def initialize(store_path, options, is_done)
       @day = DateTime.now
       @is_done = is_done
       @db = false
-      super(hbt, options)
+      super(store_path, options)
     end
 
     def execute
@@ -83,9 +83,5 @@ module Hbtrack
       [day.year, day.month, day.day]
     end
 
-    private
-    def action(is_done)
-      is_done ? 'Done' : 'Undone'
-    end
   end
 end

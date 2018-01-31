@@ -8,10 +8,8 @@ module Hbtrack
   # ShowCommand class is responsible for handling
   # `hbtrack import` command in CLI
   class ShowCommand < Command
-    def initialize(file_path = 'hbtrack.db', options)
-      # To allow creation of test.db
-      @store = Hbtrack::Database::SequelStore.new(name: file_path)
-      super(nil, options)
+    def initialize(store_path, options)
+      super(store_path, options)
     end
 
     def execute

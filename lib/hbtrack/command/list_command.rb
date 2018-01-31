@@ -8,9 +8,9 @@ module Hbtrack
   class ListCommand < Command
     attr_reader :printer, :formatter, :month
 
-    def initialize(hbt, options)
+    def initialize(store_path, options)
       @month = Date.today.strftime("%Y,%-m").to_sym
-      super(hbt, options)
+      super(store_path, options)
     end
 
     def execute

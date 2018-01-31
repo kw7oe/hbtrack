@@ -11,12 +11,9 @@ module Hbtrack
   # ImportCommand class is responsible for handling
   # `hbtrack import` command in CLI
   class ImportCommand < Command
-    def initialize(file_path = 'hbtrack.db', options)
+    def initialize(store_path, options)
       @importer = Hbtrack::Importer::HbtrackImporter.new
-
-      # To allow creation of test.db
-      @store = Hbtrack::Database::SequelStore.new(name: file_path)
-      super(nil, options)
+      super(store_path, options)
     end
 
     def execute
