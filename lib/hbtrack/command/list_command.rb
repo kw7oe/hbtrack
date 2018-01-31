@@ -9,11 +9,8 @@ module Hbtrack
     attr_reader :printer, :formatter, :month
 
     def initialize(hbt, options)
-      @percentage = false
       @month = Date.today.strftime("%Y,%-m").to_sym
-
       super(hbt, options)
-      @formatter = @percentage ? CompletionRateSF.new : CompleteSF.new
     end
 
     def execute
@@ -26,10 +23,6 @@ module Hbtrack
         opts.banner = 'Usage: hbtrack list [<habit_name>] [options]'
         opts.separator ''
         opts.separator 'Options:'
-
-        opts.on('-p', '--percentage', 'List habit(s) with completion rate') do
-          @percentage = true
-        end
 
         # TODO: Renamed to better describe the functionality
         #       as in this case user are required toe enter
