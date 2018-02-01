@@ -10,4 +10,7 @@ module Hbtrack
 
   # File to store your data
   FILE_NAME = Dir.home + '/.habit'
+
+  # DB file
+  DB_PATH = Dir.home + '/.habit.db'
 end

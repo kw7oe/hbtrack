@@ -3,4 +3,12 @@
 
 require 'bundler/setup'
 require 'hbtrack'
+
+unless File.exist? Hbtrack::DB_PATH
+  if File.exist? Hbtrack::FILE_NAME
+    Hbtrack::ImportCommand.new(
+      Hbtrack::DB_PATH,
+      Hbtrack::FILE_NAME).execute
+  end
+end
 Hbtrack.run(ARGV)
