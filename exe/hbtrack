@@ -4,4 +4,4 @@
 require 'bundler/setup'
 require 'hbtrack'
 
-Hbtrack.run(ARGV)
+Hbtrack::CLI.run(ARGV)

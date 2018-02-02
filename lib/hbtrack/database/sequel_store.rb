@@ -119,7 +119,6 @@ module Hbtrack
         db.create_table? :habits do
           primary_key :id
           String :title
-          Integer :page
           Integer :display_order
         end
 

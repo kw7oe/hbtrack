@@ -8,10 +8,3 @@ require 'hbtrack/database/sequel_store'
 require 'hbtrack/error_handler'
 require 'hbtrack/cli/cli'
 
-module Hbtrack
-  class << self
-    def run(store_path = DB_PATH, args)
-      CLI.run(store_path, args)
-    end
-  end
-end

@@ -10,7 +10,7 @@ require 'hbtrack/command/import_command'
 module Hbtrack
   module CLI
     class << self
-      def run(store_path, args)
+      def run(store_path = DB_PATH, args)
         command = case args.shift
                   when 'list'
                     ListCommand.new(store_path, args)
